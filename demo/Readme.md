@@ -1,5 +1,6 @@
-1. npm install 
-2. node app.js 
+1. npm install
+2. node app.js
+ 
 game -> BootScene -> LibraryScene -> StudyScene -> LibraryScene 순서로 전환됩니다.
  
 libraryscene으로 다시 돌아오면 항상 문제가 생겨요.
