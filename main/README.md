@@ -32,36 +32,26 @@ main
 
 - 여유가 되면 task랑 직접 관련 있는 함수들은 @ task 에 번호를 적어두면 작성한 feature 리스트랑 쉽게 매치할 방법을 찾아볼 수 있을 것 같아요.
 
-  ex. 
-
-   updatePostIt() @ task 1 
-
-   createArtifact() @ task 2
-
-   goToRest() @ task 3
-
-   moveUser() @ task (적을필요없음)
-
+```
+ updatePostIt() @ task 1 
+ createArtifact() @ task 2
+ goToRest() @ task 3
+ moveUser() @ task (적을필요없음)
+```
+```javascript
 /**Example.*/
+/**#############################################
+* 서버에서 받은 업데이트 반영하기  
+* #############################################*/ 
 
-/**######################################################################
 
-   \* 서버에서 받은 업데이트 반영하기  \######################################################################*/ 
-
-  /**  새로운 그룹 목표가 달성 되었을 때  
-
-   \* -> Tooltip 또는 애니메이션 생성
-
-   \* @ param 달성한 목표 제목,
-
-   \* @ return .  
-
-   \* @ task 2
-
-   */   
-
-  newGroupArtifact(artifact) {
-
-  		throw { name: "NotImplementedError" };
-
-  }
+/**  새로운 그룹 목표가 달성 되었을 때  
+ * -> Tooltip 또는 애니메이션 생성
+ * @ param 달성한 목표 제목,
+ * @ return .  
+ * @ task 2
+ */
+newGroupArtifact(artifact) {
+    throw { name: "NotImplementedError" };
+}
+```
