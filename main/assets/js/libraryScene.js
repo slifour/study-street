@@ -178,4 +178,169 @@ class LibraryScene extends Phaser.Scene {
     updateCamera() {
         throw { name: "NotImplementedError" };
     }
+
+    /**
+     * key event input
+     * character 이동, animation
+     * @ param
+     * @ return
+     * @ task 1
+     */        
+    moveLeft() {
+        throw { name: "NotImplementedError" };
+    };
+    moveRight() {
+        throw { name: "NotImplementedError" };
+    };
+    moveUp() {
+        throw { name: "NotImplementedError" };
+    };
+    moveDown() {
+        throw { name: "NotImplementedError" };
+    };
+
+    /**
+     * 상대방에 가까이 다가갔을 때(혹은 그룹 공간에 들어갔을 때)
+     * Avatar 위에 Status를 띄움
+     * @ param user
+     * @ return ReactComponent
+     * @ task 1
+     */        
+     statusOnAvatar(user) {
+        throw { name: "NotImplementedError" };
+    };
+
+    /**
+     * 의자 근처에 다가갔을 때
+     * 의자 Click 유도하는 effect 출력
+     * @ param chair
+     * @ return
+     * @ task 1
+     */        
+     showChairClickBait(chair) {
+        throw { name: "NotImplementedError" };
+    };
+
+    //여러 Scene에서 사용되는 Entities, UI 구성 요소들은 별개의 Component로 구성하는 것이 더 좋을 듯!
+    
+    ////Playlist
+    /**
+     * playlist의 switch 클릭
+     * playlist를 켜고 끔
+     * @ param
+     * @ return
+     * @ task 1
+     */        
+     switchPlaylist() {
+        throw { name: "NotImplementedError" };
+    };
+
+    ////Icon
+    /**
+     * icon update
+     * @ param icons, status
+     * @ return
+     * @ task 1
+     */        
+     updateIcons(info) {
+        throw { name: "NotImplementedError" };
+    };
+
+    /**
+     * icon hover
+     * icon 옆에 status를 띄움
+     * @ param icon
+     * @ return ReactComponent
+     * @ task 1
+     */        
+     statusOnIcon(icon) {
+        throw { name: "NotImplementedError" };
+    };
+
+    /**
+     * icon click
+     * icon 옆에 dropdown 메뉴를 띄움
+     * @ param icon
+     * @ return ReactComponent
+     * @ task 1
+     */        
+     dropmenuOnIcon(icon) {
+        throw { name: "NotImplementedError" };
+    };
+
+    /**
+     * icon dropmenu의 move to group space(user) click
+     * user나 group space로 이동
+     * @ param user(group)
+     * @ return
+     * @ task 1
+     */        
+     moveToUser(user) {
+        throw { name: "NotImplementedError" };
+    };
+
+    //////Menu Bar
+    ////Chat
+    /**
+     * Icon dropmenu의 chat 클릭
+     * chat 화면에 출력
+     * @ param user(혹은 group)
+     * @ return ReactComponent
+     * @ task 1
+     */        
+    chat(user) {
+        throw { name: "NotImplementedError" };
+    };
+    
+    writeMsg(string) {
+        throw { name: "NotImplementedError" };
+    };
+    sendMsg(string) {
+        throw { name: "NotImplementedError" };
+    };
+    receiveMsg(string) {
+        throw { name: "NotImplementedError" };
+    };
+
+    ////Checklist
+    /**
+     * menu bar의 checklist icon click
+     * checklist 화면에 출력
+     * @ param
+     * @ return ReactComponent
+     * @ task 2
+     */        
+     checklist() {
+        throw { name: "NotImplementedError" };
+    };
+
+    /**
+     * checklist tab 전환
+     * @ param
+     * @ return
+     * @ task 2
+     */        
+     switchTab() {
+        throw { name: "NotImplementedError" };
+    };
+
+    /**
+     * checklist todo CRUD
+     * @ param string, (todo component)
+     * @ return
+     * @ task 2
+     */        
+    createTodo(string) {
+        throw { name: "NotImplementedError" };
+    };
+    updateTodo(todo, string) {
+        throw { name: "NotImplementedError" };
+    };
+    deleteTodo(todo) {
+        throw { name: "NotImplementedError" };
+    };
+    checkTodo(todo) {
+        throw { name: "NotImplementedError" };
+    };
+    
 }
