@@ -1,0 +1,144 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Styles from React-Redux-Phaser-Tutorial */
+
+body {
+  margin: 0;
+  /* background: rgb(42, 40, 92); */
+  /* background: linear-gradient(
+    180deg,
+    rgba(42, 40, 92, 1) 35%,
+    rgba(80, 107, 137, 1) 100%
+  ); */
+  font-family: 'Source Code Pro', monospace;
+  color: #ced4d6;
+}
+p {
+  margin: 0;
+  color: white;
+}
+
+.content {
+  padding: 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: stretch;
+}
+
+h2 {
+  margin: 5px;
+  font-size: 20px;
+  color: #f6d304;
+  font-family: 'Merriweather', serif;
+}
+
+button {
+  border: none;
+  font-family: 'Source Code Pro', monospace;
+  margin: 10px 0px 10px 0px;
+}
+
+input {
+  background-color: #ced4d6;
+  font-family: 'Source Code Pro', monospace;
+}
+.top-players {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.top-scores {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.your-score {
+  display: flex;
+  flex-direction: column;
+  margin: 0px 0px 0px 0px;
+}
+
+.your-score h3 {
+  font-size: 50px;
+  margin: 20px;
+}
+
+.score-box {
+  width: 800px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  margin: 0px 20px 0px 20px;
+  justify-content: space-between;
+}
+
+.leaderboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.top-player {
+  margin: 0px;
+  font-size: 20px;
+}
+
+.top-score {
+  margin: 0px;
+  font-size: 20px;
+}
+
+.players-and-scores {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 300px;
+}
+
+.score-form {
+  display: flex;
+  flex-direction: column;
+}
+
