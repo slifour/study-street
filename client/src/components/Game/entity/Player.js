@@ -8,42 +8,40 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.scene.physics.world.enable(this);
   }
 
+  updateAnimation(state){
+    this.play(state, true);    
+  }
+
   updateMovement(cursors) {
+    let state = ''
+
+    // Stop
+    this.setVelocity(0);
     // Move left
     if (cursors.left.isDown) {
       this.setVelocityX(-360);
-      if (this.body.touching.down) {
-        this.play('left', true);
-      }
-    }
+      state = 'left'
+    } 
     // Move right
     else if (cursors.right.isDown) {
       this.setVelocityX(360);
-      if (this.body.touching.down) {
-        this.play('right', true);
-      }
+      state = 'right'
     }
-    // Neutral (no movement)
-    else {
-      this.setVelocityX(0);
-      this.play('turn', true);
+    // Move up
+    if (cursors.up.isDown) {
+      this.setVelocityY(-360);
+      state = 'up'
     }
+    // Move down
+    else if (cursors.down.isDown) {
+      this.setVelocityY(360);
+      state = 'down'
+    }
+
+    this.updateAnimation(state)
   }
 
-  updateJump(cursors, jumpSound) {
-    if (cursors.up.isDown && this.body.touching.down) {
-      this.setVelocityY(-800);
-      jumpSound.play();
-      if (cursors.right.isDown) {
-        this.play('rightJump', true);
-      } else if (cursors.left.isDown) {
-        this.play('leftJump', true);
-      }
-    }
-  }
-
-  update(cursors, jumpSound) {
+  update(cursors) {
     this.updateMovement(cursors);
-    this.updateJump(cursors, jumpSound);
   }
 }
