@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import socketIOClient from "socket.io-client";
-import socket from './socketConfig';
+
+const ENDPOINT = "http://localhost:4001";
 
 function ClientComponent() {
   const [response, setResponse] = useState("");
 
   useEffect(() => {
+    const socket = socketIOClient(ENDPOINT);
     socket.on("FromAPI", data => {
       setResponse(data);
     })
@@ -20,9 +22,3 @@ function ClientComponent() {
 }
 
 export default ClientComponent;
-
-/**
- * One socket connection per one client
- * one socket should be shared by phaser scenes
- * Some components should share  
- */
