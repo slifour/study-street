@@ -5,6 +5,7 @@ import React from 'react';
 // Import your Scenes
 import MainScene from './scenes/MainScene';
 import OpeningScene from './scenes/OpeningScene';
+import { LibraryScene } from './scenes/LibraryScene';
 
 export default class Game extends React.Component {
   componentDidMount() {
@@ -15,17 +16,18 @@ export default class Game extends React.Component {
       physics: {
         default: 'arcade',
         arcade: {
-          gravity: { y: 1500 },
-          debug: false,
+          gravity: { y: 0 },
+          debug: true, // set to true to view zones
         },
       },
       scale: {
         parent: 'game-container',
         autoCenter: Phaser.Scale.CENTER_HORIZONTALLY,
       },
-      scene: [MainScene, OpeningScene],
+      scene: [LibraryScene],
     };
-    new Phaser.Game(config);
+    const game = new Phaser.Game(config);
+    game.registry.set('socket', )
   }
   shouldComponentUpdate() {
     return false;

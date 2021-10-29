@@ -24,6 +24,16 @@ const getApiAndEmit = socket => {
 };
 
 let interval;
+/** 
+ * @type {Object.<string, {
+ *  flipX: boolean,
+ *  x: number,
+ *  y: number,
+ *  userId: string,
+ *  scene: string
+ * }>}
+ */
+const users = {};
 
 io.on("connection", (socket) => {
   console.log("New client connected");
@@ -34,9 +44,33 @@ io.on("connection", (socket) => {
   }
   interval = setInterval(() => getApiAndEmit(socket), 1000);
 
+  socket.broadcast.emit("newUser", {
+    x: 0,
+    y: 0,
+    userId: socket.id
+  })
+
+  users[socket.id] = {
+    flipX: false,
+    x: 0,
+    y: 0,
+    userId: socket.id,
+    scene: 'Library'
+  };
+
   socket.on("disconnect", () => {
     console.log("Client disconnected");
     clearInterval(interval);
+  });
+
+  socket.on('userMovement', function (movement) {
+    users[socket.id] = {
+      ...users[socket.id],
+      x: movement.x,
+      y: movement.y,
+      flipX: movement.flipX
+    };
+    socket.broadcast.emit("userMovementBroadcast", movement);
   });
 });
 
