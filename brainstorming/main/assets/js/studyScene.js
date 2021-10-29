@@ -73,8 +73,96 @@ class StudyScene extends Phaser.Scene {
     ######################################################################*/ 
 
     /**
+     * 체크리스트에서 status 등록
+     * @ call 체크리스트의 할 일을 클릭했을 때 (임시 - 추가 논의 예정)
+     * @ param 클릭한 할 일 목록
+     * @ return .  
+     * @ task 
+     */    
+    showStatus() {  
+        throw { name: "NotImplementedError" };      
+    }
+
+    /**
+     * 할 일 완료하기
+     * @ call 체크리스트의 체크박스를 클릭했을 때
+     * @ param 체크박스
+     * @ return .  
+     * @ task 
+     */    
+    clickCheckBox() {  
+        throw { name: "NotImplementedError" };      
+    }
+
+/**
+     * 다른 사람들의 활동 상태 확인하기
+     * @ call 그룹원 프로필 위에 hover할 때
+     * @ param 프로필, other의 정보
+     * @ return .  
+     * @ task 
+     */    
+ chcekOtherStatus() {  
+    throw { name: "NotImplementedError" };      
+}
+
+/**
+     * 타이머 작동
+     * @ call 타이머 시작 / 정지 / 리셋? -> api
+     * @ param
+     * @ return .  
+     * @ task 
+     */    
+ controlTimer() {  
+    throw { name: "NotImplementedError" };      
+}
+
+/**
+     * 포스트잇 알림 수신하기
+     * @ call 유저 액션 없음, 상단 배너 알림
+     * @ param 
+     * @ return .  
+     * @ task 
+     */    
+ receivePostIt() {  
+    throw { name: "NotImplementedError" };      
+}
+
+/**
+     * 포스트잇 내용 확인하기
+     * @ call 유저가 상단 배너 알림을 클릭했을 때
+     * @ param 포스트잇 알림
+     * @ return .  
+     * @ task 
+     */    
+ checkPostIt() {  
+    throw { name: "NotImplementedError" };      
+}
+
+/**
+     * 포스트잇에 답장하기
+     * @ call reply 버튼
+     * @ param 
+     * @ return .  
+     * @ task 
+     */    
+ replyPostIt() {  
+    throw { name: "NotImplementedError" };      
+}
+
+/**
+     * 포스트잇 전송 및 창 위로 보내기
+     * @ call send버튼
+     * @ param 체크박스
+     * @ return .  
+     * @ task 
+     */    
+ sendPostIt() {  
+    throw { name: "NotImplementedError" };      
+}
+
+    /**
      * 나가기 = Library Scene으로 이동
-     * @ call 
+     * @ call 나가기 버튼을 눌렀을 때
      * @ param 
      * @ return .  
      * @ task 
