@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import './App.css';
 import ClientComponent from "./components/ClientComponent";
-// import Leaderboard from "./components/Leaderboard";
+import MenuBar from "./components/ui/MenuBar";
 import Game from "./components/Game";
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
         {loadClient ? "STOP CLIENT" : "START CLIENT"}
       </button>
       {loadClient ? <ClientComponent></ClientComponent> : null}
-      {/* <Leaderboard /> */}
+      <MenuBar/>
     </div>
     <div className="game-container">
       <Game />
