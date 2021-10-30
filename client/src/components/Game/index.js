@@ -3,9 +3,6 @@ import Phaser from 'phaser';
 import React from 'react';
 
 // Import your Scenes
-import MainScene from './scenes/MainScene';
-import OpeningScene from './scenes/OpeningScene';
-import { LibraryScene } from './scenes/LibraryScene';
 import { HomeScene } from './scenes/HomeScene';
 
 export default class Game extends React.Component {
@@ -13,7 +10,7 @@ export default class Game extends React.Component {
     const config = {
       type: Phaser.AUTO,
       width: 800,
-      height: 300,
+      height: 600,
       physics: {
         default: 'arcade',
         arcade: {

@@ -88,6 +88,7 @@ io.on("connection", (socket) => {
     socket.emit("userProfile", userList[userID]);
   });
 
+  /* 아직 오류 있음 */
   socket.on("userParticipatedGroupRequest", userID => {
     let response = [];
     Object.entries(groupList).forEach(([key, value]) => {
