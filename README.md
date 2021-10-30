@@ -20,6 +20,12 @@
 
 ## Run
 
+- [Updated]
+    - At the root directory
+    - `cd server`
+    - `npm run dev`
+
+- [Outdated]
 - Server
     - At the root directory
     - `cd server`
@@ -28,6 +34,8 @@
     - At the root directory
     - `cd client`
     - `npm start`
+
+
 
 ## What the program do
 

@@ -3,8 +3,10 @@ import Phaser from 'phaser';
 import React from 'react';
 
 // Import your Scenes
-import MainScene from './scenes/MainScene';
+import MainScene from './scenes/MapScene';
 import OpeningScene from './scenes/OpeningScene';
+import FirstScene from './scenes/Workspace/FirstScene';
+import SecondScene from './scenes/Workspace/SecondScene';
 
 export default class Game extends React.Component {
   componentDidMount() {

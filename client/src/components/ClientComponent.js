@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import socketIOClient from "socket.io-client";
-import socket from './socketConfig';
+import network from './network';
 
 function ClientComponent() {
   const [response, setResponse] = useState("");
 
   useEffect(() => {
+    const socket = network.socket
     socket.on("FromAPI", data => {
       setResponse(data);
     })

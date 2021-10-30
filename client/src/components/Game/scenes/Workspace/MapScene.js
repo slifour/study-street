@@ -84,27 +84,12 @@ export default class MainScene extends Phaser.Scene {
   }
 
   //CREATE
-  create() {
-    this.friends =this.add.group();
-    this.friendDict = {}
-    console.log(this.friends)
-    
+  createWorld(){
     //set up world bounds
     this.physics.world.setBounds(0, 0, 800, 600);
 
     //background
     this.add.image(-160, 0, 'woods').setOrigin(0).setScale(0.5);
-
-    //player
-    this.player = new Player(this, 20, 400, 'newt').setScale(0.5);
-
-    this.player.setBounce(0.2);
-    this.player.setCollideWorldBounds(true);
-
-    this.createAnimations();    
-
-    //cursors
-    this.cursors = this.input.keyboard.createCursorKeys();
 
     //platforms
     this.groundGroup = this.physics.add.staticGroup({ classType: Ground });
@@ -117,15 +102,43 @@ export default class MainScene extends Phaser.Scene {
     //floor
     this.groundGroup.create(160, 620, 'mainGround');
 
-    //Socket Event Handlers
-    this.setEventHandlers();
+  }
 
+  createPlayer(){
+    //player
+    this.player = new Player(this, 20, 400, 'newt').setScale(0.5);
+
+    this.player.setBounce(0.2);
+    this.player.setCollideWorldBounds(true);
+
+    this.createAnimations();    
+
+    //cursors
+    this.cursors = this.input.keyboard.createCursorKeys();
+  }
+
+  createFriend(){
+    this.friends =this.add.group();
+    this.friendDict = {}
+    console.log(this.friends)  
+  }
+  createColliders(){
     //colliders
     this.physics.add.collider(this.player, this.groundGroup);
     this.physics.add.collider(this.friends, this.groundGroup);
+  }
 
-    this.scene.launch('OpeningScene');
-    this.scene.pause('FirstScene');
+  createHelper() {
+    this.createWorld()
+    this.createPlayer()
+    this.createFriend()
+    //Socket Event Handlers
+    this.setEventHandlers();
+    this.createColliders()
+  }
+
+  create() {
+    this.createHelper()
   }
 
   update() {

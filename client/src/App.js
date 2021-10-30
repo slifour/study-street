@@ -6,6 +6,7 @@ import ClientComponent from "./components/ClientComponent";
 import Game from "./components/Game";
 
 function App() {
+  
   const [loadClient, setLoadClient] = useState(true);
 
   return (

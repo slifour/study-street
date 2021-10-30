@@ -9,6 +9,7 @@ function ClientComponent() {
   useEffect(() => {
     const socket = socketIOClient(ENDPOINT);
     socket.on("FromAPI", data => {
+      console.log("FromAPI")
       setResponse(data);
     })
     return () => socket.disconnect();

@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import network from '../../network';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, spriteKey) {
@@ -6,6 +7,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.scene = scene;
     this.scene.add.existing(this);
     this.scene.physics.world.enable(this);
+    this.stop = true
+    this.socket = network.socket
+    network.initialize({name : 'Player', group : 1, position : {x : this.x, y : this.y}})
   }
 
   updateAnimation(state){
@@ -38,10 +42,21 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       state = 'down'
     }
 
-    this.updateAnimation(state)
+    if (state !== ''){
+      this.stop = true
+    }
+    else{
+      this.stop = false
+    }
+
+    // this.updateAnimation(state)
   }
 
   update(cursors) {
     this.updateMovement(cursors);
+    let positionData = {x : this.x, y : this.y}
+    if (!this.stop){
+      network.sendPosition(positionData)
+    }
   }
 }

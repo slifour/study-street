@@ -65,8 +65,9 @@ export default class OpeningScene extends Phaser.Scene {
     this.startButton.on(
       'pointerdown',
       () => {
-        this.scene.resume('MainScene');
-        this.scene.stop('OpeningScene');
+        //this.scene.resume('MainScene');
+        this.scene.resume('FirstScene');
+        this.scene.pause('OpeningScene');
       },
       this
     );
