@@ -17,6 +17,8 @@ const io = socketIo(server, {
   }
 }); // < Interesting!
 
+let { userList, groupList } = require("./database");
+
 const getApiAndEmit = socket => {
   const response = new Date();
   // Emitting a new message. Will be consumed by the client
@@ -71,6 +73,29 @@ io.on("connection", (socket) => {
       flipX: movement.flipX
     };
     socket.broadcast.emit("userMovementBroadcast", movement);
+  });
+
+  /* Home scene */
+  socket.on("userLoginRequest", userID => {
+    if (!userList[userID]) {
+      socket.emit("userLoginFail");
+    } else {
+      socket.emit("userLoginOK", userID);
+    }
+  });
+
+  socket.on("userProfileRequest", userID => {
+    socket.emit("userProfile", userList[userID]);
+  });
+
+  socket.on("userParticipatedGroupRequest", userID => {
+    let response = [];
+    Object.entries(groupList).forEach(([key, value]) => {
+      if (value.member[userID] !== undefined) {
+        response.append(value);
+      }
+    });
+    socket.emit("userParticipatedGroup", response);
   });
 });
 

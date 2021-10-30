@@ -1,16 +1,13 @@
 import Phaser from 'phaser';
 // import socketIOClient from "socket.io-client";
 // const ENDPOINT = "http://localhost:4001";
-import { socket } from '../../../socket';
 
-export class LibraryScene extends Phaser.Scene {
+export class HomeScene extends Phaser.Scene {
     constructor() {
-        super('LibraryScene');
+      super('HomeScene');
     }
-
     init() {
-        this.socket = socket;
-        console.log('Welcome to LibraryScene');
+        console.log('Welcome to Home');
     };
 
     preload() {
@@ -26,7 +23,6 @@ export class LibraryScene extends Phaser.Scene {
             frameWidth: 32,
             frameHeight: 32
         });
-
     }
 
     /*
@@ -55,28 +51,6 @@ export class LibraryScene extends Phaser.Scene {
             x: 0,
             y: 0
         });
-
-        this.socket.on('newUser', function (userInfo) {
-            console.log('new user:', userInfo.userId);
-            this.addOtherUsers(userInfo);
-        }.bind(this));
-
-        this.socket.on('disconnect', function (userId) {
-            this.otherUsers.getChildren().forEach(function (user) {
-                if (userId === user.userId) {
-                    user.destroy();
-                }
-            }.bind(this));
-        }.bind(this));
-
-        this.socket.on('userMovementBroadcast', function (userInfo) {
-            this.otherUsers.getChildren().forEach(function (user) {
-                if (userInfo.userId === user.userId) {
-                    user.flipX = userInfo.flipX;
-                    user.setPosition(userInfo.x, userInfo.y);
-                }
-            }.bind(this));
-        }.bind(this));
     }
 
     createMap() {
@@ -194,54 +168,9 @@ export class LibraryScene extends Phaser.Scene {
         }
     }
 
-    emitMovement() {
-        // /**
-        //  * @typedef {Object} movement
-        //  * @property {number} x
-        //  * @property {number} y
-        //  * @property {Object} oldPosition
-        //  * @property {number} oldPosition.x
-        //  * @property {number} oldPosition.y
-        //  * @property {boolean} oldPosition.flipX
-        //  */
-        // /**
-        //  * @param {movement} movement
-        //  */
-        // emit user movement
-        var x = this.container.x;
-        var y = this.container.y;
-        var flipX = this.user.flipX;
-        if (this.container.oldPosition && (x !== this.container.oldPosition.x || y !== this.container.oldPosition.y || flipX !== this.container.oldPosition.flipX)) {
-            this.socket.emit('userMovement', { x, y, flipX });
-        }
-        // save old position data
-        this.container.oldPosition = {
-            x: this.container.x,
-            y: this.container.y,
-            flipX: this.user.flipX
-        };
-    }
-
     update() {
-        if (this.container) {
-            this.updateMovement()
-            this.emitMovement();
-        }
-
-        /*
-        if (this.player?.scene !== undefined) {
-            
-            //all scene update code here
-            // update : user movement 
-            // condition : cursor(arrow key) pressed
-            if (this.container) {
-                this.updateMovement()
-                this.emitMovement();
-            }
-        }
-        */
+        this.updateMovement()
     }
-
 }
 
 // module.exports = {
