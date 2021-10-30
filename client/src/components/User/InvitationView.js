@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { socket } from "../socket";
+import { socket } from "../../socket";
 
-const ENDPOINT = "http://localhost:4001";
-
-function ClientComponent() {
+function InvitationView() {
   const [response, setResponse] = useState("");
 
   useEffect(() => {
@@ -21,4 +19,4 @@ function ClientComponent() {
   );
 }
 
-export default ClientComponent;
+export default InvitationView;
