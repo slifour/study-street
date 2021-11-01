@@ -3,11 +3,8 @@ import Phaser from 'phaser';
 import React from 'react';
 
 // Import your Scenes
-import MainScene from './scenes/MapScene';
-import OpeningScene from './scenes/OpeningScene';
 import FirstScene from './scenes/FirstScene';
 import SecondScene from './scenes/SecondScene';
-import LoadScene from './scenes/LoadScene';
 
 export default class Game extends React.Component {
   componentDidMount() {
@@ -18,7 +15,6 @@ export default class Game extends React.Component {
       physics: {
         default: 'arcade',
         arcade: {
-          gravity: { y: 1500 },
           debug: false,
         },
       },
