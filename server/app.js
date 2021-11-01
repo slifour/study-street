@@ -18,7 +18,7 @@ const origin = "http://localhost:3000"
 
 
 const SocketIOServer = require("./socketIOServer.js");
-const socketIOServer = new SocketIOServer()
+const socketIOServer = SocketIOServer()
 socketIOServer.init(server, origin)
 
 server.listen(port, () => console.log(`Listening on port ${port}`));

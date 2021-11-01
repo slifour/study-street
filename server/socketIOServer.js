@@ -2,92 +2,92 @@
  * class socketIOServer
  * 
  * @ Reference
+ * factory function : https://www.geeksforgeeks.org/what-are-factory-functions-in-javascript/
+ * factory function vs class : https://urbanbase.github.io/dev/2021/03/28/ECMAScript6.html
  */
 
 const socketIo = require("socket.io");
 
-class SocketIOServer {
-    /** Constructor */  
-  constructor() {
-    this.stateChanged = false; // flag whether state is changed : for transmission efficientcy
-    this.isEmittingUpdates = false; // flag whether server is emitting updates : to prevent redundant emission and coliision
-    this.stateUpdateInterval = 300; // interval to update player states
-    this.logInterval = 5000; // interval to stamp logs
-    this.players = {}; // players data structure
-    this.socket // server socket
-    this.id // socket id
-    this.scenes = {'FirstScene' : 1, 'SecondScene' : 2} // scenes
-  }
+const SocketIOServer = () => {
+  /** Variables */
+  let stateChanged = false // flag whether state is changed = for transmission efficientcy
+  let isEmittingUpdates = false // flag whether server is emitting updates = to prevent redundant emission and coliision
+  let stateUpdateInterval = 300 // interval to update player states
+  let logInterval = 5000 // interval to stamp logs
+  let players = {} // players data structure
+  let socket // server socket
+  let id // socket id
+  let scenes = {'FirstScene' : 1, 'SecondScene' : 2} // scenes
+  let io
 
-  /** Methods */
   /** Initialize */  
-  init(server, origin) {
-    this.io = socketIo(server, {
+  let init = (server, origin) => {
+    io = socketIo(server, {
       cors: {
         origin: origin,
         methods: ["GET", "POST"]
       }
     }); // < Interesting!
 
-    this.io.on("connection", (socket) => {
+    io.on("connection", (socketConnected) => {
       console.log("New client connected");
-      this.socket = socket 
-      this.id = socket.id
-      this.socket.emit("id", this.id);
-      this.setEventHandlers()      
-      this.logPlayers()
-    })
+      socket = socketConnected 
+      id = socket.id
+      socket.emit("id", id);
+      setEventHandlers()      
+      logPlayers()
+    });
   }
 
   /** Event Handlers */
-  setEventHandlers(){
-    /** this.socket.on('event', eventHandler) */
-    this.socket.on("disconnect", this.onDisconnect.bind(this))
-    this.socket.on("positionUpdate", this.onPositionUpdate.bind(this))  
-    this.socket.on("sceneUpdate", this.onSceneUpdate.bind(this))  
-    this.socket.on("initialize", this.onInitialize.bind(this))  
+  let setEventHandlers = () => {
+    /** socket.on('event', eventHandler) */
+    socket.on("disconnect", onDisconnect)
+    socket.on("positionUpdate", onPositionUpdate)  
+    socket.on("sceneUpdate", onSceneUpdate)  
+    socket.on("initialize", onInitialize)  
   }
   
-  onDisconnect(){
+  let onDisconnect = () => {
     console.log("Client disconnected");    
     // Remove player from state on disconnect
-    this.stateChanged = true;
-    delete this.players[this.id];
-  };
+    stateChanged = true;
+    delete players[id];
+  }
   
-  onPositionUpdate(positionData) {
-    if (!Object.keys(this.players).includes(this.id)){
+  let onPositionUpdate = (positionData) => {
+    if (!Object.keys(players).includes(id)){
       return
     }
-    this.stateChanged = true;
-    let player = this.players[this.id];
+    stateChanged = true;
+    let player = players[id];
     player.position = positionData;
-  };
+  }
   
-  onSceneUpdate(scene) {
+  let onSceneUpdate = (scene) => {
     console.log('Client moved to {} scene'.format(scene))
-    this.stateChanged = true;
-    let player = this.players[this.id];
-    player.scene = this.scenes[newScene]
-    this.socket.join(newScene);    
-    this.socket.leave(prevScene);
-  };
+    stateChanged = true;
+    let player = players[id];
+    player.scene = scenes[newScene]
+    socket.join(newScene);    
+    socket.leave(prevScene);
+  }
   
-  onInitialize(data) {
+  let onInitialize = (data) => {
     console.log("New player initialized");
-    this.stateChanged = true;    
+    stateChanged = true;    
   
     // Create a new player object
-    let newPlayer = this.createPlayer(this.id, data.name, data.group, data.position, scene);
+    let newPlayer = createPlayer(id, data.name, data.group, data.position, data.scene);
 
     // Add the newly created player to game state.
-    this.players[this.id] = newPlayer;
+    players[id] = newPlayer;
   
-    this.socket.broadcast.emit("initialize", this.id, data.name, data.group, data.position)
+    socket.broadcast.emit("initialize", id, data.name, data.group, data.position)
   
     //On first player joined, start update emit loop
-    if (this.numPlayers() === 1 && !this.isEmittingUpdates) {
-      this.emitStateUpdateLoop('room');
+    if (numPlayers() === 1 && !isEmittingUpdates) {
+      emitStateUpdateLoop('room');
     }
   }
 
@@ -97,28 +97,28 @@ class SocketIOServer {
    * Loop that emits real-time data 
    * - positions {id : {x:x, y:y}}
   */
-  emitStateUpdateLoop(room) {
-    this.isEmittingUpdates = true;
+  let emitStateUpdateLoop = (room) => {
+    isEmittingUpdates = true;
     // Reduce usage by only send state update if state has changed
-    if (this.stateChanged) {
-      this.stateChanged = false;
-      this.io.emit("stateUpdate", this.players);
+    if (stateChanged) {
+      stateChanged = false;
+      io.emit("stateUpdate", players);
       console.log("stateUpdate")
     }
 
-    if (this.numPlayers() > 0) {
-      setTimeout(this.emitStateUpdateLoop.bind(this), this.stateUpdateInterval);
+    if (numPlayers() > 0) {
+      setTimeout(emitStateUpdateLoop.bind(this), stateUpdateInterval);
     } else {
       // Stop the setTimeout loop if there are no players left
-      this.isEmittingUpdates = false;
+      isEmittingUpdates = false;
     }
-  }  
+  }
 
-  numPlayers() {
-    return Object.keys(this.players).length;
+  let numPlayers = () =>  {
+    return Object.keys(players).length;
   }
   
-  createPlayer(id, name, group, position){
+  let createPlayer = (id, name, group, position) => {
     return({id,
       name,
       group,
@@ -127,9 +127,24 @@ class SocketIOServer {
   }
 
   /** log */  
-  logPlayers() {
-    console.log(this.players);
-    setTimeout(this.logPlayers.bind(this), this.logInterval);
+  let logPlayers = () =>  {
+    console.log(players);
+    setTimeout(logPlayers.bind(this), logInterval);
+  }   
+
+  return {
+    /** Variables */
+    stateChanged : false, // flag whether state is changed : for transmission efficientcy
+    isEmittingUpdates : false, // flag whether server is emitting updates : to prevent redundant emission and coliision
+    stateUpdateInterval : 300, // interval to update player states
+    logInterval : 5000, // interval to stamp logs
+    players : {}, // players data structure
+    socket, // server socket
+    id, // socket id
+    scenes : {'FirstScene' : 1, 'SecondScene' : 2}, // scenes
+
+    /** Methods */
+    init 
   }
 }
 
