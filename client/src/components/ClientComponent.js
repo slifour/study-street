@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import network from './socketConfig';
+import socket from './socketConfig';
 
 function ClientComponent() {
   const [response, setResponse] = useState("");
 
   useEffect(() => {
-    const socket = network.socket
-    socket.on("FromAPI", data => {
+    const socketConnected = socket
+    socketConnected.on("FromAPI", data => {
       setResponse(data);
     })
-    return () => socket.disconnect();
+    return () => socketConnected.disconnect();
   }, []);
 
   return (
