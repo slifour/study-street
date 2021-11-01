@@ -6,13 +6,12 @@
  * Phaser Scene class inheritance : https://youtu.be/1P8jvnj85e4
  * 
  */
-
 import Phaser from 'phaser';
 import Player from '../entity/Player';
 import Friend from '../entity/Friend';
 import Ground from '../entity/Ground';
 // import store, { UPDATE_SCORE } from '../../../store';
-import socket from '../../socketConfig';
+import socket from '../../../socket';
 
 export default class MapScene extends Phaser.Scene {
   constructor(key) {
@@ -138,16 +137,15 @@ export default class MapScene extends Phaser.Scene {
   }
 
   createHelper() {
-    this.createWorld()
-    this.createPlayer()
-    this.createFriend()
-    //Socket Event Handlers
-    this.setEventHandlers();
-    this.createColliders()
+    this.createWorld();
+    this.createPlayer();
+    this.createFriend();
+    this.setEventHandlers();     //Socket Event Handlers
+    this.createColliders();
   }
 
   create() {
-    this.createHelper()
+    this.createHelper();
   }
 
   update() {

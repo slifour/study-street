@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import socket from '../../socketConfig';
+import socket from '../../../socket';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, spriteKey) {
