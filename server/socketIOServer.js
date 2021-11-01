@@ -29,6 +29,7 @@ const SocketIOServer = () => {
   let id // socket id
   let scenes = {'FirstScene' : 1, 'SecondScene' : 2} // scenes
   let io
+  let { userList, groupList } = require("./database");
 
   /** Methods */
   /** Initialize */  
