@@ -12,10 +12,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.initialize({name : 'Player', group : 1, position : {x : this.x, y : this.y}})
   }
 
-
   /** Socket emit methods */
 
-  // playerData : { name : name(str), group : group(int), position : {x: x. y:y} }
   /** initialize : tell server to create this player */
   initialize(playerData) {    
     this.socket.emit('initialize', playerData);
