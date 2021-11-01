@@ -7,7 +7,7 @@
  * 
  */
 import Phaser from 'phaser';
-import Player from '../entity/Player';
+import User from '../entity/User';
 import Friend from '../entity/Friend';
 import Ground from '../entity/Ground';
 // import store, { UPDATE_SCORE } from '../../../store';
@@ -71,20 +71,20 @@ export default class MapScene extends Phaser.Scene {
     // Description
     // socket.on('event', eventHandler)
   
-    // New player message received
+    // New user message received
     this.socket.on('stateUpdate', this.onStateUpdate.bind(this));
   }
 
-  onStateUpdate(players){
+  onStateUpdate(users){
     if(this.friends === undefined) {return}
-    Object.keys(players).forEach(function(id){
+    Object.keys(users).forEach(function(id){
       if (id === this.socket.id){ return}
-      let player = players[id]
+      let user = users[id]
       if (Object.keys(this.friendDict).includes(id)){
-        this.friendDict[id].setPosition(player.position.x, player.position.y)
+        this.friendDict[id].setPosition(user.position.x, user.position.y)
       } 
       else{        
-        let friend = new Friend(this, player.position.x, player.position.y, 'newt', id).setScale(0.5)
+        let friend = new Friend(this, user.position.x, user.position.y, 'newt', id).setScale(0.5)
         this.friends.add(friend)
         this.friendDict[id] = friend
       }    
@@ -112,12 +112,12 @@ export default class MapScene extends Phaser.Scene {
 
   }
 
-  createPlayer(){
-    //player
-    this.player = new Player(this, 20, 400, 'newt').setScale(0.5);
+  createUser(){
+    //user
+    this.user = new User(this, 20, 400, 'newt').setScale(0.5);
 
-    this.player.setBounce(0.2);
-    this.player.setCollideWorldBounds(true);
+    this.user.setBounce(0.2);
+    this.user.setCollideWorldBounds(true);
 
     this.createAnimations();    
 
@@ -132,13 +132,13 @@ export default class MapScene extends Phaser.Scene {
   }
   createColliders(){
     //colliders
-    this.physics.add.collider(this.player, this.groundGroup);
+    this.physics.add.collider(this.user, this.groundGroup);
     this.physics.add.collider(this.friends, this.groundGroup);
   }
 
   createHelper() {
     this.createWorld();
-    this.createPlayer();
+    this.createUser();
     this.createFriend();
     this.setEventHandlers();     //Socket Event Handlers
     this.createColliders();
@@ -149,6 +149,6 @@ export default class MapScene extends Phaser.Scene {
   }
 
   update() {
-    this.player.update(this.cursors);
+    this.user.update(this.cursors);
   }
 }

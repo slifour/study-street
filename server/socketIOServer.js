@@ -1,5 +1,7 @@
 /**
- * class socketIOServer
+ * factory function socketIOServer() =>{}
+ * server 에서 socket 통신 관련 코드를 작성하면 됩니다.
+ * app.js 에서 분리하면 관리하기 편할 것 같다고 생각했는데 별 차이는 없다는 생각이 드네요ㅜㅠ
  * 
  * @ Reference
  * factory function : https://www.geeksforgeeks.org/what-are-factory-functions-in-javascript/
@@ -9,6 +11,19 @@
 const socketIo = require("socket.io");
 
 const SocketIOServer = () => {
+  /**
+   * @example 
+   * let <variableName>;
+   * let <functionName> = (<argument>) => {
+   *    <functionBody>
+   * }
+   * 
+   * return {
+   *    <variable to excess from outside>,
+   *    <function to excess from outside>
+   * }
+   */
+
   /** Variables */
   /** 
    * @type {Object.<string, {

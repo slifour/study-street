@@ -16,16 +16,11 @@ app.use(index);
 const server = http.createServer(app);
 const origin = "http://localhost:3000"
 
-
-let { userList, groupList } = require("./database");
-
 const getApiAndEmit = socket => {
   const response = new Date();
   // Emitting a new message. Will be consumed by the client
   socket.emit("FromAPI", response);
 };
-
-let interval;
 
 const SocketIOServer = require("./socketIOServer.js");
 const socketIOServer = SocketIOServer()
