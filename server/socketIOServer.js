@@ -9,15 +9,14 @@ const socketIo = require("socket.io");
 class SocketIOServer {
     /** Constructor */  
   constructor() {
-    this.stateChanged = false;
-    this.isEmittingUpdates = false;
-    this.stateUpdateInterval = 300;
-    this.logInterval = 5000;
-    // Player state of connected players, name, groups and locations
-    this.players = {};
-    this.socket
-    this.id
-    this.scenes = {'FirstScene' : 1, 'SecondScene' : 2}
+    this.stateChanged = false; // flag whether state is changed : for transmission efficientcy
+    this.isEmittingUpdates = false; // flag whether server is emitting updates : to prevent redundant emission and coliision
+    this.stateUpdateInterval = 300; // interval to update player states
+    this.logInterval = 5000; // interval to stamp logs
+    this.players = {}; // players data structure
+    this.socket // server socket
+    this.id // socket id
+    this.scenes = {'FirstScene' : 1, 'SecondScene' : 2} // scenes
   }
 
   /** Methods */
