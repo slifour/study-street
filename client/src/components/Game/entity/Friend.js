@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-import network from '../../network';
 
 export default class Friend extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, spriteKey, id) {

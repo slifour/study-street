@@ -9,7 +9,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.scene.physics.world.enable(this);
     this.stop = true
     this.socket = socket
-    this.initialize({name : 'Player', group : 1, position : {x : this.x, y : this.y}})
+    this.initialize({name : 'Player', group : 1, position : {x : this.x, y : this.y}}, this.scene)
   }
 
   /** Socket emit methods */
@@ -23,7 +23,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
   sendPosition(positionData) {
     this.socket.emit('positionUpdate', positionData);
   };
-
 
   /** Update methods */
   updateAnimation(state){
@@ -56,7 +55,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       state = 'down'
     }
 
-    if (state !== ''){
+    if (state == ''){
       this.stop = true
     }
     else{
