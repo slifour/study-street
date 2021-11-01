@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import socket from "../socket";
+import socket from "../../socket";
 
-const ENDPOINT = "http://localhost:4001";
-
-function ClientComponent() {
+function InvitationView() {
   const [response, setResponse] = useState("");
 
   useEffect(() => {
@@ -21,10 +19,4 @@ function ClientComponent() {
   );
 }
 
-export default ClientComponent;
-
-/**
- * One socket connection per one client
- * one socket should be shared by phaser scenes
- * Some components should share  
- */
+export default InvitationView;

@@ -3,8 +3,9 @@ import Phaser from 'phaser';
 import React from 'react';
 
 // Import your Scenes
-import MainScene from './scenes/MainScene';
-import OpeningScene from './scenes/OpeningScene';
+import { HomeScene } from './scenes/HomeScene';
+import FirstScene from './scenes/FirstScene';
+import SecondScene from './scenes/SecondScene';
 
 export default class Game extends React.Component {
   componentDidMount() {
@@ -15,7 +16,6 @@ export default class Game extends React.Component {
       physics: {
         default: 'arcade',
         arcade: {
-          gravity: { y: 1500 },
           debug: false,
         },
       },
@@ -23,9 +23,10 @@ export default class Game extends React.Component {
         parent: 'game-container',
         autoCenter: Phaser.Scale.CENTER_HORIZONTALLY,
       },
-      scene: [MainScene, OpeningScene],
+      scene: [HomeScene, FirstScene, SecondScene],
     };
-    new Phaser.Game(config);
+    const game = new Phaser.Game(config);
+    game.registry.set('socket', )
   }
   shouldComponentUpdate() {
     return false;

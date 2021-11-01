@@ -1,6 +1,11 @@
+/**
+ * app.js
+ * 
+ * @ Reference
+ *  Socket Room : https://socket.io/docs/v3/rooms/
+ */
 const express = require("express");
 const http = require("http");
-const socketIo = require("socket.io");
 
 const port = process.env.PORT || 4001;
 const index = require("./routes/index");
@@ -9,13 +14,10 @@ const app = express();
 app.use(index);
 
 const server = http.createServer(app);
+const origin = "http://localhost:3000"
 
-const io = socketIo(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"]
-  }
-}); // < Interesting!
+
+let { userList, groupList } = require("./database");
 
 const getApiAndEmit = socket => {
   const response = new Date();
@@ -25,19 +27,8 @@ const getApiAndEmit = socket => {
 
 let interval;
 
-io.on("connection", (socket) => {
-  console.log("New client connected");
-
-  /* 1초에 한번씩 소켓에 데이터를 emit하기 */
-  if (interval) {
-    clearInterval(interval);
-  }
-  interval = setInterval(() => getApiAndEmit(socket), 1000);
-
-  socket.on("disconnect", () => {
-    console.log("Client disconnected");
-    clearInterval(interval);
-  });
-});
+const SocketIOServer = require("./socketIOServer.js");
+const socketIOServer = SocketIOServer()
+socketIOServer.init(server, origin)
 
 server.listen(port, () => console.log(`Listening on port ${port}`));

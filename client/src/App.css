@@ -2,7 +2,7 @@
 /* Styles from React-Redux-Phaser-Tutorial */
 
 body {
-  margin: 0;
+  /* margin: 0; */
   /* background: rgb(42, 40, 92); */
   /* background: linear-gradient(
     180deg,
@@ -10,19 +10,19 @@ body {
     rgba(80, 107, 137, 1) 100%
   ); */
   font-family: 'Source Code Pro', monospace;
-  color: #ced4d6;
+  /* color: #ced4d6; */
 }
 p {
-  margin: 0;
-  color: white;
+  /* margin: 0; */
+  /* color: white; */
 }
 
 .content {
-  padding: 0px;
+  padding: 10px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  align-items: stretch;
+  /* align-items: stretch; */
 }
 
 button {
