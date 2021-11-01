@@ -3,7 +3,7 @@ import Player from '../entity/Player';
 import Friend from '../entity/Friend';
 import Ground from '../entity/Ground';
 // import store, { UPDATE_SCORE } from '../../../store';
-import network from '../../network';
+import network from '../../socketConfig';
 
 export default class MainScene extends Phaser.Scene {
   constructor() {

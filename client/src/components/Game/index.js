@@ -5,8 +5,9 @@ import React from 'react';
 // Import your Scenes
 import MainScene from './scenes/MapScene';
 import OpeningScene from './scenes/OpeningScene';
-import FirstScene from './scenes/Workspace/FirstScene';
-import SecondScene from './scenes/Workspace/SecondScene';
+import FirstScene from './scenes/FirstScene';
+import SecondScene from './scenes/SecondScene';
+import LoadScene from './scenes/LoadScene';
 
 export default class Game extends React.Component {
   componentDidMount() {
@@ -25,7 +26,7 @@ export default class Game extends React.Component {
         parent: 'game-container',
         autoCenter: Phaser.Scale.CENTER_HORIZONTALLY,
       },
-      scene: [MainScene, OpeningScene],
+      scene: [FirstScene, SecondScene],
     };
     new Phaser.Game(config);
   }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import network from './network';
+import network from './socketConfig';
 
 function ClientComponent() {
   const [response, setResponse] = useState("");

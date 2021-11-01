@@ -21,6 +21,7 @@
 ## Run
 
 - [Updated]
+- Concurrently
     - At the root directory
     - `cd server`
     - `npm run dev`

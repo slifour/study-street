@@ -1,13 +1,15 @@
 import Phaser from 'phaser';
 
-export default class OpeningScene extends Phaser.Scene {
+export default class LoadScene extends Phaser.Scene {
   constructor() {
-    super('OpeningScene');
+    super('LoadScene');
   }
 
   preload() {}
 
   create() {
+    console.log("LoadScene started")
+    this.scene.pause('LoadScene');
     //Popup box
     this.popup = this.add.graphics();
     this.popup.lineStyle(1, 0x2a275c);
@@ -66,8 +68,7 @@ export default class OpeningScene extends Phaser.Scene {
       'pointerdown',
       () => {
         //this.scene.resume('MainScene');
-        this.scene.launch('SecondScene');
-        this.scene.pause('OpeningScene');
+        this.scene.resume('FirstScene');
       },
       this
     );

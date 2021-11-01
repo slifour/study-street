@@ -1,14 +1,23 @@
+/** 
+ * class MapScene
+ * @ extends : Phaser.Scene 
+ * @ extended by : FirstScene, SecondScene (all the scenes in form of navigatable map)
+ * @ Reference
+ * Phaser Scene class inheritance : https://youtu.be/1P8jvnj85e4
+ * 
+ */
+
 import Phaser from 'phaser';
 import Player from '../entity/Player';
 import Friend from '../entity/Friend';
 import Ground from '../entity/Ground';
 // import store, { UPDATE_SCORE } from '../../../store';
-import network from '../../network';
+import socket from '../../socketConfig';
 
-export default class MainScene extends Phaser.Scene {
-  constructor() {
-    super('MainScene');
-    this.socket = network.socket;    
+export default class MapScene extends Phaser.Scene {
+  constructor(key) {
+    super(key);
+    this.socket = socket;    
   }
   preload() {
     //PRELOAD SPRITES
@@ -70,7 +79,7 @@ export default class MainScene extends Phaser.Scene {
   onStateUpdate(players){
     if(this.friends === undefined) {return}
     Object.keys(players).forEach(function(id){
-      if (id == network.id){ return}
+      if (id === this.socket.id){ return}
       let player = players[id]
       if (Object.keys(this.friendDict).includes(id)){
         this.friendDict[id].setPosition(player.position.x, player.position.y)

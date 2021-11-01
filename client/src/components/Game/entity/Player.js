@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import network from '../../network';
+import socket from '../../socketConfig';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, spriteKey) {
@@ -8,10 +8,26 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.scene.add.existing(this);
     this.scene.physics.world.enable(this);
     this.stop = true
-    this.socket = network.socket
-    network.initialize({name : 'Player', group : 1, position : {x : this.x, y : this.y}})
+    this.socket = socket
+    this.initialize({name : 'Player', group : 1, position : {x : this.x, y : this.y}})
   }
 
+
+  /** Socket emit methods */
+
+  // playerData : { name : name(str), group : group(int), position : {x: x. y:y} }
+  /** initialize : tell server to create this player */
+  initialize(playerData) {    
+    this.socket.emit('initialize', playerData);
+  };
+
+  /** sendPosition : tell server to move this player */
+  sendPosition(positionData) {
+    this.socket.emit('positionUpdate', positionData);
+  };
+
+
+  /** Update methods */
   updateAnimation(state){
     this.play(state, true);    
   }
@@ -56,7 +72,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.updateMovement(cursors);
     let positionData = {x : this.x, y : this.y}
     if (!this.stop){
-      network.sendPosition(positionData)
+      this.sendPosition(positionData)
     }
   }
 }
