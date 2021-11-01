@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { socket } from "../../socket";
+import socket from "../../socket";
 
 function UserInfo({userID}) {
   const [profile, setProfile] = useState({});
