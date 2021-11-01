@@ -1,6 +1,11 @@
+/**
+ * app.js
+ * 
+ * @ Reference
+ *  Socket Room : https://socket.io/docs/v3/rooms/
+ */
 const express = require("express");
 const http = require("http");
-const socketIo = require("socket.io");
 
 const port = process.env.PORT || 4001;
 const index = require("./routes/index");
@@ -9,14 +14,10 @@ const app = express();
 app.use(index);
 
 const server = http.createServer(app);
+const origin = "http://localhost:3000"
 
-const io = socketIo(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"]
-  }
-}); // < Interesting!
 
+<<<<<<< HEAD
 let { userList, groupList } = require("./database");
 
 const getApiAndEmit = socket => {
@@ -99,5 +100,10 @@ io.on("connection", (socket) => {
     socket.emit("userParticipatedGroup", response);
   });
 });
+=======
+const SocketIOServer = require("./socketIOServer.js");
+const socketIOServer = SocketIOServer()
+socketIOServer.init(server, origin)
+>>>>>>> Hyeon
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
