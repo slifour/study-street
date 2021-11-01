@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { socket } from "../socket";
+import socket from "../socket";
 
 const ENDPOINT = "http://localhost:4001";
 
@@ -11,7 +11,7 @@ function ClientComponent() {
     socket.on("FromAPI", data => {
       setResponse(data);
     })
-    return () => socketConnected.disconnect();
+    return () => socket.disconnect();
   }, []);
 
   return (
