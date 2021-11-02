@@ -8,7 +8,7 @@ import InvitationView from "./components/User/InvitationView";
 import GroupView from "./components/User/GroupView";
 import UserInfo from "./components/User/UserInfo";
 import Login from "./components/User/LogIn";
-
+import Avatars from "./components/ui/Avatars";
 function App() {
   
   const [loadClient, setLoadClient] = useState(true);
@@ -26,6 +26,7 @@ function App() {
       </button>
       {loadClient ? <ClientComponent></ClientComponent> : null}
       <MenuBar/>
+      <Avatars/>
     </div>
     <div className="game-container">
       <Game />
