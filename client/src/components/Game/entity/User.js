@@ -9,6 +9,7 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
     this.scene.physics.world.enable(this);
     this.stop = true
     this.socket = socket
+    this.setCollideWorldBounds(true);
     this.initialize({name : 'User', group : 1, position : {x : this.x, y : this.y}}, this.scene)
   }
 
@@ -30,38 +31,39 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
   }
 
   updateMovement(cursors) {
+    this.stop = true
     let state = ''
 
     // Stop
     this.setVelocity(0);
     // Move left
     if (cursors.left.isDown) {
-      this.setVelocityX(-360);
+      this.setVelocityX(-500);
       state = 'left'
     } 
     // Move right
     else if (cursors.right.isDown) {
-      this.setVelocityX(360);
+      this.setVelocityX(500);
       state = 'right'
     }
     // Move up
     if (cursors.up.isDown) {
-      this.setVelocityY(-360);
-      state = 'up'
+      this.setVelocityY(-500);
+      if (state === ''){
+        state = 'up'
+      }      
     }
     // Move down
     else if (cursors.down.isDown) {
-      this.setVelocityY(360);
-      state = 'down'
+      this.setVelocityY(500);
+      if (state === ''){
+        state = 'down'
+      }      
     }
 
-    if (state == ''){
-      this.stop = true
-    }
-    else{
+    if (state !== ''){
       this.stop = false
     }
-
     // this.updateAnimation(state)
   }
 
