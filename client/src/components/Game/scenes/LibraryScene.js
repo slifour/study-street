@@ -76,6 +76,7 @@ export default class Library extends Phaser.Scene {
 
     update() {
         this.user.update(this.cursors);
+        Object.values(this.friendDict).forEach(friend => {friend.update();});
     }
 
     createMap() {
@@ -124,7 +125,10 @@ export default class Library extends Phaser.Scene {
 
     createUser() {
         this.user = new User(this, 4000, 2200, 'user').setScale(2);
-        this.user.setCollideWorldBounds(true);
+        this.add.existing(this.user);
+
+        // this.user = new User(this, 4000, 2200, 'user').setScale(2);
+        // this.user.setCollideWorldBounds(true);
 
         // this.container = this.add.container(userInfo.x, userInfo.y);
         // this.container.setSize(64, 64);
@@ -145,7 +149,7 @@ export default class Library extends Phaser.Scene {
             this.handleEnterBuffer,
             undefined,
             this
-        )
+        );
     }
 
     createFriend(){

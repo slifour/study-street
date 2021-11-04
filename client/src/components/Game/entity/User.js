@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import socket from '../../../socket';
+import Status from './Status';
 
 export default class User extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, spriteKey) {
@@ -11,6 +12,12 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
     this.socket = socket
     this.setCollideWorldBounds(true);
     this.initialize({name : 'User', group : 1, position : {x : this.x, y : this.y}}, this.scene)
+
+    /* Status display */
+    this.setInteractive();
+    this.prepareStatusView();
+    this.on('pointerover', this.onPointerOver);
+    this.on('pointerout', this.onPointerOut);
   }
 
   /** Socket emit methods */
@@ -67,11 +74,36 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
     // this.updateAnimation(state)
   }
 
+  /* Status display methods */
+  prepareStatusView() {
+    const initialtext = "Loading status..";
+    this.statusView = new Status(this.scene, this, initialtext);
+    this.scene.add.existing(this.statusView);
+    this.statusView.setActive(false).setVisible(false);
+  }
+
+  onPointerOver() {
+    /* 플레이어를 호버할 때 status view를 보여주기 */
+    const dummyUser = {
+        "userID": "eunki",
+        "userName": "은기",
+        "status": "Making status",
+    };
+
+    this.statusView.text = dummyUser.status;
+    this.statusView.setActive(true).setVisible(true);
+  }
+
+  onPointerOut() {
+    this.statusView.setActive(false).setVisible(false);
+  }
+
   update(cursors) {
+    this.statusView.update();
     this.updateMovement(cursors);
-    let positionData = {x : this.x, y : this.y}
+    let positionData = {x : this.x, y : this.y};
     if (!this.stop){
-      this.sendPosition(positionData)
+      this.sendPosition(positionData);
     }
   }
 }
