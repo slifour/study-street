@@ -9,7 +9,7 @@ function ClientComponent() {
     socket.on("FromAPI", data => {
       setResponse(data);
     })
-    return () => socket.disconnect();
+    return () => {};
   }, []);
 
   return (
