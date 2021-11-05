@@ -7,63 +7,68 @@
  * 
  */
 import Phaser from 'phaser';
-import Player from '../entity/Player';
+import User from '../entity/User';
 import Friend from '../entity/Friend';
-import Ground from '../entity/Ground';
 // import store, { UPDATE_SCORE } from '../../../store';
 import socket from '../../../socket';
 
 export default class MapScene extends Phaser.Scene {
-  constructor(key) {
+  constructor(key, otherScene) {
     super(key);
     this.socket = socket;    
+    this.bufferWidth = 50;
+    this.mapKey = 'map_'+ key
+    this.otherScene = otherScene
   }
   preload() {
-    //PRELOAD SPRITES
-    this.load.image('woods', './assets/backgrounds/woods.png');
-    this.load.spritesheet('newt', 'assets/spriteSheets/newt.png', {
-      frameWidth: 118.1,
-      frameHeight: 131,
+    this.load.spritesheet('user', 'assets/spriteSheets/user.png', {
+      frameWidth: 32,
+      frameHeight: 32
     });
-    this.load.image('ground', 'assets/sprites/ground.png');
-    this.load.image('mainGround', 'assets/sprites/mainGround.png');
-    this.load.audio('jump', 'assets/audio/jump.wav');
-    this.load.audio('twinkle', 'assets/audio/twinkle.wav');
+  }
+
+  create() {
+    this.cursors = this.input.keyboard.createCursorKeys();    
+    this.createMap()
+    this.createUser();
+    this.createFriend();    
+    this.setEventHandlers();     //Socket Event Handlers
+    this.createColliders();    
+  }
+
+  update() {
+    this.user.update(this.cursors);
   }
 
   //ANIMATIONS HELPER FUNC
   createAnimations() {
+    //  animation with key 'left', we don't need left and right as we will use one and flip the sprite
     this.anims.create({
-      key: 'left',
-      frames: this.anims.generateFrameNumbers('newt', { start: 0, end: 3 }),
-      frameRate: 10,
-      repeat: -1,
+        key: 'down',
+        frames: this.anims.generateFrameNumbers('user', { frames: [0, 1, 0, 2] }),
+        frameRate: 10,
+        repeat: -1
     });
+
     this.anims.create({
-      key: 'leftJump',
-      frames: [{ key: 'newt', frame: 2 }],
-      frameRate: 20,
+        key: 'left',
+        frames: this.anims.generateFrameNumbers('user', { frames: [3, 4, 3, 5] }),
+        frameRate: 10,
+        repeat: -1
     });
+
     this.anims.create({
-      key: 'turn',
-      frames: [{ key: 'newt', frame: 4 }],
-      frameRate: 20,
+        key: 'right',
+        frames: this.anims.generateFrameNumbers('user', { frames: [6, 7, 6, 8] }),
+        frameRate: 10,
+        repeat: -1
     });
+
     this.anims.create({
-      key: 'rightJump',
-      frames: [{ key: 'newt', frame: 6 }],
-      frameRate: 20,
-    });
-    this.anims.create({
-      key: 'right',
-      frames: this.anims.generateFrameNumbers('newt', { start: 5, end: 8 }),
-      frameRate: 10,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: 'wearingHat',
-      frames: [{ key: 'newt', frame: 10 }],
-      frameRate: 20,
+        key: 'up',
+        frames: this.anims.generateFrameNumbers('user', { frames: [9, 10, 9, 11] }),
+        frameRate: 10,
+        repeat: -1
     });
   }
 
@@ -71,20 +76,20 @@ export default class MapScene extends Phaser.Scene {
     // Description
     // socket.on('event', eventHandler)
   
-    // New player message received
+    // New user message received
     this.socket.on('stateUpdate', this.onStateUpdate.bind(this));
   }
 
-  onStateUpdate(players){
+  onStateUpdate(users){
     if(this.friends === undefined) {return}
-    Object.keys(players).forEach(function(id){
+    Object.keys(users).forEach(function(id){
       if (id === this.socket.id){ return}
-      let player = players[id]
+      let user = users[id]
       if (Object.keys(this.friendDict).includes(id)){
-        this.friendDict[id].setPosition(player.position.x, player.position.y)
+        this.friendDict[id].setPosition(user.position.x, user.position.y)
       } 
       else{        
-        let friend = new Friend(this, player.position.x, player.position.y, 'newt', id).setScale(0.5)
+        let friend = new Friend(this, user.position.x, user.position.y, 'newt', id).setScale(0.5)
         this.friends.add(friend)
         this.friendDict[id] = friend
       }    
@@ -92,37 +97,43 @@ export default class MapScene extends Phaser.Scene {
   }
 
   //CREATE
-  createWorld(){
-    //set up world bounds
-    this.physics.world.setBounds(0, 0, 800, 600);
+  createMap() {
+    console.log('Map Key = ', this.mapKey)
+    this.map = this.add.image(0, 0, this.mapKey).setOrigin(0).setScale(1);
 
+    // don't go out of the map
+    this.physics.world.bounds.width = this.map.displayWidth + this.bufferWidth;
+    this.physics.world.bounds.height = this.map.displayHeight;
+
+    // Buffer for Scene Shift    
+    this.bufferToFirst = this.add.rectangle(this.map.displayWidth, 0, this.bufferWidth, this.map.displayHeight, 0xff0000);
+    
     //background
-    this.add.image(-160, 0, 'woods').setOrigin(0).setScale(0.5);
 
-    //platforms
-    this.groundGroup = this.physics.add.staticGroup({ classType: Ground });
+    /** Unblock Following After Drawing Tilemap */
+    // // create the map
+    // this.map = this.make.tilemap({
+    //     key: 'library', tileWidth: 32, tileHeight: 32
+    // });
+    // var tileset = this.map.addTilesetImage('tiles', 'tiles');
+    // var layer = this.map.createStaticLayer('backgroundLayer', tileset, 0, 0)
 
-    this.groundGroup.create(160, 100, 'ground');
-    this.groundGroup.create(250, 350, 'ground');
-    this.groundGroup.create(530, 200, 'ground');
-    this.groundGroup.create(600, 510, 'ground');
-
-    //floor
-    this.groundGroup.create(160, 620, 'mainGround');
-
+    // // don't go out of the map
+    // this.physics.world.bounds.width = this.map.widthInPixels;
+    // this.physics.world.bounds.height = this.map.heightInPixels;
   }
-
-  createPlayer(){
-    //player
-    this.player = new Player(this, 20, 400, 'newt').setScale(0.5);
-
-    this.player.setBounce(0.2);
-    this.player.setCollideWorldBounds(true);
-
-    this.createAnimations();    
-
-    //cursors
-    this.cursors = this.input.keyboard.createCursorKeys();
+  
+  handleEnterBuffer(){
+    console.log('handleEnterBuffer')
+    this.cameras.main.fadeOut(1000, 0, 0, 0)
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+      this.scene.start(this.otherScene);
+    })  
+  }      
+  
+  createUser(){    
+    this.user = new User(this, 100, 100, 'user').setScale(1);
+    this.updateCamera()
   }
 
   createFriend(){
@@ -130,25 +141,27 @@ export default class MapScene extends Phaser.Scene {
     this.friendDict = {}
     console.log(this.friends)  
   }
-  createColliders(){
+
+  updateCamera() {
+    // limit camera to map
+    this.cameras.main.setBounds(0, 0, this.map.displayWidth, this.map.displayHeight);
+    this.cameras.main.startFollow(this.user);
+    this.cameras.main.roundPixels = true; // avoid tile bleed
+  }
+
+  createColliders(){    
     //colliders
-    this.physics.add.collider(this.player, this.groundGroup);
-    this.physics.add.collider(this.friends, this.groundGroup);
   }
 
   createHelper() {
-    this.createWorld();
-    this.createPlayer();
+    // cursors
+    this.cursors = this.input.keyboard.createCursorKeys();    
+    this.createUser();    
     this.createFriend();
-    this.setEventHandlers();     //Socket Event Handlers
+    this.createAnimations();    
+    this.setEventHandlers(); //Socket Event Handlers
     this.createColliders();
   }
 
-  create() {
-    this.createHelper();
-  }
 
-  update() {
-    this.player.update(this.cursors);
-  }
 }
