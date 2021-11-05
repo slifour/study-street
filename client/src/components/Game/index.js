@@ -26,8 +26,7 @@ export default class Game extends React.Component {
       // scene: [HomeScene, Library, Rest],
       scene: [HomeScene, Library, Rest],
     };
-    const game = new Phaser.Game(config);
-    game.registry.set('socket', )
+    this.game = new Phaser.Game(config);
   }
   shouldComponentUpdate() {
     return false;
