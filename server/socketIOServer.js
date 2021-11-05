@@ -105,7 +105,7 @@ const SocketIOServer = () => {
     socket.on("initialize", onInitialize.bind(null, socket))  
     socket.on("userLoginRequest", onUserLoginRequest.bind(null, socket))
     socket.on("userProfileRequest", onUserProfileRequest.bind(null, socket))
-    socket.on("userParticipatedGroupRequest", onUserParticipatedGroupRequest.bind(null, socket))
+    /*socket.on("userParticipatedGroupRequest", onUserParticipatedGroupRequest.bind(null, socket))*/
     socket.on("joinTextChat", onJoinGroup.bind(null, socket))
     socket.on("leaveTextChat", onLeaveGroup.bind(null, socket))
     socket.on("sendGroupMessage", onSendGroupMessage.bind(null, socket))
@@ -128,30 +128,36 @@ const SocketIOServer = () => {
   }
 
   /* 아직 오류 있음; 추가적인 구조 수정 필요 */
-  const onUserParticipatedGroupRequest = (socket, userID) => {
+  /*const onUserParticipatedGroupRequest = (socket, userID) => {
     let response = [];
     Object.entries(groupList).forEach(([key, value]) => {
-      if (value.member[userID] !== groupList[]) {
+      if (value.member[userID] !== undefined) {
         response.append(value);
       }
     });
     socket.emit("userParticipatedGroup", response);
-  }  
+  }*/
 
   /* 아직 오류 있음 */
   const onJoinGroup = (socket, groupID, userID) => {
-    socket.join(groups[groupID], () => {
+    socket.join(groups[groupID]);
+    memList = groups.memberList;
+    memList.append(userID);
+      /*, () => {
       console.log(userID + ' join a ' + room[groupID]);
       io.to(room[groupID]).emit("joinGroup", groupID, userID);
-    });
+    });*/
   }
 
     /* 아직 오류 있음 */
   const onLeaveGroup = (socket, groupID, userID) => {
-    socket.leave(groups[groupID], () => {
+    socket.leave(groups[groupID]);
+    memList = groups.memberList;
+    memList.remove(userID);
+      /*, () => {
       console.log(userID + ' leave a ' + room[groupID]);
       io.to(room[groupID]).emit("leaveGroup", groupID, userID);
-    });
+    });*/
   }
   
   /* 아직 오류 있음 */
