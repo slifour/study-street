@@ -21,6 +21,16 @@ const SocketIOServer = () => {
    */
   const users = {}; // users data structure
 
+  /** 
+   * @type {Object.<string, {
+   *  flipX: boolean,
+   *  groupId: string,
+   *  status: string,
+   *  memberList: string[]
+   * }>}
+   */
+  const group = {}; // group data structure
+
   let stateChanged = false // flag whether state is changed = for transmission efficientcy
   let isEmittingUpdates = false // flag whether server is emitting updates = to prevent redundant emission and coliision
   let stateUpdateInterval = 300 // interval to update user states
@@ -68,6 +78,9 @@ const SocketIOServer = () => {
     socket.on("userLoginRequest", onUserLoginRequest)
     socket.on("userProfileRequest", onUserProfileRequest)
     socket.on("userParticipatedGroupRequest", onUserParticipatedGroupRequest)
+    socket.on("joinTextChat", onJoinTextChat)
+    socket.on("leaveTextChat", onLeaveTextChat)
+    socket.on("sendMessage", onSendMessage)
   }
 
   /* Home scene */
@@ -94,7 +107,28 @@ const SocketIOServer = () => {
     socket.emit("userParticipatedGroup", response);
   }  
 
+  /* 아직 오류 있음 */
+  let onJoinTextChat = (num, name) => {
+    socket.join(room[num], () => {
+      console.log(name + ' join a ' + room[num]);
+      io.to(room[num]).emit("joinTextChat", num, name);
+    });
+  }
+
+    /* 아직 오류 있음 */
+  let onLeaveTextChat = (num, name) => {
+    socket.leave(room[num], () => {
+      console.log(name + ' leave a ' + room[num]);
+      io.to(room[num]).emit("leaveTextChat", num, name);
+    });
+  }
   
+  /* 아직 오류 있음 */
+  let onSendMessage = (num, name, msg) => {
+    a = num;
+    io.to(room[a]).emit('chat message', name, msg);
+  }
+
   let onPositionUpdate = (positionData) => {
     if (!Object.keys(users).includes(id)){
       return
