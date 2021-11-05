@@ -7,6 +7,7 @@ import InvitationView from "./components/User/InvitationView";
 import GroupView from "./components/User/GroupView";
 import UserInfo from "./components/User/UserInfo";
 import Login from "./components/User/LogIn";
+import Avatars from "./components/ui/Avatars";
 
 
 /* Example of LoginUserContext value
@@ -33,6 +34,7 @@ function App() {
     <LoginUserContext.Provider value={ {loginUser, setLoginUser} }>
       <div className="content">
         <MenuBar/>
+        <Avatars/>
       </div>
       <div className="game-container">
         <Game ref={game}/>

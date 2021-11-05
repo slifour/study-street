@@ -35,7 +35,7 @@
 }
 
 .menuBar {
-    position: absolute;
+    position: fixed;
     width: 360px;
     height: 60px;
     margin: auto;
@@ -75,4 +75,104 @@
 .hvrGrow:focus,
 .hvrGrow:active {
     transform: scale(1.2);
+}
+
+.avatarContainer {
+    position: absolute;
+    left: 2.5%;
+    top: 20%;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+}
+
+.chatContainer {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 550px;
+    width: 400px;
+}
+
+.chatHeader {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 14px 24px;
+    height: 10%;
+}
+
+.chatName {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.chatContent {
+    height: 75%;
+    width: 100%;
+}
+
+.chatFooter {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 10%;
+}
+
+.chatInputContainer {
+    width: 85%;
+}
+.chatInput {
+    width: 100%;
+    height: 100%;
+    border-width: 0;
+    padding: 0 20px;
+    border-radius: 0 0 0 8px;
+
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    font-size: 18px;
+}
+
+.chatInput:hover {
+    background-color: #F3F3F3;
+}
+
+.chatInput:focus {
+    outline: none;
+}
+
+.chatButton {
+    width: 15%;
+    height: 100%;
+    background-color: #C4C4C4;
+    border-radius: 0 0 8px 0;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+}
+
+.styledHr {
+    margin: 0;
+    border: 0;
+    height: 0.5px;
+    background-color: #C4C4C4;
+}
+
+.iconsWhite {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 26px;
+    color: #FFFFFF;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    text-rendering: optimizeLegibility;
+    margin: auto;
 }
