@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import User from '../entity/User';
 import Friend from '../entity/Friend';
 import socket from '../../../socket';
+import { createCharacterAnimsGirl, createCharacterAnimsWizard } from '../anims/CharacterAnims';
 // import socketIOClient from "socket.io-client";
 // const ENDPOINT = "http://localhost:4001";
 
@@ -28,9 +29,13 @@ export default class Library extends Phaser.Scene {
         this.load.image('sitShadow', 'assets/images/sitShadow.png');
         this.load.image('sitText', 'assets/images/sitText.png');
         // map in json format
-        this.load.spritesheet('user', 'assets/spriteSheets/user.png', {
+        this.load.spritesheet('user-girl', 'assets/spriteSheets/user.png', {
             frameWidth: 32,
             frameHeight: 32
+        });
+        this.load.spritesheet('user-wizard', 'assets/spriteSheets/wizard.png', {
+            frameWidth: 60,
+            frameHeight: 90
         });
     }
 
@@ -66,7 +71,9 @@ export default class Library extends Phaser.Scene {
         this.createMap();
         this.createDesk();
 
-        this.createAnimations();
+        // this.createAnimations();
+        createCharacterAnimsWizard(this.anims);
+        createCharacterAnimsGirl(this.anims);
         this.cursors = this.input.keyboard.createCursorKeys();
 
         this.createUser();
@@ -92,54 +99,11 @@ export default class Library extends Phaser.Scene {
         this.physics.add.existing(this.bufferToFirst)
     }
 
-    createAnimations() {
-        //  animation with key 'left', we don't need left and right as we will use one and flip the sprite
-        this.anims.create({
-            key: 'down',
-            frames: this.anims.generateFrameNumbers('user', { frames: [0, 1, 0, 2] }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'left',
-            frames: this.anims.generateFrameNumbers('user', { frames: [3, 4, 3, 5] }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'right',
-            frames: this.anims.generateFrameNumbers('user', { frames: [6, 7, 6, 8] }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'up',
-            frames: this.anims.generateFrameNumbers('user', { frames: [9, 10, 9, 11] }),
-            frameRate: 10,
-            repeat: -1
-        });
-    }
-
     createUser() {
-        this.user = new User(this, 4000, 2200, 'user').setScale(2);
+        this.user = new User(this, 4000, 2200, 'user-girl', 'girl').setScale(2);
         this.add.existing(this.user);
 
-        // this.user = new User(this, 4000, 2200, 'user').setScale(2);
-        // this.user.setCollideWorldBounds(true);
-
-        // this.container = this.add.container(userInfo.x, userInfo.y);
-        // this.container.setSize(64, 64);
-        // this.physics.world.enable(this.container);
-        // this.container.add(this.user);
-
-        // update camera
         this.updateCamera();
-
-        // don't go out of the map
-        // this.container.body.setCollideWorldBounds(true);
 
         this.physics.add.collider(this.user, this.spawns);
         this.physics.add.collider(this.user, this.desk0);
@@ -188,21 +152,21 @@ export default class Library extends Phaser.Scene {
       }
     
     onStateUpdate(users){
-    if(this.friends === undefined) {return}
-    Object.keys(users).forEach(function(id){        
-        if (id === this.socket.id) {return}
-        console.log('Not returned')
-        let user = users[id]
-        if (Object.keys(this.friendDict).includes(id)){
-            console.log(id, this.socket.id)
-            this.friendDict[id].setPosition(user.position.x, user.position.y)
-        } 
-        else{        
-            let friend = new Friend(this, user.position.x, user.position.y, 'user', id).setScale(2)
-            this.friends.add(friend)    
-            this.friendDict[id] = friend
-        }    
-    }.bind(this))
+        if(this.friends === undefined) {return;}
+        Object.keys(users).forEach(function(id) {        
+            if (id === this.socket.id) {return;}
+
+            console.log('Not returned');
+            let user = users[id]
+            if (Object.keys(this.friendDict).includes(id)){
+                console.log(id, this.socket.id);
+                this.friendDict[id].updateMovement(user.position);
+            } else {        
+                let friend = new Friend(this, user.position.x, user.position.y, 'user-wizard', 'wizard', id).setScale(1);
+                this.friends.add(friend);
+                this.friendDict[id] = friend;
+            }    
+        }.bind(this))
     }
 
 

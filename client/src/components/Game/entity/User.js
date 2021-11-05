@@ -3,7 +3,7 @@ import socket from '../../../socket';
 import Status from './Status';
 
 export default class User extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y, spriteKey) {
+  constructor(scene, x, y, spriteKey, animSuffix) {
     super(scene, x, y, spriteKey);
     this.scene = scene;
     this.scene.add.existing(this);
@@ -12,6 +12,14 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
     this.socket = socket
     this.setCollideWorldBounds(true);
     this.initialize({name : 'User', group : 1, position : {x : this.x, y : this.y}}, this.scene)
+
+    this.animName = {
+      'idle': 'user-idle-' + animSuffix,
+      'left': 'user-left-' + animSuffix,
+      'up': 'user-up-' + animSuffix,
+      'right': 'user-right-' + animSuffix,
+      'down': 'user-down-' + animSuffix,
+    }
 
     /* Status display */
     this.setInteractive();
@@ -33,45 +41,44 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
   };
 
   /** Update methods */
+  /** @param {string} state  */
   updateAnimation(state){
     this.play(state, true);    
   }
 
+  /** @param {Phaser.Types.Input.Keyboard.CursorKeys} cursors */
   updateMovement(cursors) {
     this.stop = true
-    let state = ''
+    let animState = this.animName.idle;
 
     // Stop
     this.setVelocity(0);
     // Move left
     if (cursors.left.isDown) {
       this.setVelocityX(-500);
-      state = 'left'
+      animState = this.animName.left;
+      this.stop = false;
     } 
     // Move right
     else if (cursors.right.isDown) {
       this.setVelocityX(500);
-      state = 'right'
+      animState = this.animName.right;
+      this.stop = false;
     }
     // Move up
     if (cursors.up.isDown) {
       this.setVelocityY(-500);
-      if (state === ''){
-        state = 'up'
-      }      
+      animState = this.animName.up;
+      this.stop = false;
     }
     // Move down
     else if (cursors.down.isDown) {
       this.setVelocityY(500);
-      if (state === ''){
-        state = 'down'
-      }      
+      animState = this.animName.down;
+      this.stop = false;
     }
 
-    if (state !== ''){
-      this.stop = false
-    }
-    // this.updateAnimation(state)
+    this.updateAnimation(animState)
   }
 
   /* Status display methods */
@@ -98,6 +105,7 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
     this.statusView.setActive(false).setVisible(false);
   }
 
+  /** @param {Phaser.Types.Input.Keyboard.CursorKeys} cursors */
   update(cursors) {
     this.statusView.update();
     this.updateMovement(cursors);
