@@ -29,7 +29,7 @@ const SocketIOServer = () => {
    *  memberList: string[]
    * }>}
    */
-  const group = {}; // group data structure
+  const groups = {}; // group data structure
 
   let stateChanged = false // flag whether state is changed = for transmission efficientcy
   let isEmittingUpdates = false // flag whether server is emitting updates = to prevent redundant emission and coliision
@@ -78,9 +78,11 @@ const SocketIOServer = () => {
     socket.on("userLoginRequest", onUserLoginRequest)
     socket.on("userProfileRequest", onUserProfileRequest)
     socket.on("userParticipatedGroupRequest", onUserParticipatedGroupRequest)
-    socket.on("joinTextChat", onJoinTextChat)
-    socket.on("leaveTextChat", onLeaveTextChat)
-    socket.on("sendMessage", onSendMessage)
+    socket.on("joinTextChat", onJoinGroup)
+    socket.on("leaveTextChat", onLeaveGroup)
+    socket.on("sendGroupMessage", onSendGroupMessage)
+    socket.on("sendPrivateMessage", onSendPrivateMessage)
+    socket.on("updateGroupStatus", onUpdateGroupStatus)
   }
 
   /* Home scene */
@@ -96,11 +98,11 @@ const SocketIOServer = () => {
     socket.emit("userProfile", userList[userID]);
   }
 
-  /* 아직 오류 있음 */
+  /* 아직 오류 있음; 추가적인 구조 수정 필요 */
   let onUserParticipatedGroupRequest = userID => {
     let response = [];
     Object.entries(groupList).forEach(([key, value]) => {
-      if (value.member[userID] !== undefined) {
+      if (value.member[userID] !== groupList[]) {
         response.append(value);
       }
     });
@@ -108,25 +110,40 @@ const SocketIOServer = () => {
   }  
 
   /* 아직 오류 있음 */
-  let onJoinTextChat = (num, name) => {
-    socket.join(room[num], () => {
-      console.log(name + ' join a ' + room[num]);
-      io.to(room[num]).emit("joinTextChat", num, name);
+  let onJoinGroup = (groupID, userID) => {
+    socket.join(groups[groupID], () => {
+      console.log(userID + ' join a ' + room[groupID]);
+      io.to(room[groupID]).emit("joinGroup", groupID, userID);
     });
   }
 
     /* 아직 오류 있음 */
-  let onLeaveTextChat = (num, name) => {
-    socket.leave(room[num], () => {
-      console.log(name + ' leave a ' + room[num]);
-      io.to(room[num]).emit("leaveTextChat", num, name);
+  let onLeaveGroup = (groupID, userID) => {
+    socket.leave(groups[groupID], () => {
+      console.log(userID + ' leave a ' + room[groupID]);
+      io.to(room[groupID]).emit("leaveGroup", groupID, userID);
     });
   }
   
   /* 아직 오류 있음 */
-  let onSendMessage = (num, name, msg) => {
-    a = num;
-    io.to(room[a]).emit('chat message', name, msg);
+  let onSendGroupMessage = (groupID, userID, msg) => {
+    a = groupID;
+    io.to(groups[a]).emit('chat message', userID, msg);
+  }
+
+  /* 아직 오류 있음 */
+  let onSendPrivateMessage = (user1ID, user2ID, msg) => {
+    io.to(users[user1ID]).emit('chat message', user2ID, msg);
+  }
+
+  /* 아직 오류 있음 */
+  let onUpdateGroupStatus = (groupID, stat) => {
+    if (!groupList[groupID]) {S
+      socket.emit("findingGroupFail");
+    } else {
+      let group = groupList[groupID];
+      group.status = stat;
+    }
   }
 
   let onPositionUpdate = (positionData) => {

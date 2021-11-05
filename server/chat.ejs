@@ -68,15 +68,16 @@
     let room = ['room1', 'room2'];
     let num = 0;
 
-    socket.emit('joinTextChat', num, name);
+    socket.emit('joinGroup', num, name);
 
+    /* swiching rooms (not included in our function)
     $('select').change(() => {
-      socket.emit('leaveTextChat', num, name);
+      socket.emit('leaveGroup', num, name);
       num++;
       num = num % 2;
-      socket.emit('joinTextChat', num, name);
+      socket.emit('joinGroup', num, name);
     });
-
+    */
 
     $('form').submit(() => {
       socket.emit('chat message', num, name, $('#m').val());
@@ -89,12 +90,12 @@
         msg));
     });
 
-    socket.on('leaveTextChat', (num, name) => {
+    socket.on('leaveGroup', (num, name) => {
       $('#messages').append($('<li>').text(name + ' leaved '
         + room[num] + ' :('));
     });
 
-    socket.on('joinTextChat', (num, name) => {
+    socket.on('joinGroup', (num, name) => {
       $('#messages').append($('<li>').text(name + ' joined '
         + room[num] + ':)'));
     });
