@@ -3,6 +3,9 @@ import User from '../entity/User';
 import Friend from '../entity/Friend';
 import socket from '../../../socket';
 import { createCharacterAnimsGirl, createCharacterAnimsWizard } from '../anims/CharacterAnims';
+import GroupArea from '../entity/GroupArea';
+import Tooltip from '../entity/Tooltip';
+import Book from '../entity/Book';
 // import socketIOClient from "socket.io-client";
 // const ENDPOINT = "http://localhost:4001";
 
@@ -24,10 +27,12 @@ export default class Library extends Phaser.Scene {
     preload() {
         // this.load.image("library", "assets/map/library_small.png");
         this.load.image('map_library', 'assets/map/map_library.png');
-        this.load.image('desk', 'assets/images/desk.png');
+        this.load.image('desk', 'assets/images/desk_4.png');
         this.load.image('chair', 'assets/images/chair.png');
         this.load.image('sitShadow', 'assets/images/sitShadow.png');
         this.load.image('sitText', 'assets/images/sitText.png');
+        this.load.image('book-front', 'assets/images/book-front.png');
+        this.load.image('bookshelf', 'assets/images/bookshelf.png');
         // map in json format
         this.load.spritesheet('user-girl', 'assets/spriteSheets/user.png', {
             frameWidth: 32,
@@ -37,16 +42,27 @@ export default class Library extends Phaser.Scene {
             frameWidth: 60,
             frameHeight: 90
         });
+        this.load.spritesheet('booksheet', 'assets/spriteSheets/booksheet.png', {
+            frameWidth: 28,
+            frameHeight: 35
+        });
+        this.load.html('newArtifact', 'assets/NewArtifact.html')
     }
 
     /*
      * Map 에 create 해야할 sprites 
      */    
-    createDesk() {
-        this.desk0 = this.physics.add.image(500, 200, 'desk');
-        this.desk0.setImmovable(true);        
-    } 
 
+    createGroupArea(){
+        this.groupArea = new GroupArea(this, 4000, 2200)
+        this.groupArea.init('desk', 'chair', 'bookshelf')
+        this.nextBookPosition = this.groupArea.positions[0]
+        this.groupArea.setPosition(4000,2000)
+    }
+
+    createChair() {
+
+    }
     /*
      * Create
      */
@@ -69,8 +85,7 @@ export default class Library extends Phaser.Scene {
          }, this);
         // create map
         this.createMap();
-        this.createDesk();
-
+        this.createGroupArea();
         // this.createAnimations();
         createCharacterAnimsWizard(this.anims);
         createCharacterAnimsGirl(this.anims);
@@ -79,6 +94,14 @@ export default class Library extends Phaser.Scene {
         this.createUser();
         this.createFriend();
         this.setEventHandlers();
+        this.time.addEvent({
+            delay: 1000,
+            callback: ()=>{
+                socket.emit("newArtifact")
+                console.log("emit : newArtifact")
+            },
+            loop: false
+        })
     }
 
     update() {
@@ -149,8 +172,52 @@ export default class Library extends Phaser.Scene {
       
         // New user message received
         this.socket.on('stateUpdate', this.onStateUpdate.bind(this));
+        this.socket.on('newArtifact', this.onNewArtifact.bind(this));
+        this.socket.on('newGroup', this.onNewGroup.bind(this))
       }
     
+    onNewGroup(){
+        this.createGroupArea()
+    }  
+
+    onNewArtifact(data){
+        console.log('recieve : newArtifact')
+        
+        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
+        const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
+        let tooltip = new Tooltip(this, screenCenterX, screenCenterY, 'book-front', 'newArtifact');
+        
+        this.time.addEvent({
+            delay: 1000,
+            callback: ()=>{
+              tooltip.onArtifactTooltipClicked(this.nextBookPosition)
+            },
+            loop: false
+        })
+        // let book = new Book(this, screenCenterX, screenCenterY, 'book-front').setScale(0.5);
+        // tooltip.addListener('click', this.onArtifactTooltipClicked.bind(this, book));
+
+        // tooltip.on('click', this.onArtifactTooltipClicked.bind(this, book));
+        // // this.tooltipContainer = this.add.container(screenCenterX, screenCenterY);
+        // let tooltip = this.add.dom(screenCenterX, screenCenterY);             
+        // tooltip.createFromCache('newArtifact');
+        // // tooltipContainer.add(tooltip);   
+        // // tooltipContainer.fixedToCamera = true;
+
+        // this.newArtifact = new Book(this, screenCenterX, screenCenterY, 'book-front');
+        // // tooltipContainer.add(this.newArtifact)        
+    }
+
+    // onArtifactTooltipClicked(){
+    //     this.tooltip.destroy()
+    //     this.cameras.main.startFollow(book);
+    //     this.physics.moveToObject(book, this.nextBookPosition[this.nextBookIndex].x, this.nextBookPosition[this.nextBookIndex].y, 300);
+    //     if (book.x === this.nextBookPosition.x){
+    //         this.cameras.main.startFollow(this.user);
+    //     }        
+    //     this.nextBookIndex += 1;
+    // }
+
     onStateUpdate(users){
         if(this.friends === undefined) {return;}
         Object.keys(users).forEach(function(id) {        
