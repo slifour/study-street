@@ -112,6 +112,8 @@ export class HomeScene extends Phaser.Scene {
         this.user = this.add.sprite(0, 0, 'user', 6);
         this.user.setScale(2)
 
+        this.date = this
+
         this.container = this.add.container(userInfo.x, userInfo.y);
         this.container.setSize(64, 64);
         this.physics.world.enable(this.container);
