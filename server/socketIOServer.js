@@ -39,11 +39,11 @@ const SocketIOServer = () => {
   let stateChanged = false // flag whether state is changed = for transmission efficientcy
   let isEmittingUpdates = false // flag whether server is emitting updates = to prevent redundant emission and coliision
   let stateUpdateInterval = 300 // interval to update user states
-  let logInterval = 10000 // interval to stamp logs
+  let logInterval = 100000 // interval to stamp logs
   // let socket // server socket
   let scenes = {'FirstScene' : 1, 'SecondScene' : 2} // scenes
   let io
-  let { userList, groupList } = require("./database");
+  let { userList, groupList, goalList, bookList } = require("./database");
   let interval;
 
   /** Methods */
@@ -58,9 +58,9 @@ const SocketIOServer = () => {
 
     io.on("connection", (socket) => {
       console.log("New client connected");
-      socket.emit("socket.id", socket.id);
-      console.log(socket.id)
-      setEventHandlers(socket)      
+      socket.emit("socket.id", socket.id);      
+      console.log(socket.id);
+      setEventHandlers(socket);      
       logUsers()
     });
   }
@@ -96,7 +96,18 @@ const SocketIOServer = () => {
     socket.on("userLoginRequest", onUserLoginRequest.bind(null, socket))
     socket.on("userProfileRequest", onUserProfileRequest.bind(null, socket))
     socket.on("userParticipatedGroupRequest", onUserParticipatedGroupRequest.bind(null, socket))
+    socket.on("newArtifact", onNewArtifact.bind(null, socket))
+    socket.on("initializeLibrary", onIntializeLibrary.bind(null,socket))
     updateDate(socket)
+  }
+
+  const onNewArtifact = (socket) => {
+    console.log('server : newArtifact')
+    data = {
+      goal : 'Study everyday',
+      group : 'Slifour'
+    }
+    socket.emit("newArtifact", data)
   }
 
   /* Home scene */
@@ -142,20 +153,18 @@ const SocketIOServer = () => {
     socket.leave(prevScene);
   }
   
+  const onIntializeLibrary = (socket) =>{
+    socket.emit("goalUpdate", bookList);
+  }
+
   const onInitialize = (socket, data) => {
     console.log("New user initialized");
     stateChanged = true;    
-  
-    // Create a new user object
-    let newUser = createUser(socket.id, data.name, data.group, data.position, data.scene);
-
-    // Add the newly created user to game state.
-    users[socket.id] = newUser;
-  
+    let newUser = createUser(socket.id, data.name, data.group, data.position, data.scene); // Create a new user object
+    users[socket.id] = newUser;  // Add the newly created user to game state.
     socket.broadcast.emit("initialize", socket.id, data.name, data.group, data.position)
   
-    //On first user joined, start update emit loop
-    if (numUsers() === 1 && !isEmittingUpdates) {
+    if (numUsers() === 1 && !isEmittingUpdates) { //On first user joined, start update emit loop
       emitStateUpdateLoop('room');
     }
   }
@@ -174,7 +183,7 @@ const SocketIOServer = () => {
       io.emit("stateUpdate", users);
       console.log("stateUpdate")
     }
-
+    
     if (numUsers() > 0) {
       setTimeout(emitStateUpdateLoop.bind(this), stateUpdateInterval);
     } else {
