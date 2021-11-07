@@ -95,13 +95,10 @@ const SocketIOServer = () => {
     socket.on("initialize", onInitialize.bind(null, socket))  
     socket.on("userLoginRequest", onUserLoginRequest.bind(null, socket))
     socket.on("userProfileRequest", onUserProfileRequest.bind(null, socket))
-<<<<<<< HEAD
-    socket.on("userParticipatedGroupRequest", onUserParticipatedGroupRequest.bind(null, socket))
+    // socket.on("userParticipatedGroupRequest", onUserParticipatedGroupRequest.bind(null, socket))
     socket.on("newArtifact", onNewArtifact.bind(null, socket))
     socket.on("initializeLibrary", onIntializeLibrary.bind(null,socket))
-=======
     // socket.on("userParticipatedGroupRequest", onUserParticipatedGroupRequest.bind(null, socket))
->>>>>>> d7f662a49400836b5da98253cff41c4db07b57be
     updateDate(socket)
   }
 

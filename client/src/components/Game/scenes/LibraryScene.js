@@ -84,15 +84,15 @@ export default class Library extends Phaser.Scene {
          * 조건을 scene 아무데나 pointerdown 에서 'Quick Rest' react component를 클릭할 때로 변경해야 함.
          * 이동 전에 Are you sure to go to rest? 툴팁이 한 번 뜨면 좋을 것 같다. 
          */
-        this.input.on('pointerdown', function(){
-            this.handleEnterBuffer();
-        //     // this.scene.start('Rest');
-        //     // this.scene.launch('Rest')
-        //     // console.log("FirstScene -> LoadScene. Input : pointerdown")
-        //     // this.scene.resucme('LoadScene');  
-        //     // console.log("LoadScene resumed")
-        //     // this.scene.stop('FirstScene');
-         }, this);
+        // this.input.on('pointerdown', function(){
+        //     this.handleEnterBuffer();
+        // //     // this.scene.start('Rest');
+        // //     // this.scene.launch('Rest')
+        // //     // console.log("FirstScene -> LoadScene. Input : pointerdown")
+        // //     // this.scene.resucme('LoadScene');  
+        // //     // console.log("LoadScene resumed")
+        // //     // this.scene.stop('FirstScene');
+        //  }, this);
         // create map
         this.createMap();
         this.createGroupArea('a');
