@@ -95,9 +95,13 @@ const SocketIOServer = () => {
     socket.on("initialize", onInitialize.bind(null, socket))  
     socket.on("userLoginRequest", onUserLoginRequest.bind(null, socket))
     socket.on("userProfileRequest", onUserProfileRequest.bind(null, socket))
+<<<<<<< HEAD
     socket.on("userParticipatedGroupRequest", onUserParticipatedGroupRequest.bind(null, socket))
     socket.on("newArtifact", onNewArtifact.bind(null, socket))
     socket.on("initializeLibrary", onIntializeLibrary.bind(null,socket))
+=======
+    // socket.on("userParticipatedGroupRequest", onUserParticipatedGroupRequest.bind(null, socket))
+>>>>>>> d7f662a49400836b5da98253cff41c4db07b57be
     updateDate(socket)
   }
 
@@ -115,7 +119,7 @@ const SocketIOServer = () => {
     if (!userList[userID]) {
       socket.emit("userLoginFail");
     } else {
-      socket.emit("userLoginOK", userID);
+      socket.emit("userLoginOK", userList[userID]);
     }
   }
   
@@ -124,15 +128,15 @@ const SocketIOServer = () => {
   }
 
   /* 아직 오류 있음 */
-  const onUserParticipatedGroupRequest = (socket, userID)=> {
-    let response = [];
-    Object.entries(groupList).forEach(([key, value]) => {
-      if (value.member[userID] !== undefined) {
-        response.append(value);
-      }
-    });
-    socket.emit("userParticipatedGroup", response);
-  }  
+  // const onUserParticipatedGroupRequest = (socket, userID)=> {
+  //   let response = [];
+  //   Object.entries(groupList).forEach(([key, value]) => {
+  //     if (value.member[userID] !== undefined) {
+  //       response.append(value);
+  //     }
+  //   });
+  //   socket.emit("userParticipatedGroup", response);
+  // }  
 
   
   const onPositionUpdate = (socket, positionData) => {

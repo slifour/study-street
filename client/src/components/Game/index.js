@@ -30,8 +30,7 @@ export default class Game extends React.Component {
           createContainer: true
       },
     };
-    const game = new Phaser.Game(config);
-    game.registry.set('socket', )
+    this.game = new Phaser.Game(config);
   }
   shouldComponentUpdate() {
     return false;

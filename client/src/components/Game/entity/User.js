@@ -6,6 +6,7 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, spriteKey, animSuffix) {
     super(scene, x, y, spriteKey);
     this.scene = scene;
+    this.registry = this.scene.game.registry;
     this.scene.add.existing(this);
     this.scene.physics.world.enable(this);
     this.stop = true
@@ -91,13 +92,12 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
 
   onPointerOver() {
     /* 플레이어를 호버할 때 status view를 보여주기 */
-    const dummyUser = {
-        "userID": "eunki",
-        "userName": "은기",
-        "status": "Making status",
-    };
-
-    this.statusView.text = dummyUser.status;
+    const loginUser = this.registry.get("loginUser");
+    if (loginUser) {
+      this.statusView.text = loginUser.status;
+    } else {
+      this.statusView.text = "Please login first.";
+    }
     this.statusView.setActive(true).setVisible(true);
   }
 

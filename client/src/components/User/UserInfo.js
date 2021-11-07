@@ -1,24 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import socket from "../../socket";
+import { LoginUserContext } from "../../App";
 
-function UserInfo({userID}) {
-  const [profile, setProfile] = useState({});
-
-  useEffect(() => {
-    console.log("user info use effect");
-    socket.on("userProfile", profile => {
-      setProfile(profile);
-    })
-    socket.emit("userProfileRequest", userID);
-    return () => {};
-  }, [userID]);
-
+function UserInfo() {
+  const { loginUser, setLoginUser } = useContext(LoginUserContext);
   return (
-    <div>
-      {profile ? 
-      <> <b>{profile.userName}</b>님 화이팅~ </>
-      : null}
-    </div>
+    <>
+      {
+        loginUser ? 
+        <div> Name: {loginUser.userName} </div>
+        : <div> (Not logged in.) </div>
+      }
+    </>
   );
 }
 
