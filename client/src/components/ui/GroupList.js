@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styles from "./ui.module.css";
 import styled from 'styled-components';
 import Modal from 'react-overlays/Modal';
 import { LoginUserContext } from '../../App';
+import socket from '../../socket';
 
 const StyledModal = styled(Modal)`
     position: fixed;
@@ -44,27 +45,50 @@ const StyledGroupIcon = styled("div")`
 `;
 
 export default function GroupList(props) {
-    const {loginUser, setLoginUser} = useContext(LoginUserContext);
-    const [showModal, setShowModal] = useState(true);
+    const {loginUser} = useContext(LoginUserContext);
+    const [groupList, setGroupList] = useState({});
 
     const renderBackdrop = (props) => <Backdrop {...props} />;
+
+    const onResponse = ({requestUser, type, payload}) => {
+        if (type == "RESPONSE_MY_GROUP_LIST" && requestUser == loginUser.userID) {
+            setGroupList(payload);
+        }
+    };
+
+    useEffect(() => {
+        socket.on("response", onResponse);
+        return () => {
+            socket.off("response", onResponse);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (loginUser) {
+            socket.emit("request", {
+                requestUser: loginUser.userID,
+                type: "MY_GROUP_LIST",
+                payload: null
+            });
+        }
+    }, [loginUser])
     
     // Dummy data
-    const groupList = {
-        "a": {
-            groupID: "a",
-            groupName: "We love study",
-            leader: "eunki",
-            member: ["eunki", "haeseul"],
-            color: "#FFE76A"
-        },
-        "b": {
-            groupID: "b",
-            groupName: "We love slifour",
-            leader: "hyeon",
-            member: ["eunki", "hyeon", "jeonghoon"],
-        },
-    }
+    // const groupList = {
+    //     "a": {
+    //         groupID: "a",
+    //         groupName: "We love study",
+    //         leader: "eunki",
+    //         member: ["eunki", "haeseul"],
+    //         color: "#FFE76A"
+    //     },
+    //     "b": {
+    //         groupID: "b",
+    //         groupName: "We love slifour",
+    //         leader: "hyeon",
+    //         member: ["eunki", "hyeon", "jeonghoon"],
+    //     },
+    // }
 
     return(
         <div className = {styles.groupListContainer}>

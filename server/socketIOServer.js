@@ -9,6 +9,7 @@
  */
 
 const socketIo = require("socket.io");
+const { RequestType, ResponseType } = require("./requestType");
 
 const SocketIOServer = () => {
   /**
@@ -96,8 +97,54 @@ const SocketIOServer = () => {
     socket.on("userLoginRequest", onUserLoginRequest.bind(null, socket))
     socket.on("userProfileRequest", onUserProfileRequest.bind(null, socket))
     // socket.on("userParticipatedGroupRequest", onUserParticipatedGroupRequest.bind(null, socket))
+    socket.on("request", onRequest.bind(null, socket));
     updateDate(socket)
   }
+
+  const onRequest = (socket, request) => {
+    console.log("Got request:", request);
+    let requestUser, type, payload;
+    try {
+      ({requestUser, type, payload} = request);
+    } catch {
+      console.warn("Invalid request: ", request);
+      socket.emit("response", {
+          requestUser,
+          type: ResponseType.FAIL,
+          payload: {
+            "msg": "Invalid request."
+          }
+      });  
+      return;
+    }
+    let response;
+    switch (type) {
+      case RequestType.MY_GROUP_LIST: response = onRequestMyGroupList(socket, request); break;
+    }
+    socket.emit("response", response);
+  }
+
+  const onRequestMyGroupList = (socket, request) => {
+    const {requestUser, type, payload} = request;
+
+    if (!requestUser) {
+      return {
+        requestUser,
+        type: ResponseType.FAIL,
+        payload: {
+          "msg": "Login is required."
+        }
+      }
+    };
+
+    let myGroupList = Object.values(groupList)
+        .filter(({member}) => member.includes(requestUser));
+    return {
+      requestUser,
+      type: ResponseType.MY_GROUP_LIST,
+      payload: myGroupList
+    };
+  };
 
   /* Home scene */
   const onUserLoginRequest = (socket, userID) => {
@@ -110,7 +157,7 @@ const SocketIOServer = () => {
   
   const onUserProfileRequest = (socket, userID) => {
     socket.emit("userProfile", userList[userID]);
-  }
+  }  
 
   /* 아직 오류 있음 */
   // const onUserParticipatedGroupRequest = (socket, userID)=> {
