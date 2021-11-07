@@ -11,8 +11,6 @@ export default class Game extends React.Component {
   componentDidMount() {
     const config = {
       type: Phaser.AUTO,
-      width: 910,
-      height: 910,
       physics: {
         default: 'arcade',
         arcade: {
@@ -20,8 +18,11 @@ export default class Game extends React.Component {
         },
       },
       scale: {
+        mode: Phaser.Scale.RESIZE,
         parent: 'game-container',
-        autoCenter: Phaser.Scale.CENTER_HORIZONTALLY,
+        autoCenter: Phaser.Scale.CENTER_HORIZONTALLY,  
+        // width: 910,
+        // height: 910,
       },
       scene: [Library, Rest],
       // scene: [HomeScene, Library, Rest],
