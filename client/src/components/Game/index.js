@@ -23,8 +23,11 @@ export default class Game extends React.Component {
         parent: 'game-container',
         autoCenter: Phaser.Scale.CENTER_HORIZONTALLY,
       },
+      scene: [Library, Rest],
       // scene: [HomeScene, Library, Rest],
-      scene: [HomeScene, Library, Rest],
+      dom: {
+          createContainer: true
+      },
     };
     const game = new Phaser.Game(config);
     game.registry.set('socket', )

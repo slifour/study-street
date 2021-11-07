@@ -14,14 +14,18 @@ export default class Library extends Phaser.Scene {
       super('Library');
       this.socket = socket;   
     }
+
     init() {
         console.log('Welcome to Library');
         this.bufferWidth = 10
         this.firstOverlap = true 
+        this.groupAreas = {};        
     };
 
     firstOverlap(){
         return this.firstOverlap
+
+
     }
 
     preload() {
@@ -31,8 +35,12 @@ export default class Library extends Phaser.Scene {
         this.load.image('chair', 'assets/images/chair.png');
         this.load.image('sitShadow', 'assets/images/sitShadow.png');
         this.load.image('sitText', 'assets/images/sitText.png');
-        this.load.image('book-front', 'assets/images/book-front.png');
-        this.load.image('bookshelf', 'assets/images/bookshelf.png');
+        this.load.image('bookshelf', 'assets/images/book-shelf.png');
+        this.load.image('book-side', 'assets/images/book-red.png');
+        this.load.image('book-right', 'assets/images/book-right.png');
+        this.load.image('book-center', 'assets/images/book-center.png');
+        this.load.image('book-left', 'assets/images/book-left.png');
+
         // map in json format
         this.load.spritesheet('user-girl', 'assets/spriteSheets/user.png', {
             frameWidth: 32,
@@ -47,17 +55,19 @@ export default class Library extends Phaser.Scene {
             frameHeight: 35
         });
         this.load.html('newArtifact', 'assets/NewArtifact.html')
+        this.load.html('alert', 'assets/NewAlert.html')
     }
 
     /*
      * Map 에 create 해야할 sprites 
      */    
 
-    createGroupArea(){
-        this.groupArea = new GroupArea(this, 4000, 2200)
-        this.groupArea.init('desk', 'chair', 'bookshelf')
-        this.nextBookPosition = this.groupArea.positions[0]
-        this.groupArea.setPosition(4000,2000)
+    createGroupArea(groupKey){
+        let groupArea = new GroupArea(this, 4000, 2200)
+        groupArea.init('desk', 'chair', 'bookshelf')
+        // this.nextBookPosition = groupArea.positions[0]
+        groupArea.setPosition(4000,2000)
+        this.groupAreas[groupKey] = groupArea
     }
 
     createChair() {
@@ -76,24 +86,24 @@ export default class Library extends Phaser.Scene {
          */
         this.input.on('pointerdown', function(){
             this.handleEnterBuffer();
-            // this.scene.start('Rest');
-            // this.scene.launch('Rest')
-            // console.log("FirstScene -> LoadScene. Input : pointerdown")
-            // this.scene.resucme('LoadScene');  
-            // console.log("LoadScene resumed")
-            // this.scene.stop('FirstScene');
+        //     // this.scene.start('Rest');
+        //     // this.scene.launch('Rest')
+        //     // console.log("FirstScene -> LoadScene. Input : pointerdown")
+        //     // this.scene.resucme('LoadScene');  
+        //     // console.log("LoadScene resumed")
+        //     // this.scene.stop('FirstScene');
          }, this);
         // create map
         this.createMap();
-        this.createGroupArea();
+        this.createGroupArea('a');
         // this.createAnimations();
         createCharacterAnimsWizard(this.anims);
         createCharacterAnimsGirl(this.anims);
         this.cursors = this.input.keyboard.createCursorKeys();
-
         this.createUser();
         this.createFriend();
         this.setEventHandlers();
+        this.socket.emit("initializeLibrary");
         this.time.addEvent({
             delay: 1000,
             callback: ()=>{
@@ -124,19 +134,18 @@ export default class Library extends Phaser.Scene {
 
     createUser() {
         this.user = new User(this, 4000, 2200, 'user-girl', 'girl').setScale(2);
-        this.add.existing(this.user);
 
         this.updateCamera();
 
         this.physics.add.collider(this.user, this.spawns);
         this.physics.add.collider(this.user, this.desk0);
-        this.physics.add.overlap(
-            this.bufferToFirst,
-            this.user,
-            this.handleEnterBuffer,
-            undefined,
-            this
-        );
+        // this.physics.add.overlap(
+        //     this.bufferToFirst,
+        //     this.user,
+        //     this.handleEnterBuffer,
+        //     undefined,
+        //     this
+        // );
     }
 
     createFriend(){
@@ -165,7 +174,6 @@ export default class Library extends Phaser.Scene {
         this.cameras.main.roundPixels = true; // avoid tile bleed
     }
 
-
     setEventHandlers(){
         // Description
         // socket.on('event', eventHandler)
@@ -174,6 +182,7 @@ export default class Library extends Phaser.Scene {
         this.socket.on('stateUpdate', this.onStateUpdate.bind(this));
         this.socket.on('newArtifact', this.onNewArtifact.bind(this));
         this.socket.on('newGroup', this.onNewGroup.bind(this))
+        this.socket.on("goalUpdate", this.onGoalUpdate.bind(this));
       }
     
     onNewGroup(){
@@ -181,12 +190,11 @@ export default class Library extends Phaser.Scene {
     }  
 
     onNewArtifact(data){
-        console.log('recieve : newArtifact')
+        // console.log('recieve : newArtifact')
         
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
         let tooltip = new Tooltip(this, screenCenterX, screenCenterY, 'book-front', 'newArtifact');
-        
         this.time.addEvent({
             delay: 1000,
             callback: ()=>{
@@ -200,7 +208,8 @@ export default class Library extends Phaser.Scene {
         // tooltip.on('click', this.onArtifactTooltipClicked.bind(this, book));
         // // this.tooltipContainer = this.add.container(screenCenterX, screenCenterY);
         // let tooltip = this.add.dom(screenCenterX, screenCenterY);             
-        // tooltip.createFromCache('newArtifact');
+        // tooltip.createFromCache('newArtifact');updateBooks
+
         // // tooltipContainer.add(tooltip);   
         // // tooltipContainer.fixedToCamera = true;
 
@@ -236,6 +245,28 @@ export default class Library extends Phaser.Scene {
         }.bind(this))
     }
 
+/** 
+ * let bookList = {
+  "a": {
+    0 : [1,3,1,1,1],
+    1 : [5,3,2,3],
+  },
+  "b": {
+  },  
+}
+ * @param {*} bookList 
+ */
+    onGoalUpdate(bookList){
+        console.log('onGoalUpdate')
+        for (const [groupId, value] of Object.entries(bookList)) {
+            if (Object.keys(this.groupAreas).includes(groupId)){
+                let groupArea = this.groupAreas[groupId]
+                groupArea.updateBooks(value) 
+
+                console.log(groupId, value);
+            }           
+        }        
+    }
 
 }
 

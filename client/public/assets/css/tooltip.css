@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+.tooltip {
+    position: absolute;
+    width: 447px;
+    height: 229px;
+    left: 0px;
+    top: 0px;
+    
+    background: #FFFFFF;
+    box-shadow: 0px 4px 10px rgba(109, 109, 109, 0.25);
+    border-radius: 14px;
+}
+
+.artifact{
+    position: absolute;
+    width: 84px;
+    height: 105px;
+    left: 210px;
+    top: 32px;
+}
+
+
+.tooltipHeader {
+    position: absolute;
+    width: 161px;
+    height: 16px;
+    left: 143px;
+    top: 107px;
+
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 900;
+    font-size: 16px;
+    line-height: 100%;
+    /* identical to box height, or 16px */
+
+    display: flex;
+    align-items: center;
+
+    color: #0C0C0C;
+}
+
+.tooltipParagraph {
+    position: absolute;
+    width: 250px;
+    height: 32px;
+    left: 99px;
+    top: 135px;
+
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 100%;
+    /* or 16px */
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    color: #0C0C0C;
+}

@@ -8,8 +8,12 @@ import InvitationView from "./components/User/InvitationView";
 import GroupView from "./components/User/GroupView";
 import UserInfo from "./components/User/UserInfo";
 import Login from "./components/User/LogIn";
+import Tooltip from "./components/Game/entity/Tooltip";
 
 function App() {
+
+  const eventEmitter = require('events');
+  window.ee = new eventEmitter();
   
   const [loadClient, setLoadClient] = useState(true);
   const [userID, setUserID] = useState(false);
