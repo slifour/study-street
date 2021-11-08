@@ -30,7 +30,7 @@ export default class Library extends Phaser.Scene {
 
     preload() {
         // this.load.image("library", "assets/map/library_small.png");
-        this.load.image('map_library', 'assets/map/map_library.png');
+        // this.load.image('map_library', 'assets/map/map_library.png');
         this.load.image('desk', 'assets/images/desk_4.png');
         this.load.image('chair', 'assets/images/chair.png');
         this.load.image('sitShadow', 'assets/images/sitShadow.png');
