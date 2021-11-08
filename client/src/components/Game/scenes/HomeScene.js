@@ -17,12 +17,17 @@ export class HomeScene extends Phaser.Scene {
         this.load.image('chair', 'assets/images/chair.png');
         this.load.image('sitShadow', 'assets/images/sitShadow.png');
         this.load.image('sitText', 'assets/images/sitText.png');
-        // map in json format
-        this.load.tilemapTiledJSON('library', 'assets/map/library.json');
         this.load.spritesheet('user', 'assets/spriteSheets/user.png', {
             frameWidth: 32,
             frameHeight: 32
         });
+
+        // map in json format
+        this.load.image('restTiles1', 'assets/map/restTiles1.png');
+        this.load.image('restTiles2', 'assets/map/restTiles2.png');
+        this.load.image('restTiles3', 'assets/map/restTiles3.png');
+
+        this.load.tilemapTiledJSON('restMap', 'assets/map/restMap.json');
     }
 
     /*
@@ -42,7 +47,7 @@ export class HomeScene extends Phaser.Scene {
 
         // create map
         this.createMap();
-        this.createDesk();
+        // this.createDesk();
 
         this.createAnimations();
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -55,11 +60,23 @@ export class HomeScene extends Phaser.Scene {
 
     createMap() {
         // create the map
-        this.map = this.make.tilemap({
-            key: 'library', tileWidth: 32, tileHeight: 32
-        });
-        var tileset = this.map.addTilesetImage('tiles', 'tiles');
-        var layer = this.map.createStaticLayer('backgroundLayer', tileset, 0, 0)
+        this.map = this.make.tilemap({ key: 'restMap' });
+        const tileset1 = this.map.addTilesetImage('restTiles1', 'restTiles1');
+        const tileset2 = this.map.addTilesetImage('restTiles2', 'restTiles2');
+        const tileset3 = this.map.addTilesetImage('restTiles3', 'restTiles3');
+        const allTiles = [tileset1, tileset2, tileset3];
+
+        this.belowPlayer1 = this.map.createLayer('Below Player1', allTiles);
+        this.belowPlayer2 = this.map.createLayer('Below Player2', allTiles);
+        this.belowPlayer3 = this.map.createLayer('Below Player3', allTiles);
+        this.world1 = this.map.createLayer('World1', allTiles);
+        this.world2 = this.map.createLayer('World2', allTiles);
+        this.abovePlayer = this.map.createLayer('Above Player', allTiles);
+
+        this.belowPlayer1.setCollisionByProperty({ collides: true });
+        this.world1.setCollisionByProperty({ collides: true });
+        this.world2.setCollisionByProperty({ collides: true });
+        this.abovePlayer.setDepth(10);
 
         // don't go out of the map
         this.physics.world.bounds.width = this.map.widthInPixels;
@@ -116,6 +133,9 @@ export class HomeScene extends Phaser.Scene {
 
         this.physics.add.collider(this.container, this.spawns);
         this.physics.add.collider(this.container, this.desk0);
+        this.physics.add.collider(this.container, this.belowPlayer1);
+        this.physics.add.collider(this.container, this.world1);
+        this.physics.add.collider(this.container, this.world2);
     }
 
     addOtherUsers(userInfo) {
