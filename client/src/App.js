@@ -2,12 +2,10 @@ import React, { useRef, useEffect, useState } from "react";
 import './App.css';
 import MenuBar from "./components/ui/MenuBar";
 import Game from "./components/Game";
-import InvitationView from "./components/User/InvitationView";
-import GroupView from "./components/User/GroupView";
-import UserInfo from "./components/User/UserInfo";
 import Login from "./components/User/LogIn";
 import Tooltip from "./components/Game/entity/Tooltip";
 import Avatars from "./components/ui/Avatars";
+import {GroupListButton} from "./components/ui/GroupList";
 
 
 /* Example of LoginUserContext value
@@ -38,6 +36,7 @@ function App() {
       <div className="content">
         <MenuBar/>
         <Avatars/>
+        <GroupListButton></GroupListButton>
       </div>
       <div className="game-container">
         <Game ref={game}/>
