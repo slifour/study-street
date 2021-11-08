@@ -1,76 +1,49 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import styles from "./ui.module.css";
-import styled from 'styled-components';
-import Modal from 'react-overlays/Modal';
 import { LoginUserContext } from '../../App';
 import socket from '../../socket';
-
-const StyledModal = styled(Modal)`
-    position: fixed;
-    width: 340px;
-    height: 310px;
-    z-index: 1040;
-    bottom: 10%;
-    left: 20%;
-    border-radius: 8px;
-    outline: none;
-    background-color: white;
-    box-shadow: 0px 4px 10px rgba(71, 71, 71, 0.25);
-`;
-
-const Backdrop = styled("div")`
-    position: fixed;
-    z-index: 1040;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: #000;
-    opacity: 0.2;
-`;
-
-const StyledGroupIcon = styled("div")`
-    width: 40px;
-    height: 40px;
-    box-shadow: 0px 4px 4px rgba(88, 88, 88, 0.25);
-    border-radius: 50%;
-
-    color: #FDFDFD;
-    line-height: 40px;
-    text-align: center;
-    font-size: 16px;
-    font-weight: 600;    
-
-    background: ${props => props.color};
-`;
+import GroupIcon from './GroupIcon';
+import OverlayButton from './OverlayButton';
+import GroupMemberList from './GroupMemberList';
+import uniqueString from 'unique-string';
 
 export default function GroupList(props) {
     const {loginUser} = useContext(LoginUserContext);
     const [groupList, setGroupList] = useState({});
 
-    const renderBackdrop = (props) => <Backdrop {...props} />;
+    const usedRequestKeyRef = useRef(null);
 
-    const onResponse = ({requestUser, type, payload}) => {
-        if (type == "RESPONSE_MY_GROUP_LIST" && requestUser == loginUser.userID) {
-            setGroupList(payload);
+    const onResponse = ({requestKey, status, payload}) => {
+        if (requestKey === usedRequestKeyRef.current) {
+            switch (status) {
+                case "STATUS_OK":
+                    setGroupList(payload);
+                    break;
+                case "STATUS_FAIL":
+                    alert(payload.msg || "Failed to obtain groups (client msg)");
+                    break;
+            }
         }
     };
 
     useEffect(() => {
-        socket.on("response", onResponse);
-        return () => {
-            socket.off("response", onResponse);
-        }
+        const responseType = "RESPONSE_MY_GROUP_LIST";
+        socket.on(responseType, onResponse);
+        return () => {socket.off(responseType, onResponse);};
     }, []);
 
     useEffect(() => {
-        if (loginUser) {
-            socket.emit("request", {
-                requestUser: loginUser.userID,
-                type: "MY_GROUP_LIST",
-                payload: null
-            });
-        }
+        if (!loginUser) return;
+
+        const requestType = "REQUEST_MY_GROUP_LIST";
+        usedRequestKeyRef.current = uniqueString();
+        
+        socket.emit(requestType, {
+            requestUser: loginUser.userID,
+            requestKey: usedRequestKeyRef.current,
+            requestType,
+            payload: {}
+          });
     }, [loginUser])
     
     // Dummy data
@@ -111,28 +84,28 @@ export default function GroupList(props) {
 
 export function GroupListItem({group}) {
     const shortenName = group.groupName.substr(0, 2).toUpperCase();
+
+    const [showMemberList, setShowMemberList] = useState(false);
+
+    const onClick = () => {
+        setShowMemberList(true);
+    }
+
     return (
-        <div className={styles.groupListItem}>
-            <StyledGroupIcon color={group.color || '#79ACBC'}>{shortenName}</StyledGroupIcon>
+        <>
+        <div className={styles.groupListItem} onClick={onClick}>
+            <GroupIcon group={group}></GroupIcon>
             <div className = {styles.groupListItemText}>{group.groupName}</div>
         </div>
+        <GroupMemberList show={showMemberList} setShow={setShowMemberList} group={group}></GroupMemberList>
+        </>
     )
 }
 
 export function GroupListButton(props) {
-    const [show, setShow] = useState(false);
-    const renderBackdrop = props => <Backdrop {...props} />;
     return (
-        <>
-        <div className={`${styles.groupListButton} ${styles.hvrGrow}`} onClick={() => {setShow(true)}}>
-            Groups
-        </div> 
-        <StyledModal
-            show = {show}
-            onHide = {() => setShow(false)}
-            renderBackdrop = {renderBackdrop}>
-            {show ? <GroupList></GroupList> : null}
-        </StyledModal>
-        </>
-    )
+        <OverlayButton text="Your Groups" buttonStyle = {{left: "20%", bottom: "10%"}}>
+            <GroupList></GroupList>
+        </OverlayButton>
+    );
 }
