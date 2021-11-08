@@ -30,7 +30,7 @@ export default class Library extends Phaser.Scene {
 
     preload() {
         // this.load.image("library", "assets/map/library_small.png");
-        this.load.image('map_library', 'assets/map/map_library.png');
+        // this.load.image('map_library', 'assets/map/map_library.png');
         this.load.image('desk', 'assets/images/desk_4.png');
         this.load.image('chair', 'assets/images/chair.png');
         this.load.image('sitShadow', 'assets/images/sitShadow.png');
@@ -72,7 +72,7 @@ export default class Library extends Phaser.Scene {
         let groupArea = new GroupArea(this, 4000, 2200)
         groupArea.init('desk', 'chair', 'bookshelf')
         // this.nextBookPosition = groupArea.positions[0]
-        groupArea.setPosition(4000,2000)
+        groupArea.setPosition(500, 400);
         this.groupAreas[groupKey] = groupArea
     }
 
@@ -153,8 +153,8 @@ export default class Library extends Phaser.Scene {
 
         this.physics.add.collider(this.user, this.spawns);
         this.physics.add.collider(this.user, this.desk0);
-        this.physics.add.collider(this.container, this.belowPlayer1);
-        this.physics.add.collider(this.container, this.world1);
+        this.physics.add.collider(this.user, this.belowPlayer1);
+        this.physics.add.collider(this.user, this.world1);
         // this.physics.add.overlap(
         //     this.bufferToFirst,
         //     this.user,
