@@ -9,6 +9,7 @@
  */
 
 const socketIo = require("socket.io");
+const { RequestType, ResponseType, ResponseStatus } = require("./requestType");
 
 const SocketIOServer = () => {
   /**
@@ -49,11 +50,11 @@ const SocketIOServer = () => {
   let stateChanged = false // flag whether state is changed = for transmission efficientcy
   let isEmittingUpdates = false // flag whether server is emitting updates = to prevent redundant emission and coliision
   let stateUpdateInterval = 300 // interval to update user states
-  let logInterval = 10000 // interval to stamp logs
+  let logInterval = 100000 // interval to stamp logs
   // let socket // server socket
   let scenes = {'FirstScene' : 1, 'SecondScene' : 2} // scenes
   let io
-  let { userList, groupList } = require("./database");
+  let { userList, groupList, invitationList, goalList, bookList } = require("./database");
   let interval;
 
   /** Methods */
@@ -68,9 +69,9 @@ const SocketIOServer = () => {
 
     io.on("connection", (socket) => {
       console.log("New client connected");
-      socket.emit("socket.id", socket.id);
-      console.log(socket.id)
-      setEventHandlers(socket)      
+      socket.emit("socket.id", socket.id);      
+      console.log(socket.id);
+      setEventHandlers(socket);      
       logUsers()
     });
   }
@@ -111,7 +112,153 @@ const SocketIOServer = () => {
     socket.on("sendGroupMessage", onSendGroupMessage.bind(null, socket))
     socket.on("sendPrivateMessage", onSendPrivateMessage.bind(null, socket))
     socket.on("updateGroupStatus", onUpdateGroupStatus.bind(null, socket))
+    socket.on("newArtifact", onNewArtifact.bind(null, socket))
+    socket.on("initializeLibrary", onIntializeLibrary.bind(null,socket))
+    socket.on(RequestType.MY_GROUP_LIST, onRequest.bind(null, socket, RequestType.MY_GROUP_LIST));
+    socket.on(RequestType.INVITE_FRIEND, onRequest.bind(null, socket, RequestType.INVITE_FRIEND));
+    socket.on(RequestType.LOGIN, onRequest.bind(null, socket, RequestType.LOGIN));
+    socket.on(RequestType.MY_PROFILE, onRequest.bind(null, socket, RequestType.MY_PROFILE));
     updateDate(socket)
+  }
+
+  const onRequest = (socket, requestName, request) => {
+    console.log("Got request:", request);
+    let requestUser, requestKey, requestType, payload;
+    try {
+      ({requestUser, requestKey, requestType, payload} = request);
+      if (requestName !== requestType) throw new Error();
+    } catch {
+      console.warn("Invalid request: ", request);
+      responseFail(socket, request.requestKey || "", ResponseType.OTHER, "Invalid request.");
+      return;
+    }
+    let response;
+    switch (requestType) {
+      case RequestType.MY_GROUP_LIST: onRequestMyGroupList(socket, request); break;
+      case RequestType.INVITE_FRIEND: onRequestInviteFriend(socket, request); break;
+      case RequestType.LOGIN: onRequestLogin(socket, request); break;
+      case RequestType.MY_PROFILE: onRequestMyProfile(socket, request); break;
+    }
+    socket.emit("response", response);
+  }
+
+  /** 
+   * @param {socketIo.Socket} socket
+   * @param {string} requestKey 
+   * @param {string} responseType
+   * @param {object} msg 
+  */
+   const responseFail = (socket, requestKey, responseType, msg) => {
+    socket.emit(responseType, {
+      requestKey,
+      responseType,
+      status: ResponseStatus.FAIL,
+      payload: { msg }
+    });
+  };
+
+
+  const onRequestMyGroupList = (socket, request) => {
+    const {requestUser, requestKey} = request;
+    const responseType = ResponseType.MY_GROUP_LIST;
+
+    if (!requestUser) {
+      return responseFail(socket, requestKey, responseType, "Login is required.");
+    };
+
+    let myGroupList = Object.values(groupList)
+        .filter(({member}) => member.includes(requestUser));
+
+    return socket.emit(responseType, {
+      requestKey, 
+      responseType,
+      status: ResponseStatus.OK,
+      payload: myGroupList
+    });
+  };
+
+  const onRequestInviteFriend = (socket, request) => {
+    const {requestUser, requestKey, payload} = request;
+    const responseType = ResponseType.INVITE_FRIEND;
+
+    if (!requestUser) {
+      return responseFail(socket, requestKey, responseType, "Login is required.");
+    }
+    
+    let groupID, friendID;
+    try {
+      ({groupID, friendID} = payload);
+    } catch {
+      return responseFail(socket, requestKey, responseType, "Invalid request.");
+    }
+    
+    if (groupList[groupID].member.includes(friendID)) {
+      return responseFail(socket, requestKey, responseType, "Already in group.");
+    }
+    
+    const invitationKey = `${groupID} ${friendID}`;
+    invitationList[invitationKey] = {
+      groupID,
+      friendID,
+      inviteTime: new Date()
+    };
+
+    return socket.emit(responseType, {
+      requestUser,
+      responseType,
+      status: ResponseStatus.OK,
+      payload: {}
+    });
+  }
+
+  const onRequestLogin = (socket, request) => {
+    const {requestUser, requestKey, payload} = request;
+    const responseType = ResponseType.LOGIN;
+
+    console.log("onRequestLogin: ", request); 
+
+    let userID;
+    try {
+      ({userID} = payload);
+    } catch {
+      return responseFail(socket, requestKey, responseType, "Invalid request.");
+    }
+
+    if (userList[userID]) {
+      return socket.emit(responseType, {
+        requestKey,
+        responseType,
+        status: ResponseStatus.OK,
+        payload: userList[userID]
+      });
+    } else {
+      return responseFail(socket, requestKey, responseType, "Failed to login.");
+    }
+  }
+
+  const onRequestMyProfile = (socket, userID) => {
+    const {requestUser, requestKey, payload} = request;
+    const responseType = ResponseType.MY_PROFILE;
+
+    if (!requestUser) {
+      return responseFail(socket, requestKey, responseType, "Login is required.");
+    }
+
+    return socket.emit(responseType, {
+      requestKey,
+      responseType,
+      status: ResponseStatus.OK,
+      payload: userList[userID]
+    });
+  }
+
+  const onNewArtifact = (socket) => {
+    console.log('server : newArtifact')
+    data = {
+      goal : 'Study everyday',
+      group : 'Slifour'
+    }
+    socket.emit("newArtifact", data)
   }
 
   /* Home scene */
@@ -199,20 +346,18 @@ const SocketIOServer = () => {
     socket.leave(prevScene);
   }
   
+  const onIntializeLibrary = (socket) =>{
+    socket.emit("goalUpdate", bookList);
+  }
+
   const onInitialize = (socket, data) => {
     console.log("New user initialized");
     stateChanged = true;    
-  
-    // Create a new user object
-    let newUser = createUser(socket.id, data.name, data.group, data.position, data.scene);
-
-    // Add the newly created user to game state.
-    users[socket.id] = newUser;
-  
+    let newUser = createUser(socket.id, data.name, data.group, data.position, data.scene); // Create a new user object
+    users[socket.id] = newUser;  // Add the newly created user to game state.
     socket.broadcast.emit("initialize", socket.id, data.name, data.group, data.position)
   
-    //On first user joined, start update emit loop
-    if (numUsers() === 1 && !isEmittingUpdates) {
+    if (numUsers() === 1 && !isEmittingUpdates) { //On first user joined, start update emit loop
       emitStateUpdateLoop('room');
     }
   }
@@ -231,7 +376,7 @@ const SocketIOServer = () => {
       io.emit("stateUpdate", users);
       console.log("stateUpdate")
     }
-
+    
     if (numUsers() > 0) {
       setTimeout(emitStateUpdateLoop.bind(this), stateUpdateInterval);
     } else {
@@ -253,8 +398,8 @@ const SocketIOServer = () => {
   }
 
   /** log */  
-  const logUsers = () =>  {
-    console.log(users);
+  let logUsers = () =>  {
+    // console.log(users);
     setTimeout(logUsers.bind(this), logInterval);
   }   
 
