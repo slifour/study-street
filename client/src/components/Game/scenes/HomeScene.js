@@ -44,7 +44,6 @@ export class HomeScene extends Phaser.Scene {
      */
     create() {
         this.otherUsers = this.physics.add.group();
-
         // create map
         this.createMap();
         // this.createDesk();
@@ -56,6 +55,16 @@ export class HomeScene extends Phaser.Scene {
             x: 0,
             y: 0
         });
+
+        this.input.on('pointerdown', function(){
+            this.handleEnterBuffer();
+            // this.scene.start('Rest');
+            // this.scene.launch('Rest')
+            // console.log("FirstScene -> LoadScene. Input : pointerdown")
+            // this.scene.resume('LoadScene');  
+            // console.log("LoadScene resumed")
+            // this.scene.stop('FirstScene');
+        }, this);
     }
 
     createMap() {
@@ -120,6 +129,8 @@ export class HomeScene extends Phaser.Scene {
         this.user = this.add.sprite(0, 0, 'user', 6);
         this.user.setScale(2)
 
+        this.date = this
+
         this.container = this.add.container(userInfo.x, userInfo.y);
         this.container.setSize(64, 64);
         this.physics.world.enable(this.container);
@@ -137,6 +148,18 @@ export class HomeScene extends Phaser.Scene {
         this.physics.add.collider(this.container, this.world1);
         this.physics.add.collider(this.container, this.world2);
     }
+    
+    handleEnterBuffer(){
+        // this.scene.start('Rest');
+        // this.physics.destroy(this.bufferToFirst)
+        console.log('handleEnterBuffer')        
+        this.cameras.main.fadeOut(1000, 0, 0, 0)
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+            // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
+            // this.doUpdate = false
+            this.scene.start('Library');
+        })  
+    }     
 
     addOtherUsers(userInfo) {
         console.log("add other users:", userInfo.userId);
