@@ -48,9 +48,9 @@ export default class Library extends Phaser.Scene {
 
         this.load.tilemapTiledJSON('libraryMap', 'assets/map/libraryMap.json');
 
-        this.load.spritesheet('user-girl', 'assets/spriteSheets/user.png', {
-            frameWidth: 32,
-            frameHeight: 32
+        this.load.spritesheet('user-girl', 'assets/spriteSheets/user_1.png', {
+            frameWidth: 32 * (100/3),
+            frameHeight: 42 * (100/3)
         });
         this.load.spritesheet('user-wizard', 'assets/spriteSheets/wizard.png', {
             frameWidth: 60,
@@ -139,6 +139,9 @@ export default class Library extends Phaser.Scene {
         this.belowPlayer1.setCollisionByProperty({ collides: true });
         this.world1.setCollisionByProperty({ collides: true });
 
+        this.belowPlayer1.setScale(1.2);
+        this.world1.setScale(1.2);
+
         // don't go out of the map
         this.physics.world.bounds.width = this.map.displayWidth;
         this.physics.world.bounds.height = this.map.displayHeight;
@@ -147,7 +150,7 @@ export default class Library extends Phaser.Scene {
     }
 
     createUser() {
-        this.user = new User(this, 0, 0, 'user-girl', 'girl').setScale(2);
+        this.user = new User(this, 800, 400, 'user-girl', 'girl').setScale(3/100 * 1.2);
 
         this.updateCamera();
 

@@ -44,7 +44,7 @@ export function createCharacterAnimsGirl(anims) {
   //  animation with key 'left', we don't need left and right as we will use one and flip the sprite
   anims.create({
     key: 'user-idle-girl',
-    frames: anims.generateFrameNumbers('user-girl', {frames: [0, 1, 0, 2]}),
+    frames: anims.generateFrameNumbers('user-girl', {frames: [1]}),
     frameRate: 1,
     repeat: -1
   });
