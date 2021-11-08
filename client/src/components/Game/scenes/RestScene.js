@@ -153,9 +153,9 @@ export default class Rest extends Phaser.Scene {
 
         this.physics.add.collider(this.user, this.spawns);
         this.physics.add.collider(this.user, this.desk0);
-        this.physics.add.collider(this.container, this.belowPlayer1);
-        this.physics.add.collider(this.container, this.world1);
-        this.physics.add.collider(this.container, this.world2);
+        this.physics.add.collider(this.user, this.belowPlayer1);
+        this.physics.add.collider(this.user, this.world1);
+        this.physics.add.collider(this.user, this.world2);
         // this.physics.add.overlap(
         //   this.bufferToFirst,
         //   this.user,
