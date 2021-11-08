@@ -69,10 +69,10 @@ export default class Library extends Phaser.Scene {
      */    
 
     createGroupArea(groupKey){
-        let groupArea = new GroupArea(this, 4000, 2200)
+        let groupArea = new GroupArea(this, 500, 400)
         groupArea.init('desk', 'chair', 'bookshelf')
         // this.nextBookPosition = groupArea.positions[0]
-        groupArea.setPosition(4000,2000)
+        groupArea.setPosition(500, 400)
         this.groupAreas[groupKey] = groupArea
     }
 
@@ -153,8 +153,8 @@ export default class Library extends Phaser.Scene {
 
         this.physics.add.collider(this.user, this.spawns);
         this.physics.add.collider(this.user, this.desk0);
-        this.physics.add.collider(this.container, this.belowPlayer1);
-        this.physics.add.collider(this.container, this.world1);
+        this.physics.add.collider(this.user, this.belowPlayer1);
+        this.physics.add.collider(this.user, this.world1);
         // this.physics.add.overlap(
         //     this.bufferToFirst,
         //     this.user,
