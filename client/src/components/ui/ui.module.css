@@ -17,23 +17,6 @@
     cursor: pointer;
   }
 
-.iconsOnHover {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 36px;
-    color: #BBBBBB;
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
-    text-rendering: optimizeLegibility;
-    cursor: pointer;
-}
-
 .menuBar {
     position: fixed;
     width: 360px;
@@ -133,6 +116,7 @@
     font-family: 'Lato', sans-serif;
     font-weight: 300;
     font-size: 18px;
+    transition: 0.2s all;
 }
 
 .chatInput:hover {
@@ -151,6 +135,7 @@
     display: flex;
     cursor: pointer;
     align-items: center;
+    justify-content: center;
 }
 
 .styledHr {

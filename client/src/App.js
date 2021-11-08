@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, useState } from "react";
-
 import './App.css';
 import MenuBar from "./components/ui/MenuBar";
 import Game from "./components/Game";
 import Login from "./components/User/LogIn";
+import Tooltip from "./components/Game/entity/Tooltip";
 import Avatars from "./components/ui/Avatars";
 import {GroupListButton} from "./components/ui/GroupList";
 
@@ -18,6 +18,9 @@ import {GroupListButton} from "./components/ui/GroupList";
 export const LoginUserContext = React.createContext(null);
 
 function App() {
+
+  const eventEmitter = require('events');
+  window.ee = new eventEmitter();
   
   const [loginUser, setLoginUser] = useState(null);
   const game = useRef(null);

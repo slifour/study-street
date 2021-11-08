@@ -3,6 +3,25 @@
 그러면 데이터베이스에 있는 값이 정확하다고 보장할 수 없게 됩니다. 
 i.e. 쓰는 사람 입장에서, 본인의 userName은 나중에 바꿀 수 있지만, userID는 바꿀 수 없어요. 
 */
+class Goal {
+  constructor(id, startDate, repeat){
+    this.id = id;
+    this.startDate = startDate;
+    this.repeat = repeat;
+  }
+}
+
+class timeGoal extends Goal{
+  constructor(id, startDate, repeat){
+    super(id, startDate, repeat);
+  }
+}
+
+class appointmentGoal extends Goal {
+  constructor(id, startDate, repeat){
+    super(id, startDate, repeat);
+  }
+}
 
 let userList = {
   "eunki": {
@@ -32,14 +51,15 @@ let groupList = {
     groupID: "a",
     groupName: "We love study",
     leader: "eunki",
-    color: "#FFE76A",
-    member: ["eunki", "haeseul"]
+    member: ["eunki", "haeseul"],
+    colors: ['#F79489', '#F9F1F0']
   },
   "b": {
     groupID: "b",
     groupName: "We love slifour",
     leader: "hyeon",
-    member: ["eunki", "hyeon", "jeonghoon"]
+    member: ["eunki", "hyeon", "jeonghoon"],
+    colors: ['#003B73', '#BFD7ED']
   },
 };
 
@@ -60,4 +80,23 @@ let invitationList = {
   }
 }
 
-module.exports = {userList, groupList, invitationList};
+let goalList = {
+  "a": {
+    0 : new timeGoal(),
+    1 : new appointmentGoal(),
+  },
+  "b": {
+  },  
+}
+
+let bookList = {
+  "a": {
+    0 : [1,3,1,1,1],
+    1 : [5,3,2,3],
+  },
+  "b": {
+  },  
+}
+
+
+module.exports = {userList, groupList, invitationList, goalList, bookList};

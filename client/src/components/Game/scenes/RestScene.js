@@ -25,6 +25,13 @@ export default class Rest extends Phaser.Scene {
             frameWidth: 32,
             frameHeight: 32
         });
+
+        // map in json format
+        this.load.image('restTiles1', 'assets/map/restTiles1.png');
+        this.load.image('restTiles2', 'assets/map/restTiles2.png');
+        this.load.image('restTiles3', 'assets/map/restTiles3.png');
+
+        this.load.tilemapTiledJSON('restMap', 'assets/map/restMap.json');
     }
 
     /*
@@ -71,8 +78,24 @@ export default class Rest extends Phaser.Scene {
      * - Add buffer to another scene (library scene)
      */
     createMap() {
-        this.map = this.add.image(0, 0, 'map_rest').setOrigin(0).setScale(1);
-        console.log(this.map.displayWidth, this.map.displayHeight) // 4403 4347
+        // create the map
+        this.map = this.make.tilemap({ key: 'restMap' });
+        const tileset1 = this.map.addTilesetImage('restTiles1', 'restTiles1');
+        const tileset2 = this.map.addTilesetImage('restTiles2', 'restTiles2');
+        const tileset3 = this.map.addTilesetImage('restTiles3', 'restTiles3');
+        const allTiles = [tileset1, tileset2, tileset3];
+
+        this.belowPlayer1 = this.map.createLayer('Below Player1', allTiles);
+        this.belowPlayer2 = this.map.createLayer('Below Player2', allTiles);
+        this.belowPlayer3 = this.map.createLayer('Below Player3', allTiles);
+        this.world1 = this.map.createLayer('World1', allTiles);
+        this.world2 = this.map.createLayer('World2', allTiles);
+        this.abovePlayer = this.map.createLayer('Above Player', allTiles);
+
+        this.belowPlayer1.setCollisionByProperty({ collides: true });
+        this.world1.setCollisionByProperty({ collides: true });
+        this.world2.setCollisionByProperty({ collides: true });
+        this.abovePlayer.setDepth(10);
 
         // don't go out of the map
         this.physics.world.bounds.width = this.map.displayWidth;
@@ -114,7 +137,7 @@ export default class Rest extends Phaser.Scene {
     }
 
     createUser() {
-        this.user = new User(this, 400, 2200, 'user').setScale(2);
+        this.user = new User(this, 0, 0, 'user').setScale(2);
         this.user.setCollideWorldBounds(true);
 
         // this.container = this.add.container(userInfo.x, userInfo.y);
@@ -130,13 +153,16 @@ export default class Rest extends Phaser.Scene {
 
         this.physics.add.collider(this.user, this.spawns);
         this.physics.add.collider(this.user, this.desk0);
-        this.physics.add.overlap(
-          this.bufferToFirst,
-          this.user,
-          this.handleEnterBuffer,
-          this.firstOverlap,
-          this
-        )
+        this.physics.add.collider(this.container, this.belowPlayer1);
+        this.physics.add.collider(this.container, this.world1);
+        this.physics.add.collider(this.container, this.world2);
+        // this.physics.add.overlap(
+        //   this.bufferToFirst,
+        //   this.user,
+        //   this.handleEnterBuffer,
+        //   this.firstOverlap,
+        //   this
+        // )
     }
 
     handleEnterBuffer(){
