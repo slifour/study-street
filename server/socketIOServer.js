@@ -206,8 +206,8 @@ const SocketIOServer = () => {
   }
 
   /** log */  
-  const logUsers = () =>  {
-    console.log(users);
+  let logUsers = () =>  {
+    // console.log(users);
     setTimeout(logUsers.bind(this), logInterval);
   }   
 

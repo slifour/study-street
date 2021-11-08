@@ -17,8 +17,6 @@ export class HomeScene extends Phaser.Scene {
         this.load.image('chair', 'assets/images/chair.png');
         this.load.image('sitShadow', 'assets/images/sitShadow.png');
         this.load.image('sitText', 'assets/images/sitText.png');
-        // map in json format
-        this.load.tilemapTiledJSON('library', 'assets/map/library.json');
         this.load.spritesheet('user', 'assets/spriteSheets/user.png', {
             frameWidth: 32,
             frameHeight: 32
@@ -41,7 +39,7 @@ export class HomeScene extends Phaser.Scene {
         this.otherUsers = this.physics.add.group();
         // create map
         this.createMap();
-        this.createDesk();
+        // this.createDesk();
 
         this.createAnimations();
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -64,15 +62,6 @@ export class HomeScene extends Phaser.Scene {
 
     createMap() {
         // create the map
-        this.map = this.make.tilemap({
-            key: 'library', tileWidth: 32, tileHeight: 32
-        });
-        var tileset = this.map.addTilesetImage('tiles', 'tiles');
-        var layer = this.map.createStaticLayer('backgroundLayer', tileset, 0, 0)
-
-        // don't go out of the map
-        this.physics.world.bounds.width = this.map.widthInPixels;
-        this.physics.world.bounds.height = this.map.heightInPixels;
     }
 
     createAnimations() {

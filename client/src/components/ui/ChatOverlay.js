@@ -32,7 +32,9 @@ export default function ChatOverlay(props) {
                     <input type="text"  className = {styles.chatInput}></input>
                 </form>    
                 <div className = {styles.chatButton}>
-                    <span className={styles.iconsWhite}>send</span>
+                    <div className={styles.hvrGrow}>
+                        <span className={styles.iconsWhite}>send</span>
+                    </div>
                 </div>
             </div>
         </div>
