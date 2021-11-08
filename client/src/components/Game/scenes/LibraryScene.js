@@ -37,11 +37,17 @@ export default class Library extends Phaser.Scene {
         this.load.image('sitText', 'assets/images/sitText.png');
         this.load.image('bookshelf', 'assets/images/book-shelf.png');
         this.load.image('book-side', 'assets/images/book-red.png');
-        this.load.image('book-right', 'assets/images/book-right.png');
-        this.load.image('book-center', 'assets/images/book-center.png');
-        this.load.image('book-left', 'assets/images/book-left.png');
+        // this.load.image('book-right', 'assets/images/book-right.png');
+        // this.load.image('book-center', 'assets/images/book-center.png');
+        // this.load.image('book-left', 'assets/images/book-left.png');
 
         // map in json format
+        this.load.image('libraryTiles1', 'assets/map/libraryTiles1.png');
+        this.load.image('libraryTiles2', 'assets/map/libraryTiles2.png');
+        this.load.image('libraryTiles3', 'assets/map/libraryTiles3.png');
+
+        this.load.tilemapTiledJSON('libraryMap', 'assets/map/libraryMap.json');
+
         this.load.spritesheet('user-girl', 'assets/spriteSheets/user.png', {
             frameWidth: 32,
             frameHeight: 32
@@ -121,24 +127,34 @@ export default class Library extends Phaser.Scene {
 
     createMap() {
         // create the map
-        this.map = this.add.image(0, 0, 'map_library').setOrigin(0).setScale(1);
-        console.log(this.map.displayWidth, this.map.displayHeight) // 4403 4347
+        this.map = this.make.tilemap({ key: 'libraryMap' });
+        const tileset1 = this.map.addTilesetImage('libraryTiles1', 'libraryTiles1');
+        const tileset2 = this.map.addTilesetImage('libraryTiles2', 'libraryTiles2');
+        const tileset3 = this.map.addTilesetImage('libraryTiles3', 'libraryTiles3');
+        const allTiles = [tileset1, tileset2, tileset3];
+
+        this.belowPlayer1 = this.map.createLayer('Below Player1', allTiles);
+        this.world1 = this.map.createLayer('World', allTiles);
+
+        this.belowPlayer1.setCollisionByProperty({ collides: true });
+        this.world1.setCollisionByProperty({ collides: true });
 
         // don't go out of the map
         this.physics.world.bounds.width = this.map.displayWidth;
         this.physics.world.bounds.height = this.map.displayHeight;
-
         this.bufferToFirst = this.add.rectangle(this.map.displayWidth-this.bufferWidth/2, this.map.displayHeight/2, this.bufferWidth, this.map.displayHeight, 0xff0000);
         this.physics.add.existing(this.bufferToFirst)
     }
 
     createUser() {
-        this.user = new User(this, 4000, 2200, 'user-girl', 'girl').setScale(2);
+        this.user = new User(this, 0, 0, 'user-girl', 'girl').setScale(2);
 
         this.updateCamera();
 
         this.physics.add.collider(this.user, this.spawns);
         this.physics.add.collider(this.user, this.desk0);
+        this.physics.add.collider(this.container, this.belowPlayer1);
+        this.physics.add.collider(this.container, this.world1);
         // this.physics.add.overlap(
         //     this.bufferToFirst,
         //     this.user,
