@@ -100,10 +100,9 @@ const SocketIOServer = () => {
     socket.on("newArtifact", onNewArtifact.bind(null, socket))
     socket.on("initializeLibrary", onIntializeLibrary.bind(null,socket))
 
-    socket.on(RequestType.MY_GROUP_LIST, onRequest.bind(null, socket, RequestType.MY_GROUP_LIST));
-    socket.on(RequestType.INVITE_FRIEND, onRequest.bind(null, socket, RequestType.INVITE_FRIEND));
-    socket.on(RequestType.LOGIN, onRequest.bind(null, socket, RequestType.LOGIN));
-    socket.on(RequestType.MY_PROFILE, onRequest.bind(null, socket, RequestType.MY_PROFILE));
+    Object.values(RequestType).forEach( requestType => {
+      socket.on(requestType, onRequest.bind(null, socket, requestType));
+    });
     updateDate(socket)
   }
 
@@ -124,6 +123,7 @@ const SocketIOServer = () => {
       case RequestType.INVITE_FRIEND: onRequestInviteFriend(socket, request); break;
       case RequestType.LOGIN: onRequestLogin(socket, request); break;
       case RequestType.MY_PROFILE: onRequestMyProfile(socket, request); break;
+      case RequestType.PENDING_INVITE_LIST: onPendingInviteList(socket, request); break;
     }
     socket.emit("response", response);
   }
@@ -181,6 +181,10 @@ const SocketIOServer = () => {
     if (groupList[groupID].member.includes(friendID)) {
       return responseFail(socket, requestKey, responseType, "Already in group.");
     }
+
+    if (!userList[friendID]) {
+      return responseFail(socket, requestKey, responseType, "Invalid friend id.");
+    }
     
     const invitationKey = `${groupID} ${friendID}`;
     invitationList[invitationKey] = {
@@ -190,7 +194,7 @@ const SocketIOServer = () => {
     };
 
     return socket.emit(responseType, {
-      requestUser,
+      requestKey,
       responseType,
       status: ResponseStatus.OK,
       payload: {}
@@ -222,7 +226,7 @@ const SocketIOServer = () => {
     }
   }
 
-  const onRequestMyProfile = (socket, userID) => {
+  const onRequestMyProfile = (socket, request) => {
     const {requestUser, requestKey, payload} = request;
     const responseType = ResponseType.MY_PROFILE;
 
@@ -234,7 +238,35 @@ const SocketIOServer = () => {
       requestKey,
       responseType,
       status: ResponseStatus.OK,
-      payload: userList[userID]
+      payload: userList[requestUser]
+    });
+  }
+
+  const onPendingInviteList = (socket, request) => {
+    const {requestUser, requestKey, payload} = request;
+    const responseType = ResponseType.PENDING_INVITE_LIST;
+
+    if (!requestUser) {
+      return responseFail(socket, requestKey, responseType, "Login is required.");
+    }
+
+    /* There are two types of payload.
+      1. { userID }
+      2. { groupID } */ 
+
+    let filtered;
+    if (payload.userID) {
+      filtered = Object.values(invitationList).filter( ({friendID}) => payload.userID === friendID );
+    } else if (payload.groupID) {
+      filtered = Object.values(invitationList).filter( ({groupID}) => payload.groupID === groupID );
+    } else {
+      return responseFail(socket, requestKey, responseType, "Invalid payload.");
+    }
+    return socket.emit(responseType, {
+      requestKey,
+      responseType,
+      status: ResponseStatus.OK,
+      payload: filtered
     });
   }
 
