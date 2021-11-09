@@ -37,7 +37,7 @@ export default class Book extends Phaser.GameObjects.Sprite {
   }
 
   onPointerDown(){
-    console.log("onPointerOver()")
+    console.log("onPointerDown()")
     this.setScale(this.size/1.5, 0.6)
     if (this.alert !== undefined){
       this.alert.setPosition(this.alert.x + this.displayWidth*(this.size/1.5-this.size/2), this.alert.y - this.displayHeight*0.1)

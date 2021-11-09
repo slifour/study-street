@@ -10,10 +10,12 @@ export default class Desk extends Phaser.GameObjects.Container {
 
     let margin = 10
     let desk = this.scene.physics.add.image(0, 0, deskKey);
+    desk.setImmovable();
+
     this.setSize(desk.displayWidth, desk.displayHeight)
 
     this.chairY = - (desk.displayHeight/2 + margin)    
-    this.createChairs(n, this.chairY,chairKey)
+    this.createChairs(n, this.chairY, chairKey)
 
     this.add(desk)
     
@@ -30,7 +32,8 @@ export default class Desk extends Phaser.GameObjects.Container {
     let chairX = chairDistance/2-this.displayWidth/2
     let i;
     for (i=0; i < n; i++){
-      let chair = new Chair(this.scene, this.x + chairX, chairY, chairKey);
+      let chair = new Chair(this.scene, chairX, chairY, chairKey);
+      chair.setImmovable();
       this.add(chair)
       chair.init()
       chairX += chairDistance
