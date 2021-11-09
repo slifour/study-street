@@ -6,6 +6,7 @@ import Login from "./components/User/LogIn";
 import Tooltip from "./components/Game/entity/Tooltip";
 import Avatars from "./components/ui/Avatars";
 import {GroupListButton} from "./components/ui/GroupList";
+import {QuickMoveButton} from "./components/ui/QuickMove";
 
 
 /* Example of LoginUserContext value
@@ -16,11 +17,19 @@ import {GroupListButton} from "./components/ui/GroupList";
   }
   */
 export const LoginUserContext = React.createContext(null);
+export const GameContext = React.createContext(null);
+
+const box_active = {
+  width: "300px",
+  height: "200px",
+  border: "1px solid black",
+  position: "relative",
+  background: "grey",
+  opacity: "1",
+  transition: "opacity 500ms",
+};
 
 function App() {
-
-  const eventEmitter = require('events');
-  window.ee = new eventEmitter();
   
   const [loginUser, setLoginUser] = useState(null);
   const game = useRef(null);
@@ -31,12 +40,25 @@ function App() {
     }
   }, [loginUser])
 
+
+  // const [currentScene, setCurrentScene] = useState("")
+
+  // setCurrentScene(game.current.game.registry.get("currentScene"))
+
+  const emitToGame = (data => {
+    if (game.current !== null && game.current.game) {
+      game.current.emit(data)
+    }
+  }) 
+
   return (
     <LoginUserContext.Provider value={ {loginUser, setLoginUser} }>
+      <GameContext.Provider value={{game}}>
       <div className="content">
         <MenuBar/>
         <Avatars/>
         <GroupListButton></GroupListButton>
+        <QuickMoveButton emitToGame = {emitToGame}></QuickMoveButton>
       </div>
       <div className="game-container">
         <Game ref={game}/>
@@ -47,6 +69,7 @@ function App() {
         {/* <InvitationView></InvitationView> */}
         {/* <GroupView></GroupView>     */}
       </div>
+      </GameContext.Provider>
     </LoginUserContext.Provider>
   );
 }
