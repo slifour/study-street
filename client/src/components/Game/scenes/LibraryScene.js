@@ -110,14 +110,6 @@ export default class Library extends Phaser.Scene {
         this.createFriend();
         this.setEventHandlers();
         this.socket.emit("initializeLibrary");
-        this.time.addEvent({
-            delay: 1000,
-            callback: ()=>{
-                socket.emit("newArtifact")
-                console.log("emit : newArtifact")
-            },
-            loop: false
-        })
     }
 
     update() {
@@ -178,13 +170,17 @@ export default class Library extends Phaser.Scene {
         // this.physics.destroy(this.bufferToFirst)
         this.firstOverlap = false
         console.log('handleEnterBuffer')        
+        this.toRestScene();
+    }     
+
+    toRestScene(){
         this.cameras.main.fadeOut(1000, 0, 0, 0)
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
             // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
             // this.doUpdate = false
             this.scene.start('Rest');
         })  
-    }     
+    }
 
     updateCamera() {
         // limit camera to map
@@ -202,6 +198,9 @@ export default class Library extends Phaser.Scene {
         this.socket.on('newArtifact', this.onNewArtifact.bind(this));
         this.socket.on('newGroup', this.onNewGroup.bind(this))
         this.socket.on("goalUpdate", this.onGoalUpdate.bind(this));
+        this.game.events.on('toRestScene', () => {
+            this.toRestScene()
+        })
       }
     
     onNewGroup(){
