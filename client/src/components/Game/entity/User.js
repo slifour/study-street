@@ -56,25 +56,25 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
     this.setVelocity(0);
     // Move left
     if (cursors.left.isDown) {
-      this.setVelocityX(-500);
+      this.setVelocityX(-200);
       animState = this.animName.left;
       this.stop = false;
     } 
     // Move right
     else if (cursors.right.isDown) {
-      this.setVelocityX(500);
+      this.setVelocityX(200);
       animState = this.animName.right;
       this.stop = false;
     }
     // Move up
     if (cursors.up.isDown) {
-      this.setVelocityY(-500);
+      this.setVelocityY(-200);
       animState = this.animName.up;
       this.stop = false;
     }
     // Move down
     else if (cursors.down.isDown) {
-      this.setVelocityY(500);
+      this.setVelocityY(200);
       animState = this.animName.down;
       this.stop = false;
     }

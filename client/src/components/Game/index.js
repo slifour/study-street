@@ -38,4 +38,7 @@ export default class Game extends React.Component {
   render() {
     return <div id="phaser-game" />;
   }
+  emit(data){
+    this.game.events.emit(data);
+  }
 }

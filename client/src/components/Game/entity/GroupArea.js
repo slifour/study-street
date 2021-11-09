@@ -24,11 +24,9 @@ export default class GroupArea extends Phaser.GameObjects.Container {
 
     init(deskKey, chairKey, bookshelfKey) {
         console.log('GroupArea.init():', deskKey, chairKey);        
-        this.createBorder();
         this.createBookshelf(bookshelfKey);
         this.createBooks();
         Phaser.Display.Align.To.BottomLeft(this.books, this.bookshelf, -15, 5)
-        this.createDesk(deskKey, chairKey);
     }
 
     createDesk(deskKey, chairKey) {

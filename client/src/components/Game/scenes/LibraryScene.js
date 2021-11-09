@@ -4,6 +4,7 @@ import Friend from '../entity/Friend';
 import socket from '../../../socket';
 import { createCharacterAnimsGirl, createCharacterAnimsWizard } from '../anims/CharacterAnims';
 import GroupArea from '../entity/GroupArea';
+import Desk from '../entity/Desk';
 import Tooltip from '../entity/Tooltip';
 import Book from '../entity/Book';
 // import socketIOClient from "socket.io-client";
@@ -19,7 +20,9 @@ export default class Library extends Phaser.Scene {
         console.log('Welcome to Library');
         this.bufferWidth = 10
         this.firstOverlap = true 
-        this.groupAreas = {};        
+        this.groupAreas = {};      
+        this.desks = {}
+        this.borderWidth = 3  
     };
 
     firstOverlap(){
@@ -48,9 +51,9 @@ export default class Library extends Phaser.Scene {
 
         this.load.tilemapTiledJSON('libraryMap', 'assets/map/libraryMap.json');
 
-        this.load.spritesheet('user-girl', 'assets/spriteSheets/user.png', {
-            frameWidth: 32,
-            frameHeight: 32
+        this.load.spritesheet('user-girl', 'assets/spriteSheets/user_1.png', {
+            frameWidth: 32 * (100/3),
+            frameHeight: 42 * (100/3)
         });
         this.load.spritesheet('user-wizard', 'assets/spriteSheets/wizard.png', {
             frameWidth: 60,
@@ -99,25 +102,24 @@ export default class Library extends Phaser.Scene {
         // //     // console.log("LoadScene resumed")
         // //     // this.scene.stop('FirstScene');
         //  }, this);
-        // create map
-        this.createMap();
-        this.createGroupArea('a');
+        // create map     
+        this.createMap();        
         // this.createAnimations();
         createCharacterAnimsWizard(this.anims);
         createCharacterAnimsGirl(this.anims);
         this.cursors = this.input.keyboard.createCursorKeys();
+
+        this.assignGroupArea(2);
+
         this.createUser();
         this.createFriend();
         this.setEventHandlers();
         this.socket.emit("initializeLibrary");
-        this.time.addEvent({
-            delay: 1000,
-            callback: ()=>{
-                socket.emit("newArtifact")
-                console.log("emit : newArtifact")
-            },
-            loop: false
-        })
+
+        this.assignGroupArea(2);
+        // this.aGrid = new AlignGrid({scene:this, rows:20, cols:20})
+        // this.aGrid.showNumbers();
+
     }
 
     update() {
@@ -139,6 +141,22 @@ export default class Library extends Phaser.Scene {
         this.belowPlayer1.setCollisionByProperty({ collides: true });
         this.world1.setCollisionByProperty({ collides: true });
 
+        this.belowPlayer1.setScale(1.2);
+        this.world1.setScale(1.2);      
+
+        // Group Area Example (Manual)
+        this.createGroupArea('a');
+
+        // Create desks
+        this.deskPositions = [{x:500, y:450}, {x:1000, y:450}, {x:1500, y: 450}]
+        let deskIndex = 0
+        this.deskPositions.forEach(position =>{
+            let desk = this.createDesk(position.x, position.y, 'desk', 'chair');
+            this.desks[deskIndex] = desk;
+            deskIndex += 1;  
+
+        })
+
         // don't go out of the map
         this.physics.world.bounds.width = this.map.displayWidth;
         this.physics.world.bounds.height = this.map.displayHeight;
@@ -146,15 +164,45 @@ export default class Library extends Phaser.Scene {
         this.physics.add.existing(this.bufferToFirst)
     }
 
+    createDesk(x, y, deskKey, chairKey) {
+        return new Desk(this, x, y, deskKey, chairKey);    
+    }  
+
+    /**assignGroupArea
+     * @parameter deskId: id of desk to assign, groupId : to be implemented
+     * 
+     */
+    assignGroupArea(deskId){        
+        let desk = this.desks[deskId];
+        let container = this.add.container(desk.x, desk.y); 
+        container.setSize(350, 300);        
+        let border = this.add.rectangle(0, 0, container.width, container.height);
+        border.setStrokeStyle(this.borderWidth, 0xff0000)        
+        border.setDepth(-1);
+        container.add(border);
+        // container.add(desk)
+    }
+
     createUser() {
-        this.user = new User(this, 0, 0, 'user-girl', 'girl').setScale(2);
+        this.user = new User(this, 800, 400, 'user-girl', 'girl').setScale(3/100 * 1.2);
+        this.user.setDepth(1);
 
         this.updateCamera();
 
         this.physics.add.collider(this.user, this.spawns);
-        this.physics.add.collider(this.user, this.desk0);
         this.physics.add.collider(this.user, this.belowPlayer1);
         this.physics.add.collider(this.user, this.world1);
+
+        Object.keys(this.desks).forEach(key =>{
+            let desk = this.desks[key];
+            console.log(desk)
+            desk.getAll().forEach(sprite => {
+                this.physics.add.collider(this.user, sprite);
+            })
+        })
+
+
+
         // this.physics.add.overlap(
         //     this.bufferToFirst,
         //     this.user,
@@ -175,13 +223,17 @@ export default class Library extends Phaser.Scene {
         // this.physics.destroy(this.bufferToFirst)
         this.firstOverlap = false
         console.log('handleEnterBuffer')        
+        this.toRestScene();
+    }     
+
+    toRestScene(){
         this.cameras.main.fadeOut(1000, 0, 0, 0)
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
             // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
             // this.doUpdate = false
             this.scene.start('Rest');
         })  
-    }     
+    }
 
     updateCamera() {
         // limit camera to map
@@ -199,6 +251,9 @@ export default class Library extends Phaser.Scene {
         this.socket.on('newArtifact', this.onNewArtifact.bind(this));
         this.socket.on('newGroup', this.onNewGroup.bind(this))
         this.socket.on("goalUpdate", this.onGoalUpdate.bind(this));
+        this.game.events.on('toRestScene', () => {
+            this.toRestScene()
+        })
       }
     
     onNewGroup(){
