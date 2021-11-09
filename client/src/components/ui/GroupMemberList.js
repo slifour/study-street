@@ -5,6 +5,8 @@ import Modal from 'react-overlays/Modal';
 import { LoginUserContext } from '../../App';
 import socket from '../../socket';
 import GroupIcon from './GroupIcon';
+import InviteFriend from './InviteFriend';
+import PendingInviteList from './PendingInviteList';
 
 const StyledModal = styled(Modal)`
     position: fixed;
@@ -34,6 +36,7 @@ export default function GroupMemberList(props) {
     const {loginUser} = useContext(LoginUserContext);
     // const [groupList, setGroupList] = useState({});
     const {show, setShow, group} = props;
+    const [pendingInviteListRequestTime, setPendingInviteListRequestTime] = useState(new Date());
 
     const dummyGroup = { // Dummy data
         groupID: "a",
@@ -62,7 +65,8 @@ export default function GroupMemberList(props) {
                             <GroupMemberListItem memberID={memberID} key={memberID}></GroupMemberListItem>        
                         ))
                     }
-                    <InviteFriend group={group}></InviteFriend>
+                    <PendingInviteList group={group} requestTime={pendingInviteListRequestTime}></PendingInviteList>
+                    <InviteFriend group={group} onInvite={() => {setPendingInviteListRequestTime(new Date())}}></InviteFriend>
                 </div>
                 <hr className={styles.styledHr}/>
             </div>
@@ -76,31 +80,6 @@ export function GroupMemberListItem({memberID}) {
         <div className={styles.groupListItem}>
             {/* <GroupIcon group={group}></GroupIcon> */}
             <div className = {styles.groupListItemText}>{memberID}</div>
-        </div>
-    )
-}
-
-export function InviteFriend({group}) {
-    const [showInput, setShowInput] = useState(false);
-    const [friend, setFriend] = useState("");
-    
-    const onInputChange = e => {
-        setFriend(e.target.value);
-    }
-
-    const onInviteClick = () => {
-        
-    };
-
-    return (
-        <div className={styles.groupListItem} onClick={() => {setShowInput(true)}}>
-            {!showInput ? 
-                <div className = {styles.groupListItemText}>💌 Invite a friend</div> :
-                <div> 
-                  <input type="text" name="inviteFriend" value={friend} onChange={onInputChange}></input>
-                  <button onClick={onInviteClick}>Invite</button>
-                </div>
-            }
         </div>
     )
 }
