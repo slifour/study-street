@@ -7,6 +7,7 @@ import Tooltip from "./components/Game/entity/Tooltip";
 import Avatars from "./components/ui/Avatars";
 import {GroupListButton} from "./components/ui/GroupList";
 import {QuickMoveButton} from "./components/ui/QuickMove";
+import HomeMain from "./components/ui/Home/HomeMain";
 
 
 /* Example of LoginUserContext value
@@ -55,8 +56,9 @@ function App() {
     <LoginUserContext.Provider value={ {loginUser, setLoginUser} }>
       <GameContext.Provider value={{game}}>
       <div className="content">
+        <HomeMain></HomeMain>
         <MenuBar/>
-        <Avatars/>
+        {/* <Avatars/> */}
         <GroupListButton></GroupListButton>
         <QuickMoveButton emitToGame = {emitToGame}></QuickMoveButton>
       </div>

@@ -1,0 +1,25 @@
+.sidebar {
+  height: 100%;
+  width: 110px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-top: 36px;
+  background-color: #000;
+}
+
+.sidebarItem {
+  padding: 24px;
+  display: block;
+  color: #fff;
+}
+
+.infoArea {
+  height: 100%;
+  width: 390px;
+  position: absolute;
+  left: 110px;
+  top: 0;
+  padding: 47px 37px;
+  background-color: #fff;
+}
