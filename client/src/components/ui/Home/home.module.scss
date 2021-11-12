@@ -1,6 +1,8 @@
+$sidebar-width: 110px;
+
 .sidebar {
   height: 100%;
-  width: 110px;
+  width: $sidebar-width;
   position: absolute;
   left: 0;
   top: 0;
@@ -18,8 +20,16 @@
   height: 100%;
   width: 390px;
   position: absolute;
-  left: 110px;
+  left: $sidebar-width;
   top: 0;
   padding: 47px 37px;
   background-color: #fff;
+}
+
+.groupListItem {
+
+}
+
+.groupListItemText {
+  
 }

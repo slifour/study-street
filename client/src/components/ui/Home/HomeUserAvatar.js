@@ -1,8 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
 import styled from 'styled-components';
 import { LoginUserContext } from '../../../App';
-import UserAvatarCircle from './UserAvaterCircle';
-import styles from "./home.module.css";
+import UserAvatarCircle from './UserAvatarCircle';
+import styles from "./home.module.scss";
 
 export default function HomeUserAvatar(props) {
     

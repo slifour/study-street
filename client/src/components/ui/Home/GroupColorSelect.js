@@ -1,10 +1,10 @@
 import React from "react";
 import styles from "./home.module.scss";
 
-export default function HomeInfoUser() {
+export default function GroupColorSelect() {
   return (
     <div>
-      Home info user
+      Group color select
     </div>
   );
 }
