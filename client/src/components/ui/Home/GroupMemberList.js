@@ -1,12 +1,16 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useCallback } from 'react';
 import styles from "./home.module.scss";
 import styled from 'styled-components';
 import InviteFriendButton from './InviteFriendButton';
 import PendingInviteList from './PendingInviteList';
+import GroupMemberListItem from './GroupMemberListItem';
+import { HomeContext } from './HomeMain';
 
 
 export default function GroupMemberList({group}) {
     const [pendingInviteListRequestTime, setPendingInviteListRequestTime] = useState(new Date());
+
+    const {setReloadTime} = useContext(HomeContext);
 
     const dummyGroup = { // Dummy data
         groupID: "a",
@@ -18,6 +22,10 @@ export default function GroupMemberList({group}) {
         color: "#FFE76A"
     };
 
+    const onInvite = useCallback( () => {
+        setReloadTime(new Date());
+    }, [setReloadTime]);
+
     return(
         <div>
             <h2>Members</h2>
@@ -28,18 +36,18 @@ export default function GroupMemberList({group}) {
                     ))
                 }
                 <PendingInviteList group={group} requestTime={pendingInviteListRequestTime}/>
-                <InviteFriendButton group={group} onInvite={() => {setPendingInviteListRequestTime(new Date())}}/>
+                <InviteFriendButton group={group} onInvite={onInvite}/>
             </div>
         </div>
     );
 }
 
-export function GroupMemberListItem({memberID}) {
-    const shortenName = memberID.substr(0, 2).toUpperCase();
-    return (
-        <div className={styles.groupListItem}>
-            {/* <GroupIcon group={group}></GroupIcon> */}
-            <div className = {styles.groupListItemText}>{memberID}</div>
-        </div>
-    )
-}
+// export function GroupMemberListItem({memberID}) {
+//     const shortenName = memberID.substr(0, 2).toUpperCase();
+//     return (
+//         <div className={styles.groupListItem}>
+//             {/* <GroupIcon group={group}></GroupIcon> */}
+//             <div className = {styles.groupListItemText}>{memberID}</div>
+//         </div>
+//     )
+// }
