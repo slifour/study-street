@@ -1,52 +1,35 @@
-import { useRef, useEffect, useState, useContext } from "react"
-import socket from "../../../socket";
-import uniqueString from "unique-string";
-import { LoginUserContext } from "../../../App";
+import React, { useCallback, useState } from "react"
 import styles from "./home.module.scss";
+import useRequest from "./useRequest";
 
 export default function InviteFriendButton({group, onInvite}) {
   const [showInput, setShowInput] = useState(false);
   const [friend, setFriend] = useState("");
-  const {loginUser} = useContext(LoginUserContext);
 
-  const usedRequestKeyRef = useRef(null);
+  const onResponseOK = useCallback(({payload}) => {
+    setShowInput(true);
+    onInvite();  
+  }, [setShowInput, onInvite]);
 
-  const onResponse = ({requestKey, status, payload}) => {
-      console.log("Invite response got response: ", {requestKey, status, payload});
-      if (requestKey === usedRequestKeyRef.current) {
-          switch (status) {
-              case "STATUS_OK":
-                  setShowInput(true);
-                  onInvite();
-                  break;
-              case "STATUS_FAIL":
-                  alert(payload.msg || "Failed to invite a friend (client msg)");
-                  setShowInput(true);
-                  break;
-          }
-      }
-  };
+  const onResponseFail = useCallback(({payload}) => {
+    alert(payload.msg || "Failed to invite a friend (client msg)");
+    setShowInput(true);
+  }, [setShowInput]);
 
-  useEffect(() => {
-      const responseType = "RESPONSE_INVITE_FRIEND";
-      socket.on(responseType, onResponse);
-      return () => {socket.off(responseType, onResponse);};
-  }, []);
+  const makePayload = useCallback(() => ({
+    groupID: group.groupID,
+    friendID: friend
+  }), [group.groupID, friend]);
 
-  const onInviteClick = () => {
-      const requestType = "REQUEST_INVITE_FRIEND";
-      usedRequestKeyRef.current = uniqueString();
-        
-      socket.emit(requestType, {
-          requestUser: loginUser.userID,
-          requestKey: usedRequestKeyRef.current,
-          requestType,
-          payload: {
-            groupID: group.groupID,
-            friendID: friend
-          }
-      });
-  };
+  const [request, innerReloadTimeRef] = useRequest({
+      requestType: "REQUEST_INVITE_FRIEND",
+      responseType: "RESPONSE_INVITE_FRIEND",
+      onResponseOK,
+      onResponseFail,
+      makePayload
+  });  
+
+  const onInviteClick = request;
 
   const onInputChange = e => {
       setFriend(e.target.value);

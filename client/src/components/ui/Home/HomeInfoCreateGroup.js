@@ -1,54 +1,34 @@
-import React, {useState, useRef, useContext, useEffect} from "react";
+import React, {useState, useRef, useContext, useCallback } from "react";
 import GroupColorSelect from "./GroupColorSelect";
 import styles from "./home.module.scss";
-import { LoginUserContext } from "../../../App";
 import { HomeContext } from "./HomeMain";
-import socket from "../../../socket";
-import uniqueString from "unique-string";
+import useRequest from "./useRequest";
 
 export default function HomeInfoCreateGroup() {
-  const {loginUser} = useContext(LoginUserContext);
   const {setReloadTime} = useContext(HomeContext);
   const [groupName, setGroupName] = useState("");
 
-  const usedRequestKeyRef = useRef(null);
-
-  const onResponse = ({requestKey, status, payload}) => {
-    if (requestKey === usedRequestKeyRef.current) {
-      switch (status) {
-        case "STATUS_OK":
-          setReloadTime(new Date());
-          break;
-        case "STATUS_FAIL":
-          alert(payload.msg || "Failed to create a group (client msg)");
-          break;
-      }
-    }
-  };
-
-  useEffect(() => {
-      const responseType = "RESPONSE_CREATE_GROUP";
-      socket.on(responseType, onResponse);
-      return () => {socket.off(responseType, onResponse);};
+  const onResponseOK = useCallback(() => {
+    setReloadTime(new Date());
+  }, [setReloadTime]);
+  const onResponseFail = useCallback(({payload}) => {
+    alert(payload.msg || "Failed to create a group (client msg)");
   }, []);
+  const makePayload = useCallback(() => ({groupName}), [groupName]);
 
-  const onClickCreateGroup = () => {
-    const requestType = "REQUEST_CREATE_GROUP";
-    usedRequestKeyRef.current = uniqueString();
-      
-    socket.emit(requestType, {
-      requestUser: loginUser.userID,
-      requestKey: usedRequestKeyRef.current,
-      requestType,
-      payload: {
-        groupName
-      }
-    });
-  };
+  const [request, innerReloadTimeRef] = useRequest({
+    requestType: "REQUEST_CREATE_GROUP",
+    responseType: "RESPONSE_CREATE_GROUP",
+    onResponseOK,
+    onResponseFail,
+    makePayload
+  });
+
+  const onClickCreateGroup = request;
 
   const onInputChange = e => {
     setGroupName(e.target.value);
-  }
+  };
 
   return (
     <div>

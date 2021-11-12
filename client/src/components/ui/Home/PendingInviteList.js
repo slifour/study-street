@@ -1,46 +1,28 @@
-import { useRef, useEffect, useState, useContext } from "react"
-import socket from "../../../socket";
-import uniqueString from "unique-string";
-import { LoginUserContext } from "../../../App";
+import React, { useCallback, useState } from "react"
 import styles from "./home.module.scss";
+import useLiveReloadHome from "./useLiveReloadHome";
+import useRequest from "./useRequest";
 
-export default function PendingInviteList({group, requestTime}) {
+export default function PendingInviteList({group}) {
   const [invitationList, setInvitationList] = useState([]);
-  const {loginUser} = useContext(LoginUserContext);
-  const usedRequestKeyRef = useRef(null);
 
-  const onResponse = ({requestKey, status, payload}) => {
-    if (requestKey === usedRequestKeyRef.current) {
-      switch (status) {
-        case "STATUS_OK":
-          setInvitationList(payload);
-          break;
-        case "STATUS_FAIL":
-          console.warn("Failed to load pending invite list");
-          break;
-      }
-    }
-  };
-
-  useEffect(() => {
-    const responseType = "RESPONSE_PENDING_INVITE_LIST";
-    socket.on(responseType, onResponse);
-    return () => {socket.off(responseType, onResponse);};
+  const onResponseOK = useCallback(({payload}) => {
+    setInvitationList(payload);
+  }, [setInvitationList]);
+  const onResponseFail = useCallback(({payload}) => {
+    console.warn("Failed to load pending invite list");
   }, []);
+  const makePayload = useCallback(() => ({ groupID: group.groupID }), [group.groupID]);
 
-  useEffect(() => {
-    if (loginUser) {
-      const requestType = "REQUEST_PENDING_INVITE_LIST";
-      usedRequestKeyRef.current = uniqueString();
-        
-      socket.emit(requestType, {
-          requestUser: loginUser.userID,
-          requestKey: usedRequestKeyRef.current,
-          requestType,
-          payload: { groupID: group.groupID }
-      });
-    }
-  }, [loginUser, group.groupID, requestTime]);  
+  const [request, innerReloadTimeRef] = useRequest({
+      requestType: "REQUEST_PENDING_INVITE_LIST",
+      responseType: "RESPONSE_PENDING_INVITE_LIST",
+      onResponseOK,
+      onResponseFail,
+      makePayload
+  });  
+
+  useLiveReloadHome({request, innerReloadTimeRef});
 
   return (
   <>

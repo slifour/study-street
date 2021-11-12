@@ -1,58 +1,33 @@
-import React, {useContext, useState, useRef, useEffect} from "react";
-import socket from "../../../socket";
-import { LoginUserContext } from "../../../App";
+import React, {useCallback, useContext} from "react";
 import { HomeContext } from "./HomeMain";
-import uniqueString from "unique-string";
 import styles from "./home.module.scss";
+import useRequest from "./useRequest";
 
 export default function GotInvitationJoinButton({gotInvitation}) {
-
-  const {loginUser} = useContext(LoginUserContext);
   const {setReloadTime} = useContext(HomeContext);
 
-  const usedRequestKeyRef = useRef(null);
+  const onResponseOK = useCallback(({payload}) => {
+    setReloadTime(new Date());
+  }, [setReloadTime]);
 
-  const onResponse = ({requestKey, status, payload}) => {
-    if (requestKey === usedRequestKeyRef.current) {
-      switch (status) {
-        case "STATUS_OK":
-          setReloadTime(new Date());
-          break;
-        case "STATUS_FAIL":
-          console.warn(payload.msg || "Failed to accept invitation (client msg)");
-          break;
-      }
-    }
-  };
-
-  const request = () => {
-    if (!loginUser) return;
-
-    const requestType = "REQUEST_JOIN_GROUP";
-    usedRequestKeyRef.current = uniqueString();
-    
-    socket.emit(requestType, {
-      requestUser: loginUser.userID,
-      requestKey: usedRequestKeyRef.current,
-      requestType,
-      payload: {
-        groupID: gotInvitation.groupID
-      }
-    });
-  }
-
-  useEffect(() => {
-    const responseType = "RESPONSE_JOIN_GROUP";
-    socket.on(responseType, onResponse);
-    return () => {socket.off(responseType, onResponse);};
+  const onResponseFail = useCallback(({payload}) => {
+    console.warn(payload.msg || "Failed to accept invitation (client msg)");
   }, []);
 
-  const onClick = () => {
-    request();
-  };
+  const makePayload = useCallback(() => ({
+    groupID: gotInvitation.groupID
+  }), [gotInvitation.groupID]);
+
+  const [request, innerReloadTimeRef] = useRequest({
+    requestType: "REQUEST_JOIN_GROUP",
+    responseType: "RESPONSE_JOIN_GROUP",
+    makePayload,
+    onResponseOK,
+    onResponseFail
+  });
 
   return (
-    <button onClick={onClick}>
+    <button onClick={request}>
       Join
     </button>
   );
