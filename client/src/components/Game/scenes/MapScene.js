@@ -1,3 +1,15 @@
+import Phaser from 'phaser';
+import User from '../entity/User';
+import Friend from '../entity/Friend';
+import socket from '../../../socket';
+import { createCharacterAnimsGirl, createCharacterAnimsWizard } from '../anims/CharacterAnims';
+import Study from './StudyScene';
+import GroupArea from '../entity/GroupArea';
+import Desk from '../entity/Desk';
+import Tooltip from '../entity/Tooltip';
+import Book from '../entity/Book';
+// import socketIOClient from "socket.io-client";
+// const ENDPOINT = "http://localhost:4001";
 /** 
  * class MapScene
  * @ extends : Phaser.Scene 
@@ -6,70 +18,119 @@
  * Phaser Scene class inheritance : https://youtu.be/1P8jvnj85e4
  * 
  */
-import Phaser from 'phaser';
-import User from '../entity/User';
-import Friend from '../entity/Friend';
-// import store, { UPDATE_SCORE } from '../../../store';
-import socket from '../../../socket';
 
 export default class MapScene extends Phaser.Scene {
-  constructor(key, otherScene) {
+  constructor(key) {
     super(key);
-    this.socket = socket;    
-    this.bufferWidth = 50;
-    this.mapKey = 'map_'+ key
-    this.otherScene = otherScene
+    this.socket = socket;   
+    this.key = key;    
+    this.world1 = null;
   }
+
+  init() {    
+    console.log("Welcome to ", this.key);  
+  }
+
   preload() {
-    this.load.spritesheet('user', 'assets/spriteSheets/user.png', {
-      frameWidth: 32,
-      frameHeight: 32
+    this.load.spritesheet('user-girl', 'assets/spriteSheets/user_1.png', {
+        frameWidth: 32 * (100/3),
+        frameHeight: 42 * (100/3)
     });
+    this.load.spritesheet('user-wizard', 'assets/spriteSheets/wizard.png', {
+        frameWidth: 60,
+        frameHeight: 90
+    });
+    this.load.spritesheet('booksheet', 'assets/spriteSheets/booksheet.png', {
+        frameWidth: 28,
+        frameHeight: 35
+    });
+    this.load.html('newArtifact', 'assets/NewArtifact.html')
+    this.load.html('alert', 'assets/NewAlert.html')
+    this.load.image('portal', 'assets/images/glow.png');
   }
 
-  create() {
-    this.cursors = this.input.keyboard.createCursorKeys();    
-    this.createMap()
+  create() {    
+    createCharacterAnimsWizard(this.anims);
+    createCharacterAnimsGirl(this.anims);
+    this.cursors = this.input.keyboard.createCursorKeys();
+
     this.createUser();
-    this.createFriend();    
-    this.setEventHandlers();     //Socket Event Handlers
-    this.createColliders();    
+    this.createFriend();
   }
 
-  update() {
-    this.user.update(this.cursors);
+  createUser() {
+    this.user = new User(this, 800, 400, 'user-girl', 'girl').setScale(3/100 * 1.2);
+    this.user.init();
+    this.user.setDepth(1);
+
+    this.updateCamera();
+
+    this.physics.add.collider(this.user, this.spawns);
+    this.physics.add.collider(this.user, this.belowPlayer1);
+    this.physics.add.collider(this.user, this.world1);
+
+    // this.physics.add.overlap(
+    //     this.bufferToFirst,
+    //     this.user,
+    //     this.handleEnterBuffer,
+    //     undefined,
+    //     this
+    // );
   }
 
-  //ANIMATIONS HELPER FUNC
-  createAnimations() {
-    //  animation with key 'left', we don't need left and right as we will use one and flip the sprite
-    this.anims.create({
-        key: 'down',
-        frames: this.anims.generateFrameNumbers('user', { frames: [0, 1, 0, 2] }),
-        frameRate: 10,
-        repeat: -1
-    });
+  createFriend(){
+      this.friends =this.add.group();
+      this.friendDict = {}
+      console.log(this.friends)  
+  }
 
-    this.anims.create({
-        key: 'left',
-        frames: this.anims.generateFrameNumbers('user', { frames: [3, 4, 3, 5] }),
-        frameRate: 10,
-        repeat: -1
-    });
+    /** createPortal
+     * @parameter x, y, deskKey : fspritekey for desk, chairkey : spritekey for chair
+     * @return Desk : extends sprite, defined in entity/Desk.js
+     */
+  createPortal(x, y){       
+      this.portal = this.add.circle(x, y, 200, 0xffffff, 0.5);
+      this.portalCollider = this.add.circle(x, y, 150);
+      this.physics.world.enable(this.portalCollider);
+      this.portal.setScale(1, 0.2);
+      this.portalCollider.setScale(1, 0.2);
+      this.portalCollider.body.setImmovable(true);
+      this.physics.add.collider(this.user, this.portalCollider, (() => {
+          this.user.disableBody(false);
+          let newScene = this.key === 'Library'? 'Rest' : 'Library';
+          this.changeScene(newScene);
+      }));
+  }
 
-    this.anims.create({
-        key: 'right',
-        frames: this.anims.generateFrameNumbers('user', { frames: [6, 7, 6, 8] }),
-        frameRate: 10,
-        repeat: -1
-    });
+  updateCamera() {    
+    this.cameras.main.startFollow(this.user);
+    this.cameras.main.roundPixels = true; // avoid tile bleed
+    console.log('camera', 0, 0, this.world1.displayWidth, this.world1.displayHeight);
+    /**
+     * 주석 처리된 경우 카메라가 맵 밖으로까지 이동해서 맵 바깥쪽 어두운 부분이 보입니다.
+     * setBounds 를 다음과 같이 하면 카메라가 맵 밖으로 안나가게 가둬둘 수 있습니다. 문제는
+     * this.world1.displayHeight가 1228.8 이 나오는데 width 보다도 훨씬 짧아서 맵의 절반까지 밖에 커버가 안됩니다. 왜일까요 ?
+     * 
+     */
+    this.cameras.main.setBounds(0, 0, this.belowPlayer1.displayWidth, this.belowPlayer1.displayHeight);
+  }
 
-    this.anims.create({
-        key: 'up',
-        frames: this.anims.generateFrameNumbers('user', { frames: [9, 10, 9, 11] }),
-        frameRate: 10,
-        repeat: -1
-    });
+  onStateUpdate(users){
+    if(this.friends === undefined) {return;}
+    Object.keys(users).forEach(function(id) {        
+        if (id === this.socket.id) {return;}
+
+        console.log('Not returned');
+        let user = users[id]
+        if (Object.keys(this.friendDict).includes(id)){
+            console.log(id, this.socket.id);
+            this.friendDict[id].updateMovement(user.position);
+        } else {        
+            let friend = new Friend(this, user.position.x, user.position.y, 'user-wizard', 'wizard', id).setScale(1);
+            this.friends.add(friend);
+            this.friendDict[id] = friend;
+        }    
+    }.bind(this))
   }
 
   setEventHandlers(){
@@ -80,88 +141,24 @@ export default class MapScene extends Phaser.Scene {
     this.socket.on('stateUpdate', this.onStateUpdate.bind(this));
   }
 
-  onStateUpdate(users){
-    if(this.friends === undefined) {return}
-    Object.keys(users).forEach(function(id){
-      if (id === this.socket.id){ return}
-      let user = users[id]
-      if (Object.keys(this.friendDict).includes(id)){
-        this.friendDict[id].setPosition(user.position.x, user.position.y)
-      } 
-      else{        
-        let friend = new Friend(this, user.position.x, user.position.y, 'newt', id).setScale(0.5)
-        this.friends.add(friend)
-        this.friendDict[id] = friend
-      }    
-    }.bind(this))
-  }
-
-  //CREATE
-  createMap() {
-    console.log('Map Key = ', this.mapKey)
-    this.map = this.add.image(0, 0, this.mapKey).setOrigin(0).setScale(1);
-
-    // don't go out of the map
-    this.physics.world.bounds.width = this.map.displayWidth + this.bufferWidth;
-    this.physics.world.bounds.height = this.map.displayHeight;
-
-    // Buffer for Scene Shift    
-    this.bufferToFirst = this.add.rectangle(this.map.displayWidth, 0, this.bufferWidth, this.map.displayHeight, 0xff0000);
-    
-    //background
-
-    /** Unblock Following After Drawing Tilemap */
-    // // create the map
-    // this.map = this.make.tilemap({
-    //     key: 'library', tileWidth: 32, tileHeight: 32
-    // });
-    // var tileset = this.map.addTilesetImage('tiles', 'tiles');
-    // var layer = this.map.createStaticLayer('backgroundLayer', tileset, 0, 0)
-
-    // // don't go out of the map
-    // this.physics.world.bounds.width = this.map.widthInPixels;
-    // this.physics.world.bounds.height = this.map.heightInPixels;
-  }
-  
-  handleEnterBuffer(){
-    console.log('handleEnterBuffer')
+  changeScene(newScene, data){
+    this.game.events.emit("changeScene", newScene);
     this.cameras.main.fadeOut(1000, 0, 0, 0)
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
-      this.scene.start(this.otherScene);
+        // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
+        // this.doUpdate = false
+        this.scene.start(newScene, data);
     })  
-  }      
-  
-  createUser(){    
-    this.user = new User(this, 100, 100, 'user').setScale(1);
-    this.updateCamera()
-  }
-
-  createFriend(){
-    this.friends =this.add.group();
-    this.friendDict = {}
-    console.log(this.friends)  
-  }
-
-  updateCamera() {
-    // limit camera to map
-    this.cameras.main.setBounds(0, 0, this.map.displayWidth, this.map.displayHeight);
-    this.cameras.main.startFollow(this.user);
-    this.cameras.main.roundPixels = true; // avoid tile bleed
-  }
-
-  createColliders(){    
-    //colliders
-  }
-
-  createHelper() {
-    // cursors
-    this.cursors = this.input.keyboard.createCursorKeys();    
-    this.createUser();    
-    this.createFriend();
-    this.createAnimations();    
-    this.setEventHandlers(); //Socket Event Handlers
-    this.createColliders();
-  }
-
-
+  }   
+    // if (newScene === 'Study'){
+    //   this.scene.start(newScene);
+    // }
+    // else{
+    //   this.cameras.main.fadeOut(1000, 0, 0, 0)
+    //   this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+    //       // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
+    //       // this.doUpdate = false
+    //       this.scene.start(newScene);
+    //   })  
+    // }
 }
