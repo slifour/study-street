@@ -6,7 +6,7 @@ import Login from "./components/User/LogIn";
 import Tooltip from "./components/Game/entity/Tooltip";
 import Avatars from "./components/ui/Avatars";
 import {GroupListButton} from "./components/ui/GroupList";
-import {QuickMoveButton} from "./components/ui/QuickMove";
+import {ConfirmAlert, QuickMoveButton} from "./components/ui/QuickMove";
 
 
 /* Example of LoginUserContext value
@@ -19,20 +19,15 @@ import {QuickMoveButton} from "./components/ui/QuickMove";
 export const LoginUserContext = React.createContext(null);
 export const GameContext = React.createContext(null);
 
-const box_active = {
-  width: "300px",
-  height: "200px",
-  border: "1px solid black",
-  position: "relative",
-  background: "grey",
-  opacity: "1",
-  transition: "opacity 500ms",
-};
-
 function App() {
   
   const [loginUser, setLoginUser] = useState(null);
+  const [scene, setScene] = useState("Library");  
+  const [showConfirmAlert, setshowConfirmAlert] = useState(false);  
   const game = useRef(null);
+  const [fadeProp, setFadeProp] = useState({
+    fade: 'fade-in'
+  });
 
   useEffect(() => {
     if (game.current !== null && game.current.game) {
@@ -40,34 +35,48 @@ function App() {
     }
   }, [loginUser])
 
-
-  // const [currentScene, setCurrentScene] = useState("")
-
-  // setCurrentScene(game.current.game.registry.get("currentScene"))
+  useEffect(() => {
+    let timeout = null;
+    if (game.current !== null && game.current.game){
+      game.current.game.events.on("changeScene", newScene => {
+        setFadeProp({fade: 'fade-out'});
+        // timeout = setTimeout(() => setFadeProp({fade: 'fade-in'}), 1000);
+        timeout = setTimeout(() => setFadeProp({fade: 'open-in'}), 1000);
+        setScene(newScene);
+      })
+    }
+    return () => {
+      clearInterval(timeout);
+    }      
+  }, [])
 
   const emitToGame = (data => {
     if (game.current !== null && game.current.game) {
       game.current.emit(data)
     }
+    console.log('emitToGame', data)
   }) 
 
   return (
     <LoginUserContext.Provider value={ {loginUser, setLoginUser} }>
-      <GameContext.Provider value={{game}}>
-      <div className="content">
-        <MenuBar/>
-        <Avatars/>
-        <GroupListButton></GroupListButton>
-        <QuickMoveButton emitToGame = {emitToGame}></QuickMoveButton>
-      </div>
-      <div className="game-container">
-        <Game ref={game}/>
-      </div>
-      <div>
-        <Login></Login>
-        {/* <UserInfo></UserInfo> */}
-        {/* <InvitationView></InvitationView> */}
-        {/* <GroupView></GroupView>     */}
+      <GameContext.Provider value={ {scene, emitToGame} }>
+      <div className = {fadeProp.fade}>
+        <div className="content">
+          <MenuBar/>
+          <Avatars/>
+          <GroupListButton></GroupListButton>
+          <QuickMoveButton></QuickMoveButton>
+          <ConfirmAlert show = {showConfirmAlert} setShow = {setshowConfirmAlert}></ConfirmAlert>
+        </div>
+        <div className="game-container">
+          <Game ref={game}/>
+        </div>
+        <div>
+          <Login></Login>
+          {/* <UserInfo></UserInfo> */}
+          {/* <InvitationView></InvitationView> */}
+          {/* <GroupView></GroupView>     */}
+        </div>
       </div>
       </GameContext.Provider>
     </LoginUserContext.Provider>

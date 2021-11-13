@@ -3,15 +3,12 @@ import User from '../entity/User';
 import Friend from '../entity/Friend';
 import socket from '../../../socket';
 import { createCharacterAnimsGirl, createCharacterAnimsWizard } from '../anims/CharacterAnims';
-import Study from './StudyScene';
 import GroupArea from '../entity/GroupArea';
 import Desk from '../entity/Desk';
 import Tooltip from '../entity/Tooltip';
 import Book from '../entity/Book';
-// import socketIOClient from "socket.io-client";
-// const ENDPOINT = "http://localhost:4001";
 /** 
- * class MapScene
+ * class StudyScene
  * @ extends : Phaser.Scene 
  * @ extended by : FirstScene, SecondScene (all the scenes in form of navigatable map)
  * @ Reference
@@ -19,19 +16,29 @@ import Book from '../entity/Book';
  * 
  */
 
-export default class MapScene extends Phaser.Scene {
-  constructor(key) {
-    super(key);
-    this.socket = socket;   
-    this.key = key;    
-    this.world1 = null;
+export default class Study extends Phaser.Scene {
+  constructor() {
+    super('Study');
+    this.socket = socket;       
+    console.log("Welcome to ", 'Study'); 
   }
 
-  init() {    
-    console.log("Welcome to ", this.key);  
+  init(data) {    
+    console.log("Welcome to ", 'Study');  
+    this.deskPosition = {x : 0 , y: 0};
+    this.desk = null;
+    this.index = data;
+    console.log(this.index)
   }
 
   preload() {
+    this.load.image('desk', 'assets/images/desk_4.png');
+    this.load.image('chair', 'assets/images/chair.png');
+    this.load.image('sitShadow', 'assets/images/sitShadow.png');
+    this.load.image('sitText', 'assets/images/sitText.png');
+    this.load.image('bookshelf', 'assets/images/book-shelf.png');
+    this.load.image('book-side', 'assets/images/book-red.png');
+
     this.load.spritesheet('user-girl', 'assets/spriteSheets/user_1.png', {
         frameWidth: 32 * (100/3),
         frameHeight: 42 * (100/3)
@@ -46,36 +53,30 @@ export default class MapScene extends Phaser.Scene {
     });
     this.load.html('newArtifact', 'assets/NewArtifact.html')
     this.load.html('alert', 'assets/NewAlert.html')
-    this.load.image('portal', 'assets/images/glow.png');
   }
 
   create() {    
+    this.createUser();
+    this.createDesk(0, 0, 'desk', 'chair');
+    // const chairPosition = {x : 0, y : 0};    
+    console.log(this.index)
+    const chair = this.desk.getAt(this.index);
+    chair.sit();
+
+    console.log("camera size :", this.cameras.main.width, this.cameras.main.height)
+    this.cameras.main.centerOn(this.desk.x + this.cameras.main.width/4 , this.desk.y);
+
     createCharacterAnimsWizard(this.anims);
     createCharacterAnimsGirl(this.anims);
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    this.createUser();
     this.createFriend();
+    this.setEventHandlers();
   }
 
   createUser() {
-    this.user = new User(this, 800, 400, 'user-girl', 'girl').setScale(3/100 * 1.2);
-    this.user.init();
-    this.user.setDepth(1);
-
-    this.updateCamera();
-
-    this.physics.add.collider(this.user, this.spawns);
-    this.physics.add.collider(this.user, this.belowPlayer1);
-    this.physics.add.collider(this.user, this.world1);
-
-    // this.physics.add.overlap(
-    //     this.bufferToFirst,
-    //     this.user,
-    //     this.handleEnterBuffer,
-    //     undefined,
-    //     this
-    // );
+    this.user = new User(this, 0, 0, 'user-girl', 'girl').setScale(3/100 * 1.2);
+    // this.user.setDepth(1);
   }
 
   createFriend(){
@@ -84,23 +85,13 @@ export default class MapScene extends Phaser.Scene {
       console.log(this.friends)  
   }
 
-    /** createPortal
-     * @parameter x, y, deskKey : fspritekey for desk, chairkey : spritekey for chair
-     * @return Desk : extends sprite, defined in entity/Desk.js
-     */
-  createPortal(x, y){       
-      this.portal = this.add.circle(x, y, 200, 0xffffff, 0.5);
-      this.portalCollider = this.add.circle(x, y, 150);
-      this.physics.world.enable(this.portalCollider);
-      this.portal.setScale(1, 0.2);
-      this.portalCollider.setScale(1, 0.2);
-      this.portalCollider.body.setImmovable(true);
-      this.physics.add.collider(this.user, this.portalCollider, (() => {
-          this.user.disableBody(false);
-          let newScene = this.key === 'Library'? 'Rest' : 'Library';
-          this.changeScene(newScene);
-      }));
-  }
+  /** createDesk
+   * @parameter x, y, deskKey : spritekey for desk, chairkey : spritekey for chair
+   * @return Desk : extends sprite, defined in entity/Desk.js
+   */
+  createDesk(x, y, deskKey, chairKey) {
+    this.desk = new Desk(this, x, y, deskKey, chairKey, false);    
+  };    
 
   updateCamera() {    
     this.cameras.main.startFollow(this.user);
@@ -134,6 +125,10 @@ export default class MapScene extends Phaser.Scene {
   }
 
   setEventHandlers(){
+    this.game.events.on('toLibraryScene', () => {
+      console.log('toLibraryScene')
+      this.changeScene('Library')
+    })
     // Description
     // socket.on('event', eventHandler)
   
@@ -141,24 +136,15 @@ export default class MapScene extends Phaser.Scene {
     this.socket.on('stateUpdate', this.onStateUpdate.bind(this));
   }
 
-  changeScene(newScene, data){
+  changeScene(newScene){
     this.game.events.emit("changeScene", newScene);
     this.cameras.main.fadeOut(1000, 0, 0, 0)
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
         // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
         // this.doUpdate = false
-        this.scene.start(newScene, data);
+        this.scene.start(newScene);
     })  
-  }   
-    // if (newScene === 'Study'){
-    //   this.scene.start(newScene);
-    // }
-    // else{
-    //   this.cameras.main.fadeOut(1000, 0, 0, 0)
-    //   this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
-    //       // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
-    //       // this.doUpdate = false
-    //       this.scene.start(newScene);
-    //   })  
-    // }
+};
+
+
 }
