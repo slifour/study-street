@@ -19,20 +19,12 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
       this.setInteractive();
     }
     this.desk = desk;    
-    this.setClick();
-    this.setHover();    
+    this.setInteractions();
   }
 
-  getAbsolutePosition(containerX, containerY){
-    this.absolutePosition = { x : containerX + this.x, y : containerY + this.y};
-  }
-
-  setHover(){
+  setInteractions(){
     this.on('pointerover', this.onPointerOver, this); 
     this.on('pointerout', this.onPointerout, this); 
-  }
-
-  setClick(){
     this.on('pointerdown', this.onPointerDown, this); 
   }
 
@@ -57,6 +49,30 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
     }    
     this.sit();
     this.scene.changeScene('Study', this.index)
+  }
+
+  onPointerOver(){
+    console.log("onPointerOver()")
+    this.setScale(1.2)
+    // if (this.alert !== undefined){
+    //   this.alert.setPosition(this.alert.x + this.displayWidth*(this.size/1.5-this.size/2), this.alert.y - this.displayHeight*0.1)
+    // }
+  }  
+
+  onPointerout(){
+    this.resetScale()
+    // if (this.alert !== undefined){
+    //   Phaser.Display.Align.To.TopCenter(this.alert, this, 0);
+    // }
+  }
+
+  resetScale(){
+    this.setScale(1)
+  }
+}
+
+
+
     // this.scene.cameras.main.pan(this.desk.x + this.x + this.scene.cameras.main.width/2 - this.gap, this.desk.y, 5000, Phaser.Math.Easing.Sine.in);
     // const timeout = setTimeout(() => this.scene.changeScene('Study'), 2000);
     
@@ -78,28 +94,7 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
     //     // this.doUpdate = false
     //     // this.scene.start('Study');
     // })  
-  }
 
-  onPointerOver(){
-    console.log("onPointerOver()")
-    this.setScale(1.2)
-    // if (this.alert !== undefined){
-    //   this.alert.setPosition(this.alert.x + this.displayWidth*(this.size/1.5-this.size/2), this.alert.y - this.displayHeight*0.1)
+    // getAbsolutePosition(containerX, containerY){
+    //   this.absolutePosition = { x : containerX + this.x, y : containerY + this.y};
     // }
-  }  
-
-  onPointerout(){
-    this.resetScale()
-    // if (this.alert !== undefined){
-    //   Phaser.Display.Align.To.TopCenter(this.alert, this, 0);
-    // }
-  }
-
-  resetScale(){
-    this.setScale(1)
-  }
-
-  handleClickChair(){    
-
-  }
-}

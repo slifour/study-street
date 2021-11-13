@@ -35,7 +35,6 @@ export default class Desk extends Phaser.GameObjects.Container {
       let chair = new Chair(this.scene, chairX, chairY, chairKey, dir);
       chair.setImmovable();
       this.add(chair);
-      chair.getAbsolutePosition(this.x, this.y);
       chair.init(this, interactive);
       chairX += chairDistance
     }

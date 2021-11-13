@@ -20,7 +20,12 @@ export function ConfirmAlert(prop) {
         'Rest' : 'Pause study and have rest?', 
         'Library' : 'Stop rest and go to study?',
     }
-    
+    const emits = {
+        'Rest' : 'restToLibrary', 
+        'Library' : 'librarytoStudy',
+        'Study' : 'studyToLibrary',
+    }
+
     return(      
         show?     
         <div>
@@ -37,14 +42,13 @@ export function ConfirmAlert(prop) {
                 <button 
                     variant="contained"
                     onClick={()=>{
-                        emitToGame((scene == 'Library') ? 'toRestScene': 'toLibraryScene');
+                        emitToGame(emits[scene]);
                         setShow(false);
                     }                        
                 }>Yes. Let's Move!</button>
             </div>
             {/* </div> */}
         </div> : null     
-
     )
 }
 
@@ -55,8 +59,7 @@ export function QuickMoveButton(prop) {
         'Library': 'Go to Rest',
         'Study': 'Exit to Library',
     }
-    const shiftText = buttonText[scene];
-    
+    const shiftText = buttonText[scene];    
 
     return (        
         <OverlayButton text = {shiftText} buttonStyle = {{left: "20%", bottom: "20%"}} id = "QuickMove">

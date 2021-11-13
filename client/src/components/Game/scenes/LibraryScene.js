@@ -1,14 +1,7 @@
-import Phaser from 'phaser';
-import User from '../entity/User';
-import Friend from '../entity/Friend';
-import socket from '../../../socket';
-import { createCharacterAnimsGirl, createCharacterAnimsWizard } from '../anims/CharacterAnims';
 import GroupArea from '../entity/GroupArea';
 import Desk from '../entity/Desk';
 import Tooltip from '../entity/Tooltip';
 import Book from '../entity/Book';
-// import socketIOClient from "socket.io-client";
-// const ENDPOINT = "http://localhost:4001";
 import MapScene from './MapScene';
 
 export default class Library extends MapScene {
@@ -34,11 +27,9 @@ export default class Library extends MapScene {
         this.load.image('bookshelf', 'assets/images/book-shelf.png');
         this.load.image('book-side', 'assets/images/book-red.png');
 
-        // map in json format
         this.load.image('libraryTiles1', 'assets/map/libraryTiles1.png');
         this.load.image('libraryTiles2', 'assets/map/libraryTiles2.png');
         this.load.image('libraryTiles3', 'assets/map/libraryTiles3.png');
-
         this.load.tilemapTiledJSON('libraryMap', 'assets/map/libraryMap.json');
     }
 
@@ -71,7 +62,7 @@ export default class Library extends MapScene {
         this.socket.on('newArtifact', this.onNewArtifact.bind(this));
         this.socket.on('newGroup', this.onNewGroup.bind(this))
         this.socket.on("goalUpdate", this.onGoalUpdate.bind(this));
-        this.game.events.on('toRestScene', () => {
+        this.game.events.on('libraryToRest', () => {
             console.log('toRestScene')
             this.changeScene('Rest')
         })
@@ -124,8 +115,8 @@ export default class Library extends MapScene {
         // console.log(this.belowPlayer1.displayWidth, this.belowPlayer1.displayHeight)
         // console.log(this.world1.displayWidth, this.world1.displayHeight)
         // console.log(this.map.widthInPixels, this.map.heightInPixels)
-        this.physics.world.bounds.width = this.belowPlayer1.displayWidth;
-        this.physics.world.bounds.height = this.belowPlayer1.displayHeight;
+        // this.physics.world.bounds.width = this.belowPlayer1.displayWidth;
+        // this.physics.world.bounds.height = this.belowPlayer1.displayHeight;
         // this.cameras.main.setBounds(0, 0, this.belowPlayer1.displayWidth, this.belowPlayer1.displayHeight);
         // this.bufferToFirst = this.add.rectangle(this.map.displayWidth-this.bufferWidth/2, this.map.displayHeight/2, this.bufferWidth, this.map.displayHeight, 0xff0000);
         // this.physics.add.existing(this.bufferToFirst)
@@ -169,7 +160,6 @@ export default class Library extends MapScene {
      */
     changeScene(newScene, data){        
         super.changeScene(newScene, data);
-        console.log('newScene :',  newScene);
     }
     
     /** 
@@ -219,19 +209,4 @@ export default class Library extends MapScene {
         // this.newArtifact = new Book(this, screenCenterX, screenCenterY, 'book-front');
         // // tooltipContainer.add(this.newArtifact)        
     }
-
-    // onArtifactTooltipClicked(){
-    //     this.tooltip.destroy()
-    //     this.cameras.main.startFollow(book);
-    //     this.physics.moveToObject(book, this.nextBookPosition[this.nextBookIndex].x, this.nextBookPosition[this.nextBookIndex].y, 300);
-    //     if (book.x === this.nextBookPosition.x){
-    //         this.cameras.main.startFollow(this.user);
-    //     }        
-    //     this.nextBookIndex += 1;
-    // }
-
 }
-
-// module.exports = {
-//     LibraryScene
-// };

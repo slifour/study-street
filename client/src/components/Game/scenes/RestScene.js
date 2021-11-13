@@ -60,9 +60,7 @@ export default class Rest extends MapScene {
 
     setEventHandlers(){
         super.setEventHandlers()
-        // Description
-        // socket.on('event', eventHandler)
-        this.game.events.on('toLibraryScene', () => {
+        this.game.events.on('restToLibrary', () => {
             console.log('toLibraryScene')
             this.changeScene()
         })
@@ -92,15 +90,10 @@ export default class Rest extends MapScene {
         this.world2.setCollisionByProperty({ collides: true });
         this.abovePlayer.setDepth(10);
 
-        // don't go out of the map
-        this.physics.world.bounds.width = this.map.displayWidth;
+          this.physics.world.bounds.width = this.map.displayWidth;
         this.physics.world.bounds.height = this.map.displayHeight;
 
         this.bufferToFirst = this.add.rectangle(this.bufferWidth/2, this.map.displayHeight/2, this.bufferWidth, this.map.displayHeight);
         this.physics.add.existing(this.bufferToFirst)
     };
 }
-
-// module.exports = {
-//     RestScene
-// };

@@ -60,6 +60,7 @@ function App() {
   return (
     <LoginUserContext.Provider value={ {loginUser, setLoginUser} }>
       <GameContext.Provider value={ {scene, emitToGame} }>
+      <div className={fadeProp}>
       <div className="content">
         <HomeMain></HomeMain>
         <MenuBar/>
@@ -70,6 +71,7 @@ function App() {
       </div>
       <div className="game-container">
         <Game ref={game}/>
+      </div>
       </div>
       <div>
         <Login></Login>

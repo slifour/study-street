@@ -62,49 +62,27 @@ export default class Study extends Phaser.Scene {
     console.log(this.index)
     const chair = this.desk.getAt(this.index);
     chair.sit();
-
-    console.log("camera size :", this.cameras.main.width, this.cameras.main.height)
     this.cameras.main.centerOn(this.desk.x + this.cameras.main.width/4 , this.desk.y);
-
-    createCharacterAnimsWizard(this.anims);
-    createCharacterAnimsGirl(this.anims);
-    this.cursors = this.input.keyboard.createCursorKeys();
-
-    this.createFriend();
     this.setEventHandlers();
+
+    // createCharacterAnimsWizard(this.anims);
+    // createCharacterAnimsGirl(this.anims);
+    // this.cursors = this.input.keyboard.createCursorKeys();
+    // this.createFriend();
+
   }
 
   createUser() {
     this.user = new User(this, 0, 0, 'user-girl', 'girl').setScale(3/100 * 1.2);
-    // this.user.setDepth(1);
-  }
-
-  createFriend(){
-      this.friends =this.add.group();
-      this.friendDict = {}
-      console.log(this.friends)  
   }
 
   /** createDesk
    * @parameter x, y, deskKey : spritekey for desk, chairkey : spritekey for chair
-   * @return Desk : extends sprite, defined in entity/Desk.js
+   * @sideEffect create Desk : extends sprite, defined in entity/Desk.js
    */
   createDesk(x, y, deskKey, chairKey) {
     this.desk = new Desk(this, x, y, deskKey, chairKey, false);    
   };    
-
-  updateCamera() {    
-    this.cameras.main.startFollow(this.user);
-    this.cameras.main.roundPixels = true; // avoid tile bleed
-    console.log('camera', 0, 0, this.world1.displayWidth, this.world1.displayHeight);
-    /**
-     * 주석 처리된 경우 카메라가 맵 밖으로까지 이동해서 맵 바깥쪽 어두운 부분이 보입니다.
-     * setBounds 를 다음과 같이 하면 카메라가 맵 밖으로 안나가게 가둬둘 수 있습니다. 문제는
-     * this.world1.displayHeight가 1228.8 이 나오는데 width 보다도 훨씬 짧아서 맵의 절반까지 밖에 커버가 안됩니다. 왜일까요 ?
-     * 
-     */
-    this.cameras.main.setBounds(0, 0, this.belowPlayer1.displayWidth, this.belowPlayer1.displayHeight);
-  }
 
   onStateUpdate(users){
     if(this.friends === undefined) {return;}
@@ -125,8 +103,7 @@ export default class Study extends Phaser.Scene {
   }
 
   setEventHandlers(){
-    this.game.events.on('toLibraryScene', () => {
-      console.log('toLibraryScene')
+    this.game.events.on('studyToLibrary', () => {
       this.changeScene('Library')
     })
     // Description
