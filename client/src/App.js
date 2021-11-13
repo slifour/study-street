@@ -25,31 +25,9 @@ function App() {
   const [scene, setScene] = useState("Library");  
   const [showConfirmAlert, setshowConfirmAlert] = useState(false);  
   const game = useRef(null);
-
   const [fadeProp, setFadeProp] = useState({
     fade: 'fade-in'
   });
-
-  // useEffect(() => {
-  //   if (game.current !== null && game.current.game){
-  //     game.current.game.events.on("changeScene", newScene =>{
-  //       setScene(newScene);
-  //       console.log("onChangeScene", newScene);
-  //     })
-  //   }    
-  //   const timeout = setInterval(() => {
-  //      if (fadeProp.fade === 'fade-in') {
-  //         setFadeProp({
-  //              fade: 'fade-out'
-  //         })
-  //      } else {
-  //           setFadeProp({
-  //              fade: 'fade-in'
-  //           })
-  //      }
-  //   }, 4000);
-  // return () => clearInterval(timeout)
-  // }, [fadeProp])
 
   useEffect(() => {
     if (game.current !== null && game.current.game) {
