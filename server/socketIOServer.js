@@ -10,6 +10,7 @@
 
 const socketIo = require("socket.io");
 const { RequestType, ResponseType, ResponseStatus } = require("./requestType");
+const chance = require("chance").Chance();
 
 const SocketIOServer = () => {
   /**
@@ -49,13 +50,14 @@ const SocketIOServer = () => {
 
   /** Methods */
   /** Initialize */  
-  const init = (server, origin) => {
+  const init = (server) => {
     io = socketIo(server, {
       cors: {
-        origin: origin,
+        // origin: origin,
+        origin: true, // Allow any origin
         methods: ["GET", "POST"]
       }
-    }); // < Interesting!
+    });
 
     io.on("connection", (socket) => {
       console.log("New client connected");
@@ -123,7 +125,9 @@ const SocketIOServer = () => {
       case RequestType.INVITE_FRIEND: onRequestInviteFriend(socket, request); break;
       case RequestType.LOGIN: onRequestLogin(socket, request); break;
       case RequestType.MY_PROFILE: onRequestMyProfile(socket, request); break;
-      case RequestType.PENDING_INVITE_LIST: onPendingInviteList(socket, request); break;
+      case RequestType.PENDING_INVITE_LIST: onRequestPendingInviteList(socket, request); break;
+      case RequestType.CREATE_GROUP: onRequestCreateGroup(socket, request); break;
+      case RequestType.JOIN_GROUP: onRequestJoinGroup(socket, request); break;
     }
     socket.emit("response", response);
   }
@@ -190,6 +194,7 @@ const SocketIOServer = () => {
     invitationList[invitationKey] = {
       groupID,
       friendID,
+      hostUser: requestUser,
       inviteTime: new Date()
     };
 
@@ -234,6 +239,17 @@ const SocketIOServer = () => {
       return responseFail(socket, requestKey, responseType, "Login is required.");
     }
 
+    /* 기본값은 요청을 보낸 사용자의 프로필을 응답으로 보내는 것.
+       그런데 만약 payload.userID가 있으면, 대신 그 유저의 프로필을 응답으로 보냄 */
+    if (payload.userID) {
+      return socket.emit(responseType, {
+        requestKey,
+        responseType,
+        status: ResponseStatus.OK,
+        payload: userList[payload.userID]
+      });  
+    }
+
     return socket.emit(responseType, {
       requestKey,
       responseType,
@@ -242,7 +258,7 @@ const SocketIOServer = () => {
     });
   }
 
-  const onPendingInviteList = (socket, request) => {
+  const onRequestPendingInviteList = (socket, request) => {
     const {requestUser, requestKey, payload} = request;
     const responseType = ResponseType.PENDING_INVITE_LIST;
 
@@ -267,6 +283,86 @@ const SocketIOServer = () => {
       responseType,
       status: ResponseStatus.OK,
       payload: filtered
+    });
+  }
+
+  const onRequestCreateGroup = (socket, request) => {
+    const {requestUser, requestKey, payload} = request;
+    const responseType = ResponseType.CREATE_GROUP;
+
+    if (!requestUser) {
+      return responseFail(socket, requestKey, responseType, "Login is required.");
+    }
+
+    let groupName;
+    try {
+      ({groupName} = payload);
+      if (groupName === "") throw new Error();
+    } catch {
+      return responseFail(socket, requestKey, responseType, "Invalid request: Group name is required.");
+    }
+
+    const randomIDOption = {
+      length: 7,
+      alpha: true,
+      numeric: true
+    };
+
+    let groupID = `group-${chance.string(randomIDOption)}`;
+    while (groupList[groupID] !== undefined) {
+      groupID = `group-${chance.string(randomIDOption)}`;
+    }
+
+    const defaultColors = ['#F79489', '#F9F1F0'];
+
+    groupList[groupID] = {
+      groupID,
+      groupName,
+      leader: requestUser,
+      member: [requestUser],
+      colors: payload.colors || defaultColors
+    };
+
+    return socket.emit(responseType, {
+      requestKey,
+      responseType,
+      status: ResponseStatus.OK,
+      payload: {}
+    });
+  };
+
+  const onRequestJoinGroup = (socket, request) => {
+    const {requestUser, requestKey, payload} = request;
+    const responseType = ResponseType.JOIN_GROUP;
+
+    if (!requestUser) {
+      return responseFail(socket, requestKey, responseType, "Login is required.");
+    }
+
+    let groupID;
+    try {
+      ({groupID} = payload);
+      if (groupID === "") throw new Error();
+    } catch {
+      return responseFail(socket, requestKey, responseType, "Invalid request: Group ID is required.");
+    }
+
+    const inviteKey = `${groupID} ${requestUser}`;
+    if(invitationList[inviteKey] === undefined) {
+      return responseFail(socket, requestKey, responseType, "User is not invited to the group. invite key is " + inviteKey + "current invitation list: " + JSON.stringify(invitationList));
+    }
+
+    if (!groupList[groupID].member.includes(requestUser)) {
+      groupList[groupID].member.push(requestUser);
+    }
+
+    delete invitationList[inviteKey];
+
+    return socket.emit(responseType, {
+      requestKey,
+      responseType,
+      status: ResponseStatus.OK,
+      payload: {}
     });
   }
 

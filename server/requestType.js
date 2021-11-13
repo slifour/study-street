@@ -7,16 +7,20 @@ module.exports.RequestType = { // they are also used as socket event name
   MY_GROUP_LIST: "REQUEST_MY_GROUP_LIST",
   INVITE_FRIEND: "REQUEST_INVITE_FRIEND",
   PENDING_INVITE_LIST: "REQUEST_PENDING_INVITE_LIST",
+  CREATE_GROUP: "REQUEST_CREATE_GROUP",
+  JOIN_GROUP: "REQUEST_JOIN_GROUP",
   // 앞으로 더 만들기
 };
 
 module.exports.ResponseType = {
-  OTHER: "OTHER", // For some invalid requests
+  OTHER: "RESPONSE_OTHER", // For some invalid requests
   LOGIN: "RESPONSE_LOGIN", 
   MY_PROFILE: "RESPONSE_MY_PROFILE",
   MY_GROUP_LIST: "RESPONSE_MY_GROUP_LIST", // { groupID, groupName, etc. }
   INVITE_FRIEND: "RESPONSE_INVITE_FRIEND",
   PENDING_INVITE_LIST: "RESPONSE_PENDING_INVITE_LIST",
+  CREATE_GROUP: "RESPONSE_CREATE_GROUP",
+  JOIN_GROUP: "RESPONSE_JOIN_GROUP",
   // 앞으로 더 만들기
 };
 

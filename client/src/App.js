@@ -3,10 +3,10 @@ import './App.css';
 import MenuBar from "./components/ui/MenuBar";
 import Game from "./components/Game";
 import Login from "./components/User/LogIn";
-import Tooltip from "./components/Game/entity/Tooltip";
 import Avatars from "./components/ui/Avatars";
 import {GroupListButton} from "./components/ui/GroupList";
 import {ConfirmAlert, QuickMoveButton} from "./components/ui/QuickMove";
+import HomeMain from "./components/ui/Home/HomeMain";
 
 
 /* Example of LoginUserContext value
@@ -60,23 +60,22 @@ function App() {
   return (
     <LoginUserContext.Provider value={ {loginUser, setLoginUser} }>
       <GameContext.Provider value={ {scene, emitToGame} }>
-      <div className = {fadeProp.fade}>
-        <div className="content">
-          <MenuBar/>
-          <Avatars/>
-          <GroupListButton></GroupListButton>
-          <QuickMoveButton></QuickMoveButton>
-          <ConfirmAlert show = {showConfirmAlert} setShow = {setshowConfirmAlert}></ConfirmAlert>
-        </div>
-        <div className="game-container">
-          <Game ref={game}/>
-        </div>
-        <div>
-          <Login></Login>
-          {/* <UserInfo></UserInfo> */}
-          {/* <InvitationView></InvitationView> */}
-          {/* <GroupView></GroupView>     */}
-        </div>
+      <div className="content">
+        <HomeMain></HomeMain>
+        <MenuBar/>
+        {/* <Avatars/> */}
+        {/* <GroupListButton></GroupListButton> */}
+        <QuickMoveButton emitToGame = {emitToGame}></QuickMoveButton>
+        <ConfirmAlert show = {showConfirmAlert} setShow = {setshowConfirmAlert}></ConfirmAlert>
+      </div>
+      <div className="game-container">
+        <Game ref={game}/>
+      </div>
+      <div>
+        <Login></Login>
+        {/* <UserInfo></UserInfo> */}
+        {/* <InvitationView></InvitationView> */}
+        {/* <GroupView></GroupView>     */}
       </div>
       </GameContext.Provider>
     </LoginUserContext.Provider>
