@@ -1,4 +1,5 @@
 $sidebar-width: 110px;
+$infoArea-width: 390px;
 
 .sidebar {
   height: 100%;
@@ -18,7 +19,7 @@ $sidebar-width: 110px;
 
 .infoArea {
   height: 100%;
-  width: 390px;
+  width: $infoArea-width;
   position: absolute;
   left: $sidebar-width;
   top: 0;
@@ -26,10 +27,33 @@ $sidebar-width: 110px;
   background-color: #fff;
 }
 
-.groupListItem {
+.icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 32px;
+  color: #444444;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  text-rendering: optimizeLegibility;
+  cursor: pointer;
+}
 
+.groupListItem {
+  
 }
 
 .groupListItemText {
   
+}
+
+.homeInfoCloseButton {
+  position: absolute;
+  left: $sidebar-width + $infoArea-width - 100px;
+  top: 30px;
 }

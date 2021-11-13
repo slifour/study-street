@@ -10,6 +10,7 @@ import styles from "./home.module.scss";
 import HomeInfoCreateGroup from "./HomeInfoCreateGroup";
 import HomeInfoGotInvitation from "./HomeInfoGotInvitation";
 import { LoginUserContext } from "../../../App";
+import HomeInfoCloseButton from "./HomeInfoCloseButton";
 
 export const HomeContext = React.createContext(null);
 
@@ -18,6 +19,7 @@ export default function HomeMain(props) {
   const SHOW_GROUP = "SHOW_GROUP";
   const SHOW_CREATE_GROUP = "SHOW_CREATE_GROUP";
   const SHOW_GOT_INVITATION = "SHOW_GOT_INVITATION";
+  const SHOW_NONE = "SHOW_NONE";
 
   const [currentShow, setCurrentShow] = useState(SHOW_USER);
   const [currentGroup, setCurrentGroup] = useState(null); // group
@@ -41,6 +43,10 @@ export default function HomeMain(props) {
     setCurrentShow(SHOW_GOT_INVITATION);
   }
 
+  const onClickHomeInfoClose = () => {
+    setCurrentShow(SHOW_NONE);
+  }
+
   if (!loginUser) {
     return (
       <div>
@@ -49,7 +55,7 @@ export default function HomeMain(props) {
             Not logged in.
           </div>
         </div>
-        <div className={styles.infoArea}/>
+        {/* <div className={styles.infoArea}/> */}
       </div>
     )
   }
@@ -64,12 +70,15 @@ export default function HomeMain(props) {
           <div onClick={onClickInvitation}><InvitationButton/></div>
           <SettingButton/>
         </div>
-        <div className={styles.infoArea}>
-          { currentShow === SHOW_USER ? <HomeInfoUser/> : null}
-          { currentShow === SHOW_GROUP ? <HomeInfoGroup group={currentGroup}/> : null}
-          { currentShow === SHOW_CREATE_GROUP ? <HomeInfoCreateGroup/> : null}
-          { currentShow === SHOW_GOT_INVITATION ? <HomeInfoGotInvitation/> : null}
-        </div>
+        {currentShow !== SHOW_NONE ? 
+          <div className={styles.infoArea}>
+            { currentShow === SHOW_USER ? <HomeInfoUser/> : null}
+            { currentShow === SHOW_GROUP ? <HomeInfoGroup group={currentGroup}/> : null}
+            { currentShow === SHOW_CREATE_GROUP ? <HomeInfoCreateGroup/> : null}
+            { currentShow === SHOW_GOT_INVITATION ? <HomeInfoGotInvitation/> : null}
+            <HomeInfoCloseButton onClick={onClickHomeInfoClose}/>
+          </div>
+          : null}
       </div>
     </HomeContext.Provider>
   );
