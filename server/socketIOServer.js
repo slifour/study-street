@@ -50,13 +50,14 @@ const SocketIOServer = () => {
 
   /** Methods */
   /** Initialize */  
-  const init = (server, origin) => {
+  const init = (server) => {
     io = socketIo(server, {
       cors: {
-        origin: origin,
+        // origin: origin,
+        origin: true, // Allow any origin
         methods: ["GET", "POST"]
       }
-    }); // < Interesting!
+    });
 
     io.on("connection", (socket) => {
       console.log("New client connected");
