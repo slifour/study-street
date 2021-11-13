@@ -104,7 +104,7 @@ export function GroupListItem({group}) {
 
 export function GroupListButton(props) {
     return (
-        <OverlayButton text="Your Groups" buttonStyle = {{left: "20%", bottom: "10%"}}>
+        <OverlayButton text="Your Groups" buttonStyle = {{left: "20%", bottom: "10%"}} id = {"GroupList"}>
             <GroupList></GroupList>
         </OverlayButton>
     );
