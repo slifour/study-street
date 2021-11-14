@@ -3,7 +3,8 @@ import styles from "./ui.module.css";
 import styled from 'styled-components';
 import Modal from 'react-overlays/Modal';
 
-const StyledModal = styled(Modal)`
+const modalStyles = {
+    "GroupList" : `
     position: fixed;
     width: 340px;
     height: 310px;
@@ -14,6 +15,32 @@ const StyledModal = styled(Modal)`
     outline: none;
     background-color: white;
     box-shadow: 0px 4px 10px rgba(71, 71, 71, 0.25);
+    `,
+    
+    "QuickMove" : `    
+    position: fixed;
+    width: 447px;
+    height: 229px;
+    z-index: 1040;
+    bottom: 50%;
+    left: 50%;
+    border-radius: 8px;
+    outline: none;
+    background-color: white;
+    box-shadow: 0px 4px 10px rgba(71, 71, 71, 0.25);
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+    ` 
+}
+
+
+/** 
+ * OverlayButton UI 를 재사용하면 좋을 것 같아서
+ * modalStyles dictionary에서 버튼의 id를 키로 클릭했을 때 나타날 modal style 을 선택할 수 있도록 했습니다.
+  */
+const StyledModal = styled(Modal)`
+    ${props => modalStyles[props.id]}
 `;
 
 const Backdrop = styled("div")`
@@ -30,6 +57,8 @@ const Backdrop = styled("div")`
 export default function OverlayButton(props) {
   const [show, setShow] = useState(false);
   const renderBackdrop = props => <Backdrop {...props} />;
+  const id = props.id;
+  console.log('OverlayButton:', id);
 
   return (
       <>
@@ -37,10 +66,11 @@ export default function OverlayButton(props) {
           {props.text}
       </div> 
       <StyledModal
+          id = {id}
           show = {show}
           onHide = {() => setShow(false)}
           renderBackdrop = {renderBackdrop}>
-          {show ? props.children : null}
+          {show ? React.cloneElement(props.children, {show : show, setShow : setShow}) : null}
       </StyledModal>
       </>
   );

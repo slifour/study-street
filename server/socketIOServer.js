@@ -10,6 +10,7 @@
 
 const socketIo = require("socket.io");
 const { RequestType, ResponseType, ResponseStatus } = require("./requestType");
+const onRequest = require("./requestHandle");
 
 const SocketIOServer = () => {
   /**
@@ -49,13 +50,14 @@ const SocketIOServer = () => {
 
   /** Methods */
   /** Initialize */  
-  const init = (server, origin) => {
+  const init = (server) => {
     io = socketIo(server, {
       cors: {
-        origin: origin,
+        // origin: origin,
+        origin: true, // Allow any origin
         methods: ["GET", "POST"]
       }
-    }); // < Interesting!
+    });
 
     io.on("connection", (socket) => {
       console.log("New client connected");
@@ -100,142 +102,10 @@ const SocketIOServer = () => {
     socket.on("newArtifact", onNewArtifact.bind(null, socket))
     socket.on("initializeLibrary", onIntializeLibrary.bind(null,socket))
 
-    socket.on(RequestType.MY_GROUP_LIST, onRequest.bind(null, socket, RequestType.MY_GROUP_LIST));
-    socket.on(RequestType.INVITE_FRIEND, onRequest.bind(null, socket, RequestType.INVITE_FRIEND));
-    socket.on(RequestType.LOGIN, onRequest.bind(null, socket, RequestType.LOGIN));
-    socket.on(RequestType.MY_PROFILE, onRequest.bind(null, socket, RequestType.MY_PROFILE));
+    Object.values(RequestType).forEach( requestType => {
+      socket.on(requestType, onRequest.bind(null, socket, requestType));
+    });
     updateDate(socket)
-  }
-
-  const onRequest = (socket, requestName, request) => {
-    console.log("Got request:", request);
-    let requestUser, requestKey, requestType, payload;
-    try {
-      ({requestUser, requestKey, requestType, payload} = request);
-      if (requestName !== requestType) throw new Error();
-    } catch {
-      console.warn("Invalid request: ", request);
-      responseFail(socket, request.requestKey || "", ResponseType.OTHER, "Invalid request.");
-      return;
-    }
-    let response;
-    switch (requestType) {
-      case RequestType.MY_GROUP_LIST: onRequestMyGroupList(socket, request); break;
-      case RequestType.INVITE_FRIEND: onRequestInviteFriend(socket, request); break;
-      case RequestType.LOGIN: onRequestLogin(socket, request); break;
-      case RequestType.MY_PROFILE: onRequestMyProfile(socket, request); break;
-    }
-    socket.emit("response", response);
-  }
-
-  /** 
-   * @param {socketIo.Socket} socket
-   * @param {string} requestKey 
-   * @param {string} responseType
-   * @param {object} msg 
-  */
-   const responseFail = (socket, requestKey, responseType, msg) => {
-    socket.emit(responseType, {
-      requestKey,
-      responseType,
-      status: ResponseStatus.FAIL,
-      payload: { msg }
-    });
-  };
-
-
-  const onRequestMyGroupList = (socket, request) => {
-    const {requestUser, requestKey} = request;
-    const responseType = ResponseType.MY_GROUP_LIST;
-
-    if (!requestUser) {
-      return responseFail(socket, requestKey, responseType, "Login is required.");
-    };
-
-    let myGroupList = Object.values(groupList)
-        .filter(({member}) => member.includes(requestUser));
-
-    return socket.emit(responseType, {
-      requestKey, 
-      responseType,
-      status: ResponseStatus.OK,
-      payload: myGroupList
-    });
-  };
-
-  const onRequestInviteFriend = (socket, request) => {
-    const {requestUser, requestKey, payload} = request;
-    const responseType = ResponseType.INVITE_FRIEND;
-
-    if (!requestUser) {
-      return responseFail(socket, requestKey, responseType, "Login is required.");
-    }
-    
-    let groupID, friendID;
-    try {
-      ({groupID, friendID} = payload);
-    } catch {
-      return responseFail(socket, requestKey, responseType, "Invalid request.");
-    }
-    
-    if (groupList[groupID].member.includes(friendID)) {
-      return responseFail(socket, requestKey, responseType, "Already in group.");
-    }
-    
-    const invitationKey = `${groupID} ${friendID}`;
-    invitationList[invitationKey] = {
-      groupID,
-      friendID,
-      inviteTime: new Date()
-    };
-
-    return socket.emit(responseType, {
-      requestUser,
-      responseType,
-      status: ResponseStatus.OK,
-      payload: {}
-    });
-  }
-
-  const onRequestLogin = (socket, request) => {
-    const {requestUser, requestKey, payload} = request;
-    const responseType = ResponseType.LOGIN;
-
-    console.log("onRequestLogin: ", request); 
-
-    let userID;
-    try {
-      ({userID} = payload);
-    } catch {
-      return responseFail(socket, requestKey, responseType, "Invalid request.");
-    }
-
-    if (userList[userID]) {
-      return socket.emit(responseType, {
-        requestKey,
-        responseType,
-        status: ResponseStatus.OK,
-        payload: userList[userID]
-      });
-    } else {
-      return responseFail(socket, requestKey, responseType, "Failed to login.");
-    }
-  }
-
-  const onRequestMyProfile = (socket, userID) => {
-    const {requestUser, requestKey, payload} = request;
-    const responseType = ResponseType.MY_PROFILE;
-
-    if (!requestUser) {
-      return responseFail(socket, requestKey, responseType, "Login is required.");
-    }
-
-    return socket.emit(responseType, {
-      requestKey,
-      responseType,
-      status: ResponseStatus.OK,
-      payload: userList[userID]
-    });
   }
 
   const onNewArtifact = (socket) => {
@@ -259,7 +129,6 @@ const SocketIOServer = () => {
   const onUserProfileRequest = (socket, userID) => {
     socket.emit("userProfile", userList[userID]);
   }  
-
   
   const onPositionUpdate = (socket, positionData) => {
     if (!Object.keys(users).includes(socket.id)){

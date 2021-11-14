@@ -1,4 +1,6 @@
 node_modules
-package-lock.json
-node_modules
 garbage
+deploy/client-deploy
+deploy/server-deploy
+.DS_Store
+.vscode

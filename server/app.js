@@ -7,14 +7,13 @@
 const express = require("express");
 const http = require("http");
 
-const port = process.env.PORT || 4001;
+const port = process.env.port || 4001;
 const index = require("./routes/index");
 
 const app = express();
 app.use(index);
 
 const server = http.createServer(app);
-const origin = "http://localhost:3000"
 
 const getApiAndEmit = socket => {
   const response = new Date();
@@ -24,6 +23,6 @@ const getApiAndEmit = socket => {
 
 const SocketIOServer = require("./socketIOServer.js");
 const socketIOServer = SocketIOServer()
-socketIOServer.init(server, origin)
+socketIOServer.init(server);
 
 server.listen(port, () => console.log(`Listening on port ${port}`));

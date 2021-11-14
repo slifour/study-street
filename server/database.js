@@ -71,11 +71,13 @@ let invitationList = {
   "a hyeon": {
     groupID: "a",
     friendID: "hyeon",
+    hostUser: "eunki",
     inviteTime: new Date('07 Nov 2021 14:30:00 GMT+9')
   },
-  "b jeonghoon": {
+  "b haeseul": {
     groupID: "b",
-    friendID: "jeonghoon",
+    friendID: "haeseul",
+    hostUser: "jeonghoon",
     inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
   }
 }
@@ -98,5 +100,13 @@ let bookList = {
   },  
 }
 
+let positionList = {
+  "Study": {    
+  },
+  "Library": {
+  },
+  "Rest": {
+  },
+}
 
 module.exports = {userList, groupList, invitationList, goalList, bookList};

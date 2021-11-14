@@ -1,0 +1,59 @@
+$sidebar-width: 110px;
+$infoArea-width: 390px;
+
+.sidebar {
+  height: 100%;
+  width: $sidebar-width;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-top: 36px;
+  background-color: #000;
+}
+
+.sidebarItem {
+  padding: 24px;
+  display: block;
+  color: #fff;
+}
+
+.infoArea {
+  height: 100%;
+  width: $infoArea-width;
+  position: absolute;
+  left: $sidebar-width;
+  top: 0;
+  padding: 47px 37px;
+  background-color: #fff;
+}
+
+.icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 32px;
+  color: #444444;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  text-rendering: optimizeLegibility;
+  cursor: pointer;
+}
+
+.groupListItem {
+  
+}
+
+.groupListItemText {
+  
+}
+
+.homeInfoCloseButton {
+  position: absolute;
+  left: $sidebar-width + $infoArea-width - 100px;
+  top: 30px;
+}

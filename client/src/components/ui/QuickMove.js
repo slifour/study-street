@@ -11,63 +11,59 @@ import Modal from 'react-overlays/Modal';
 import { GameContext } from '../../App';
 // import Button from 'react-bootstrap/Button'
 
-const StyledModal = styled(Modal)`
-    position: fixed;
-    width: 340px;
-    height: 310px;
-    z-index: 1040;
-    bottom: 10%;
-    left: 50%;
-    border-radius: 8px;
-    outline: none;
-    background-color: white;
-    box-shadow: 0px 4px 10px rgba(71, 71, 71, 0.25);
-`;
+export function ConfirmAlert(prop) {
 
-export default function ConfirmAlert(prop) {
+    const show = prop.show;
+    const setShow = prop.setShow;
+    const { scene, emitToGame } = useContext(GameContext);
+    const confirmQuestions = {
+        'Rest' : 'Pause study and have rest?', 
+        'Library' : 'Stop rest and go to study?',
+    }
+    const emits = {
+        'Rest' : 'restToLibrary', 
+        'Library' : 'librarytoStudy',
+        'Study' : 'studyToLibrary',
+    }
 
-    const [show, setShow] = useState(true);
-    
-    const inLibraryScene = prop.inLibraryScene
-    const emitToGame = prop.emitToGame
-    const confrimToRest = 'Pause study and have rest?' 
-    const confrimToLibrary = 'Stop rest and go to study?'
-    const confrimText = {inLibraryScene} ? confrimToRest: confrimToLibrary;
-    const {game} = useContext(GameContext);
-    // const toRestScene = useContext(SceneContext);
-
-    return(
+    return(      
+        show?     
         <div>
             {/* <div className = {styles.tooltip}> */}
-                <div className = {styles.tooltipHeader}>{confrimText}</div>
-                <div className = {styles.tooltipParagraph}>Description</div>
-                <div className = {styles.tooltipParagraph}>
-                    <button 
-                        variant="contained" 
-                        onClick={()=>{
-                            setShow(false);
-                        }                            
-                    }>No. keep here.</button>
-                    <button 
-                        variant="contained"
-                        onClick={()=>{
-                            emitToGame({inLibraryScene} ? 'toRestScene': 'toLibraryScene');
-                            setShow(false);
-                        }                        
-                    }>Yes. Let's Move!</button>
-                </div>
+            <div className = {styles.tooltipHeader}>{confirmQuestions[scene]}</div>
+            <div className = {styles.tooltipParagraph}>Description</div>
+            <div className = {styles.tooltipParagraph}>
+                <button 
+                    variant="contained" 
+                    onClick={()=>{
+                        setShow(false);
+                    }                            
+                }>No. keep here.</button>
+                <button 
+                    variant="contained"
+                    onClick={()=>{
+                        emitToGame(emits[scene]);
+                        setShow(false);
+                    }                        
+                }>Yes. Let's Move!</button>
             </div>
-        // </div>       
+            {/* </div> */}
+        </div> : null     
     )
 }
 
 export function QuickMoveButton(prop) {
-    const inLibraryScene = prop.inLibraryScene
-    const shiftText = inLibraryScene ? 'Return to Study' : 'Go to Rest';
-    const emitToGame = prop.emitToGame
+    const { scene, emitToGame } = useContext(GameContext);
+    const buttonText = {
+        'Rest': 'Return to Study',
+        'Library': 'Go to Rest',
+        'Study': 'Exit to Library',
+    }
+    const shiftText = buttonText[scene];    
+
     return (        
-        <OverlayButton text = {shiftText} buttonStyle = {{left: "20%", bottom: "20%"}}>
-            <ConfirmAlert buttonStyle = {{left: "50%", bottom: "50%"}} emitToGame = {emitToGame} inLibraryScene = {inLibraryScene}></ConfirmAlert>
+        <OverlayButton text = {shiftText} buttonStyle = {{left: "20%", bottom: "20%"}} id = "QuickMove">
+            <ConfirmAlert buttonStyle = {{left: "50%", bottom: "50%"}}></ConfirmAlert>
         </OverlayButton>
     );
 }

@@ -4,7 +4,7 @@ import Books from "./Books";
 import Book from './Book';
 
 export default class GroupArea extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, id = 0, color = '#ff0000', margin = 32) {
+    constructor(scene, x, y, id = 0, color = '#ff0000', margin = 32, borderMargin = 128) {
         console.log(scene, x, y)
         super(scene, x, y);
         this.scene = scene;
@@ -13,6 +13,7 @@ export default class GroupArea extends Phaser.GameObjects.Container {
         this.id = id
         this.setSize(500, 500);      
         this.setScale(1, 1);
+        this.borderMargin = borderMargin
         this.margin = margin
         this.color = color
         this.x = x
@@ -38,7 +39,7 @@ export default class GroupArea extends Phaser.GameObjects.Container {
 
     createBorder(){
         console.log('createBorder:', this.displayWidth, this.displayHeight)
-        let border = this.scene.add.rectangle(0, 0, this. displayWidth, this.displayHeight);
+        let border = this.scene.add.rectangle(0, 0, this. displayWidth + this.borderMargin, this.displayHeight + this.borderMargin);
         border.setStrokeStyle(this.borderWidth, this.color)
         this.add(border)
     }

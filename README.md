@@ -36,6 +36,22 @@
     - `cd client`
     - `npm start`
 
+## Deploy
+
+> Deploy: 우리가 만든 작업물을 실제 서버에 올리는 일을 deploy라고 합니다
+> Note -- Deploy는 제출 전에만 하면 되니 지금 너무 신경쓰실 필요는 없을 것 같아요! 
+
+- 실행하세요
+    0. 아래 스크립트는 모두 Unix (Linux / macOS) 환경에서 실행하세요. Git bash 환경에서도 아마 될 것 같아요. 
+    1. `./build.sh`
+        이 스크립트는 deploy할 파일을 만들어 `deploy/client-deploy` 와 `deploy/server-deploy`에 복사해요.
+        이 두 폴더는 각각 server와 client의 Heroku용 repository와 연결되어 있어요. 
+    2. 빌드한 것을 서버에 올리기 위한 작업은 `deploy/README.md`를 확인하세요.  
+
+- 참고하세요
+    `deploy/build-files`
+    이 폴더에는 Procfile을 포함한 Heroku 관련 설정이 들어있어요
+
 
 
 ## What the program do

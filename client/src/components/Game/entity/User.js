@@ -1,6 +1,10 @@
 import Phaser from 'phaser';
 import socket from '../../../socket';
 import Status from './Status';
+/**
+ * Reference
+ * https://stackoverflow.com/questions/66616153/pathfinding-animation-in-phaser * 
+ */
 
 export default class User extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, spriteKey, animSuffix) {
@@ -11,9 +15,6 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
     this.scene.physics.world.enable(this);
     this.stop = true
     this.socket = socket
-    this.setCollideWorldBounds(true);
-    this.initialize({name : 'User', group : 1, position : {x : this.x, y : this.y}}, this.scene)
-
     this.animName = {
       'idle': 'user-idle-' + animSuffix,
       'left': 'user-left-' + animSuffix,
@@ -21,6 +22,11 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
       'right': 'user-right-' + animSuffix,
       'down': 'user-down-' + animSuffix,
     }
+  }
+
+  init(){
+    this.setCollideWorldBounds(true);
+    this.initialize({name : 'User', group : 1, position : {x : this.x, y : this.y}}, this.scene);
 
     /* Status display */
     this.setInteractive();
@@ -28,7 +34,6 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
     this.on('pointerover', this.onPointerOver);
     this.on('pointerout', this.onPointerOut);
   }
-
   /** Socket emit methods */
 
   /** initialize : tell server to create this user */
@@ -103,6 +108,10 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
 
   onPointerOut() {
     this.statusView.setActive(false).setVisible(false);
+  }
+
+  moveTo() {
+
   }
 
   /** @param {Phaser.Types.Input.Keyboard.CursorKeys} cursors */
