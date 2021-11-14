@@ -100,5 +100,13 @@ let bookList = {
   },  
 }
 
+let positionList = {
+  "Study": {    
+  },
+  "Library": {
+  },
+  "Rest": {
+  },
+}
 
 module.exports = {userList, groupList, invitationList, goalList, bookList};

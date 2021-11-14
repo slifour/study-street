@@ -128,6 +128,7 @@ const SocketIOServer = () => {
       case RequestType.PENDING_INVITE_LIST: onRequestPendingInviteList(socket, request); break;
       case RequestType.CREATE_GROUP: onRequestCreateGroup(socket, request); break;
       case RequestType.JOIN_GROUP: onRequestJoinGroup(socket, request); break;
+      case RequestType.CHANGE_SCENE: onRequestChangeScene(socket, request); break;
     }
     socket.emit("response", response);
   }
@@ -366,6 +367,40 @@ const SocketIOServer = () => {
     });
   }
 
+  const onRequestChangeScene = (socket, request) => {
+    const {requestUser, requestKey, payload} = request;
+    const responseType = ResponseType.CHANGE_SCENE;
+
+    let prevScene, currentScene;
+    try {
+      ({prevScene, currentScene} = payload);
+    } catch {
+      return responseFail(socket, requestKey, responseType, "Invalid scene.");
+    }
+
+    socket.leave(prevScene);
+    socket.join(currentScene);
+
+
+
+    switch (scene) {
+      case "Home": ; break;
+      case "Library": ; break;
+      case "Study": ; break;
+      case "Rest": ; break;
+    }
+
+    return socket.emit(responseType, {
+      requestKey,
+      responseType,
+      status: ResponseStatus.OK,
+      payload: {}
+    });    
+  }
+
+
+
+
   const onNewArtifact = (socket) => {
     console.log('server : newArtifact')
     data = {
@@ -387,7 +422,6 @@ const SocketIOServer = () => {
   const onUserProfileRequest = (socket, userID) => {
     socket.emit("userProfile", userList[userID]);
   }  
-
   
   const onPositionUpdate = (socket, positionData) => {
     if (!Object.keys(users).includes(socket.id)){
