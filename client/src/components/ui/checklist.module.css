@@ -1,0 +1,581 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+.tabBox {
+    display: flex;
+    width: 800px;
+    height: 900px;
+}
+
+.icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 28px;
+    color: #444444;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    text-rendering: optimizeLegibility;
+    transition: all ease 1s;
+}
+
+.iconsWhiteLarge {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 45px;
+    color: #FFFFFF;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    text-rendering: optimizeLegibility;
+    transition: all ease 1s;
+}
+
+.iconsWhite {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 20px;
+    color: #FFFFFF;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    text-rendering: optimizeLegibility;
+    transition: all ease 1s;
+}
+
+.iconsGray {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 28px;
+    color: #BDBDBD;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    text-rendering: optimizeLegibility;
+}
+
+.iconsLightGray {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 28px;
+    color: #E5E5E5;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    text-rendering: optimizeLegibility;
+}
+
+.iconsExpand {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 28px;
+    color: #444444;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    text-rendering: optimizeLegibility;
+    transition: all ease 1s;
+    transform: rotate(180deg);
+}
+
+.tabBox {
+    height: 80px;
+    display: flex;
+}
+
+.groupGoalsContainer {
+    height: 820px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+    padding-bottom: 150px;
+}
+
+.groupGoalBox {
+    width: 750px;
+    min-height: min-content;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(238, 238, 238, 0.50);
+    border-radius: 14px;
+    margin-top: 25px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.groupGoalBoxHeaderExpandable {
+    width: 100%;
+    min-height: 150px;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    cursor: pointer;
+}
+
+.groupGoalBoxHeader {
+    width: 100%;
+    min-height: 150px;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.bookGauge {
+    display: flex;
+    flex-direction: column;
+    margin-left: 45px;
+}
+
+.gaugeContainer {
+    position: relative;
+}
+
+.textGauge {
+    color: #A8A8A8;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.goalContent {
+    display: flex;
+    gap: 16px;
+    margin-left: 45px;
+    justify-content: center;
+    align-items: center;
+}
+
+.textTitle {
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.textContent {
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    font-size: 20px;
+}
+
+.accept {
+    width: 120px;
+    height: 40px;
+    margin-left: auto;
+    margin-right: 25px;
+
+    color: white;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    line-height: 40px;
+    font-weight: 600;
+    font-size: 18px;
+
+    background: #6FA270;
+    box-shadow: 0px 4px 10px rgba(136, 208, 156, 0.15);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.drop {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+
+    margin-left: auto;
+    margin-right: 25px;
+}
+
+.personalContainer {
+    padding: 40px;
+}
+
+.groupGoals {
+    background: #EEF3ED;
+    box-shadow: 0px 4px 10px rgba(238, 243, 237, 0.15);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.checklistBoxContainer {
+    padding: 20px 30px;
+    margin: 10px 0px;
+}
+
+.checklistBox {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+}
+
+.checklistContent {
+    margin-left: 25px;
+
+    color: #0C0C0C;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.checklistContentDone {
+    margin-left: 25px;
+
+    color: #BDBDBD;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    font-weight: 400;
+    font-size: 20px;
+    text-decoration: line-through;
+}
+
+.checklistContentInput {
+    margin-left: 25px;
+
+    color: #DDDDDD;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.doneBox {
+    margin-left: auto;
+    margin-right: 20px;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.doneText {
+    color: #7B7B7B;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    font-weight: 300;
+    font-size: 16px;
+}
+
+.groupGoalBoxContent {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 20px;
+}
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background-color: #E7E7E7;
+    margin-bottom: 15px;
+}
+
+.groupParticipationBox {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.doneTag {
+    margin-left: 40px;
+    padding: 10px 35px;
+    background: #6FA270;
+    box-shadow: 0px 4px 10px rgba(111, 162, 112, 0.15);
+    border-radius: 14.5px;
+
+    color: #FFFFFF;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.yetTag {
+    margin-left: 40px;
+    padding: 10px 35px;
+    background: #F8F8F8;
+    border-radius: 14.5px;
+
+    color: #0C0C0C;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.tagText {
+    margin-left: 20px;
+    
+    color: #7B7B7B;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.floatButtonMain {
+    position: fixed;
+    right: 85px;
+    bottom: 85px;
+    width: 88px;
+    height: 88px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: #6FA270;
+    box-shadow: 0px 0px 10px rgba(111, 162, 112, 0.3);
+    cursor: pointer;
+}
+
+.floatBoxSubFirst {
+    position: fixed;
+    height: 60px;
+    right: 100px;
+    bottom: 200px;
+
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    gap: 13px;
+}
+
+.floatBoxSubSecond {
+    position: fixed;
+    height: 60px;
+    right: 100px;
+    bottom: 280px;
+
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    gap: 13px;
+}
+
+.floatText {
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 45px;
+    color: #6FA270;
+    z-index: 1040;
+}
+
+.floatBlur {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    filter: blur(20px);
+}
+
+.floatButtonSub {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #6FA270;
+    box-shadow: 0px 4px 4px rgba(111, 162, 112, 0.15);
+    z-index: 1040;
+    cursor: pointer;
+}
+
+.floatContainer {
+    position: relative;
+    right: 0;
+    bottom: 0;
+}
+
+.heightCompensation {
+    width: 100%;
+    min-height: 200px;
+}
+
+.addChecklistContainer {
+    width: 100%;
+
+}
+
+.addChecklist {
+    width: 100%;
+    height: 100%;
+    border-width: 0;
+    padding: 0 10px 0 25px;
+    border-radius: 0 0 0 8px;
+
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    background-color: #FBFBFB;
+    color: #BBBBBB;
+}
+
+.addChecklist:focus {
+    outline: none;
+}
+
+.inputContainer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.addButton {
+    width: 100px;
+    height: 40px;
+
+    margin-left: auto;
+    margin-right: 20px;
+    background: #F0F0F0;
+    box-shadow: 0px 4px 10px rgba(200, 200, 200, 0.1);
+    border-radius: 8px;
+
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    text-align: center;
+    line-height: 40px;
+    color: #0C0C0C;
+}
+
+.modalHeader {
+    height: 80px;
+    width: 440px;
+    display: flex;
+    align-items: center;
+    padding: 0px 30px;
+}
+
+.modalTitle {
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 80px;
+    color: #6FA270;
+}
+
+.modalContent {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    padding-left: 30px;
+    gap: 10px;
+}
+
+.modalContentText {
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.modalFooter {
+    height: 80px;
+    width: 440px;
+    display: flex;
+    justify-content: right;
+    gap: 20px;
+    align-items: center;
+    padding: 0px 30px;
+}
+
+.cancelButton {
+    width: 120px;
+    height: 40px;
+
+    color: #999999;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    line-height: 40px;
+    font-weight: 600;
+    font-size: 18px;
+
+    background: #F2F2F2;
+    box-shadow: 0px 4px 10px rgba(226, 226, 226, 0.15);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.createButton {
+    width: 120px;
+    height: 40px;
+
+    color: white;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    line-height: 40px;
+    font-weight: 600;
+    font-size: 18px;
+
+    background: #6FA270;
+    box-shadow: 0px 4px 10px rgba(136, 208, 156, 0.15);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.picker {
+    padding-top: 4px;
+    padding-left: 20px;
+    border-radius: 0 0 0 8px;
+    border-width: 0;
+
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+
+    background-color: #FBFBFB;
+    color: #BBBBBB;
+
+    -ms-user-select: none; 
+    -webkit-user-select: none;
+    user-select: none;
+
+    cursor: pointer;
+}
+
+.picker:focus {
+    outline: none;
+}
