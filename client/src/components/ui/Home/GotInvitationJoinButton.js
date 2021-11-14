@@ -1,10 +1,10 @@
 import React, {useCallback, useContext} from "react";
-import { HomeContext } from "./HomeMain";
+import { ReloadContext } from "../../request/ReloadContext";
 import styles from "./home.module.scss";
-import useRequest from "./useRequest";
+import useRequest from "../../request/useRequest";
 
 export default function GotInvitationJoinButton({gotInvitation}) {
-  const {setReloadTime} = useContext(HomeContext);
+  const {setReloadTime} = useContext(ReloadContext);
 
   const onResponseOK = useCallback(({payload}) => {
     setReloadTime(new Date());

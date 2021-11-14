@@ -1,8 +1,8 @@
 import React, {useState, useCallback} from "react";
 import UserAvatarCircle from "./UserAvatarCircle";
 import GotInvitationJoinButton from "./GotInvitationJoinButton";
-import useRequest from "./useRequest";
-import useLiveReloadHome from "./useLiveReloadHome";
+import useRequest from "../../request/useRequest";
+import useLiveReload from "../../request/useLiveReload";
 
 export default function GotInvitationListItem({gotInvitation}) {
   const [hostUser, setHostUser] = useState(null);
@@ -28,7 +28,7 @@ export default function GotInvitationListItem({gotInvitation}) {
     onResponseFail
   });
 
-  useLiveReloadHome({request, innerReloadTimeRef});
+  useLiveReload({request, innerReloadTimeRef});
   
   if (!hostUser) {
     return (

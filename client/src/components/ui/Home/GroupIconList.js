@@ -1,10 +1,8 @@
-import React, {useCallback, useContext, useEffect, useState } from 'react';
-import { LoginUserContext } from '../../../App';
-import { HomeContext } from './HomeMain';
+import React, { useCallback, useState } from 'react';
 import styles from "./home.module.scss";
 import GroupAvatarCircle from './GroupAvatarCircle';
-import useRequest from './useRequest';
-import useLiveReloadHome from './useLiveReloadHome';
+import useRequest from '../../request/useRequest';
+import useLiveReload from '../../request/useLiveReload';
 
 export default function GroupIconList({onSetGroup}) {
 
@@ -27,7 +25,7 @@ export default function GroupIconList({onSetGroup}) {
   });
 
   /* Update on reload home */
-  useLiveReloadHome({request, innerReloadTimeRef});
+  useLiveReload({request, innerReloadTimeRef});
 
   const onGroupIconClick = group => {
     onSetGroup && onSetGroup(group);

@@ -65,7 +65,6 @@ function App() {
         <HomeMain></HomeMain>
         <MenuBar/>
         {/* <Avatars/> */}
-        {/* <GroupListButton></GroupListButton> */}
         <QuickMoveButton emitToGame = {emitToGame}></QuickMoveButton>
         <ConfirmAlert show = {showConfirmAlert} setShow = {setshowConfirmAlert}></ConfirmAlert>
       </div>

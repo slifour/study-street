@@ -1,10 +1,10 @@
 import { useContext, useEffect } from "react";
-import { LoginUserContext } from "../../../App";
-import { HomeContext } from "./HomeMain";
+import { LoginUserContext } from "../../App";
+import { ReloadContext } from "./ReloadContext";
 
-export default function useLiveReloadHome({request, innerReloadTimeRef}) {
+export default function useLiveReload({request, innerReloadTimeRef}) {
   const {loginUser} = useContext(LoginUserContext);
-  const {reloadTime} = useContext(HomeContext);
+  const {reloadTime} = useContext(ReloadContext);
 
   useEffect(() => {
     if (loginUser && reloadTime > innerReloadTimeRef.current) {

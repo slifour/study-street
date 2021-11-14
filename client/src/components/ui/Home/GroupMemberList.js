@@ -4,13 +4,13 @@ import styled from 'styled-components';
 import InviteFriendButton from './InviteFriendButton';
 import PendingInviteList from './PendingInviteList';
 import GroupMemberListItem from './GroupMemberListItem';
-import { HomeContext } from './HomeMain';
+import { ReloadContext } from '../../request/ReloadContext';
 
 
 export default function GroupMemberList({group}) {
     const [pendingInviteListRequestTime, setPendingInviteListRequestTime] = useState(new Date());
 
-    const {setReloadTime} = useContext(HomeContext);
+    const {setReloadTime} = useContext(ReloadContext);
 
     const dummyGroup = { // Dummy data
         groupID: "a",

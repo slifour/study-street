@@ -1,7 +1,7 @@
 import { useRef, useEffect, useContext, useCallback } from 'react';
-import { LoginUserContext } from '../../../App';
+import { LoginUserContext } from '../../App';
 import uniqueString from 'unique-string';
-import socket from '../../../socket';
+import socket from '../../socket';
 
 export default function useRequest({
     requestType, responseType, makePayload,
