@@ -481,3 +481,101 @@
     line-height: 40px;
     color: #0C0C0C;
 }
+
+.modalHeader {
+    height: 80px;
+    width: 440px;
+    display: flex;
+    align-items: center;
+    padding: 0px 30px;
+}
+
+.modalTitle {
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 80px;
+    color: #6FA270;
+}
+
+.modalContent {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    padding-left: 30px;
+    gap: 10px;
+}
+
+.modalContentText {
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.modalFooter {
+    height: 80px;
+    width: 440px;
+    display: flex;
+    justify-content: right;
+    gap: 20px;
+    align-items: center;
+    padding: 0px 30px;
+}
+
+.cancelButton {
+    width: 120px;
+    height: 40px;
+
+    color: #999999;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    line-height: 40px;
+    font-weight: 600;
+    font-size: 18px;
+
+    background: #F2F2F2;
+    box-shadow: 0px 4px 10px rgba(226, 226, 226, 0.15);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.createButton {
+    width: 120px;
+    height: 40px;
+
+    color: white;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    line-height: 40px;
+    font-weight: 600;
+    font-size: 18px;
+
+    background: #6FA270;
+    box-shadow: 0px 4px 10px rgba(136, 208, 156, 0.15);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.picker {
+    padding-top: 4px;
+    padding-left: 20px;
+    border-radius: 0 0 0 8px;
+    border-width: 0;
+
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+
+    background-color: #FBFBFB;
+    color: #BBBBBB;
+
+    -ms-user-select: none; 
+    -webkit-user-select: none;
+    user-select: none;
+
+    cursor: pointer;
+}
+
+.picker:focus {
+    outline: none;
+}

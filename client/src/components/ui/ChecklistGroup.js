@@ -106,7 +106,6 @@ export default function ChecklistGroup() {
         let notYetUsers = [];
         let isAccepted;
         let percentGauge;
-        console.log(groupList);
         const quests = groupList[userlist[myUserID].curGroup].quests;
         for (let key in quests) {
             let quest = quests[key];
