@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react"
 import styles from "./home.module.scss";
-import useRequest from "./useRequest";
+import useRequest from "../../request/useRequest";
 
 export default function InviteFriendButton({group, onInvite}) {
   const [showInput, setShowInput] = useState(false);

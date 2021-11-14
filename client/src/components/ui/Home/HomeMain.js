@@ -11,8 +11,7 @@ import HomeInfoCreateGroup from "./HomeInfoCreateGroup";
 import HomeInfoGotInvitation from "./HomeInfoGotInvitation";
 import { LoginUserContext } from "../../../App";
 import HomeInfoCloseButton from "./HomeInfoCloseButton";
-
-export const HomeContext = React.createContext(null);
+import { ReloadContext } from "../../request/ReloadContext";
 
 export default function HomeMain(props) {
   const SHOW_USER = "SHOW_USER";
@@ -61,7 +60,7 @@ export default function HomeMain(props) {
   }
 
   return (
-    <HomeContext.Provider value = {{reloadTime, setReloadTime}}>
+    <ReloadContext.Provider value = {{reloadTime, setReloadTime}}>
       <div>
         <div className={styles.sidebar}>        
           <div onClick={onClickUser}><HomeUserAvatar/></div>
@@ -80,6 +79,6 @@ export default function HomeMain(props) {
           </div>
           : null}
       </div>
-    </HomeContext.Provider>
+    </ReloadContext.Provider>
   );
 }

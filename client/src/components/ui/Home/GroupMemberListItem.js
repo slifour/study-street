@@ -1,8 +1,8 @@
 import React, {useCallback, useState} from "react";
 import styles from "./home.module.scss";
 import UserAvatarCircle from "./UserAvatarCircle";
-import useRequest from "./useRequest";
-import useLiveReloadHome from "./useLiveReloadHome";
+import useRequest from "../../request/useRequest";
+import useLiveReload from "../../request/useLiveReload";
 
 export default function GroupMemberListItem({memberID}) {
   const [member, setMember] = useState(null);
@@ -27,7 +27,7 @@ export default function GroupMemberListItem({memberID}) {
     onResponseFail
   });
 
-  useLiveReloadHome({request, innerReloadTimeRef});
+  useLiveReload({request, innerReloadTimeRef});
 
   return (
     <div className={styles.groupListItem}>

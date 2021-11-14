@@ -2,3 +2,5 @@ node_modules
 garbage
 deploy/client-deploy
 deploy/server-deploy
+.DS_Store
+.vscode
