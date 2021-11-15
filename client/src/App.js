@@ -1,12 +1,11 @@
 import React, { useRef, useEffect, useState } from "react";
 import './App.css';
-import MenuBar from "./components/ui/MenuBar";
 import Game from "./components/Game";
 import Login from "./components/User/LogIn";
 import Avatars from "./components/ui/Avatars";
-import {GroupListButton} from "./components/ui/GroupList";
 import {ConfirmAlert, QuickMoveButton} from "./components/ui/QuickMove";
 import HomeMain from "./components/ui/Home/HomeMain";
+import MenuBar from "./components/ui/MenuBar";
 
 
 /* Example of LoginUserContext value

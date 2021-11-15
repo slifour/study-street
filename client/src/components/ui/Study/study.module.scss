@@ -1,0 +1,12 @@
+.checklist {
+  position: fixed;
+  width: 800px;
+  height: 600px;
+  z-index: 1040;
+  bottom: 20%;
+  right: 10%;
+  border-radius: 11px;
+  outline: none;
+  background-color: #3f3f3f;
+  overflow: scroll;
+}
