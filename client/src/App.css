@@ -3,6 +3,10 @@
 body {
   font-family: 'Lato', sans-serif;
   overflow: hidden;
+  margin: 0;
+  -ms-user-select: none; 
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .content {

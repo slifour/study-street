@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react"
 import styles from "./home.module.scss";
-import useLiveReloadHome from "./useLiveReloadHome";
-import useRequest from "./useRequest";
+import useLiveReload from "../../request/useLiveReload";
+import useRequest from "../../request/useRequest";
 
 export default function PendingInviteList({group}) {
   const [invitationList, setInvitationList] = useState([]);
@@ -22,7 +22,7 @@ export default function PendingInviteList({group}) {
       makePayload
   });  
 
-  useLiveReloadHome({request, innerReloadTimeRef});
+  useLiveReload({request, innerReloadTimeRef});
 
   return (
   <>

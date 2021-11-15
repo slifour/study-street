@@ -2,8 +2,8 @@ import React, { useCallback, useContext, useState } from "react";
 import { LoginUserContext } from "../../../App";
 import GotInvitationListItem from "./GotInvitationListItem";
 import styles from "./home.module.scss";
-import useLiveReloadHome from "./useLiveReloadHome";
-import useRequest from "./useRequest";
+import useLiveReload from "../../request/useLiveReload";
+import useRequest from "../../request/useRequest";
 
 export default function HomeInfoGotInvitation() {
   const {loginUser} = useContext(LoginUserContext);
@@ -27,7 +27,7 @@ export default function HomeInfoGotInvitation() {
     makePayload
   });
 
-  useLiveReloadHome({request, innerReloadTimeRef});
+  useLiveReload({request, innerReloadTimeRef});
 
   return (
     <div>

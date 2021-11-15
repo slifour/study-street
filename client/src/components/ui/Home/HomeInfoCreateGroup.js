@@ -1,11 +1,11 @@
 import React, {useState, useRef, useContext, useCallback } from "react";
 import GroupColorSelect from "./GroupColorSelect";
 import styles from "./home.module.scss";
-import { HomeContext } from "./HomeMain";
-import useRequest from "./useRequest";
+import { ReloadContext } from "../../request/ReloadContext";
+import useRequest from "../../request/useRequest";
 
 export default function HomeInfoCreateGroup() {
-  const {setReloadTime} = useContext(HomeContext);
+  const {setReloadTime} = useContext(ReloadContext);
   const [groupName, setGroupName] = useState("");
 
   const onResponseOK = useCallback(() => {
