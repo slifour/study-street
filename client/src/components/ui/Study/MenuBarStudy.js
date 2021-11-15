@@ -16,7 +16,7 @@ export default function MenuBarStudy() {
     <>
     <div>
       { showChecklist ? 
-        <div className={studyStyles.checklist}> {/* TODO: Write .checklist stylesheet */}
+        <div className={studyStyles.checklist}>
           <ChecklistContainer/>
         </div>
         : null

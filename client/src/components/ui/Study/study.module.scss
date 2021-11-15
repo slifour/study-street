@@ -1,12 +1,48 @@
+.studyMain {
+  color: white;
+}
+
 .checklist {
   position: fixed;
   width: 800px;
-  height: 600px;
+  height: 400px;
   z-index: 1040;
   bottom: 20%;
-  right: 10%;
+  right: 5%;
   border-radius: 11px;
   outline: none;
   background-color: #3f3f3f;
   overflow: scroll;
+}
+
+.clock {
+  position: fixed;
+  width: 800px;
+  height: 136px;
+  right: 5%;
+  top: 74px;
+  font-size: 30px;
+  line-height: 36px;
+  font-weight: 300;
+}
+
+.clockStudyTime {
+  font-size: 72px;
+  line-height: 86px;
+  font-weight: 700;
+}
+
+.clockIcon {
+  font-family: 'Material Icons';
+  vertical-align: bottom;
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  text-rendering: optimizeLegibility;
+  margin-right: 15px;
 }

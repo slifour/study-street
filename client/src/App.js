@@ -6,6 +6,7 @@ import Avatars from "./components/ui/Avatars";
 import {ConfirmAlert, QuickMoveButton} from "./components/ui/QuickMove";
 import HomeMain from "./components/ui/Home/HomeMain";
 import MenuBar from "./components/ui/MenuBar";
+import StudyMain from "./components/ui/Study/StudyMain";
 
 
 /* Example of LoginUserContext value
@@ -61,9 +62,10 @@ function App() {
       <GameContext.Provider value={ {scene, emitToGame} }>
       <div className={fadeProp}>
       <div className="content">
-        <HomeMain></HomeMain>
+        { scene === "Home" || scene === "Library" ? <HomeMain/> : null }
         <MenuBar/>
-        {/* <Avatars/> */}
+        { scene !== "Home" && scene !== "Library" ? <Avatars/> : null } {/* TODO: Home scene을 만들어 Library scene과 분리하기 */}
+        { scene === "Study" ? <StudyMain/> : null }
         <QuickMoveButton emitToGame = {emitToGame}></QuickMoveButton>
         <ConfirmAlert show = {showConfirmAlert} setShow = {setshowConfirmAlert}></ConfirmAlert>
       </div>
