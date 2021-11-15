@@ -22,7 +22,7 @@ export function ConfirmAlert(prop) {
     }
     const emits = {
         'Rest' : 'restToLibrary', 
-        'Library' : 'librarytoStudy',
+        'Library' : 'libraryToRest',
         'Study' : 'studyToLibrary',
     }
 

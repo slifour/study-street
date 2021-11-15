@@ -3,6 +3,13 @@ import User from '../entity/User';
 import Friend from '../entity/Friend';
 import socket from '../../../socket';
 import { createCharacterAnimsGirl, createCharacterAnimsWizard } from '../anims/CharacterAnims';
+import Study from './StudyScene';
+import GroupArea from '../entity/GroupArea';
+import Desk from '../entity/Desk';
+import Tooltip from '../entity/Tooltip';
+import Book from '../entity/Book';
+// import socketIOClient from "socket.io-client";
+// const ENDPOINT = "http://localhost:4001";
 /** 
  * class MapScene
  * @ extends : Phaser.Scene 
@@ -20,9 +27,9 @@ export default class MapScene extends Phaser.Scene {
     this.world1 = null;
   }
 
-  init() {    
+  init(data) {   
+    this.prevScene = data == undefined ? undefined : data.prevScene
     console.log("Welcome to ", this.key);  
-    this.portalDest = {'Library' : 'Rest', 'Rest' : 'Library'}
   }
 
   preload() {
@@ -38,9 +45,8 @@ export default class MapScene extends Phaser.Scene {
         frameWidth: 28,
         frameHeight: 35
     });
-    this.load.html('newArtifact', 'assets/NewArtifact.html')
-    this.load.html('alert', 'assets/NewAlert.html')
-    this.load.image('portal', 'assets/images/glow.png');
+    this.load.html('newArtifact', 'assets/NewArtifact.html');
+    this.load.html('alert', 'assets/NewAlert.html');
   }
 
   create() {    
@@ -91,15 +97,14 @@ export default class MapScene extends Phaser.Scene {
       this.portalCollider.body.setImmovable(true);
       this.physics.add.collider(this.user, this.portalCollider, (() => {
           this.user.disableBody(false);
-          let newScene = this.portalDest[this.key];
-          this.changeScene(newScene, undefined);
+          let newScene = this.key === 'Library'? 'Rest' : 'Library';
+          this.changeScene(newScene, null);
       }));
   }
 
   updateCamera() {    
     this.cameras.main.startFollow(this.user);
     this.cameras.main.roundPixels = true; // avoid tile bleed
-    console.log('camera', 0, 0, this.world1.displayWidth, this.world1.displayHeight);
     /**
      * 주석 처리된 경우 카메라가 맵 밖으로까지 이동해서 맵 바깥쪽 어두운 부분이 보입니다.
      * setBounds 를 다음과 같이 하면 카메라가 맵 밖으로 안나가게 가둬둘 수 있습니다. 문제는
@@ -109,36 +114,51 @@ export default class MapScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, this.belowPlayer1.displayWidth, this.belowPlayer1.displayHeight);
   }
 
-  onStateUpdate(users){
+  onStateUpdate(positionList){
+    console.log('update');
     if(this.friends === undefined) {return;}
-    Object.keys(users).forEach(function(id) {        
+    Object.keys(positionList).forEach(function(id) {        
         if (id === this.socket.id) {return;}
-
         console.log('Not returned');
-        let user = users[id]
+        let position = positionList[id]
         if (Object.keys(this.friendDict).includes(id)){
             console.log(id, this.socket.id);
-            this.friendDict[id].updateMovement(user.position);
+            this.friendDict[id].updateMovement(position);
         } else {        
-            let friend = new Friend(this, user.position.x, user.position.y, 'user-wizard', 'wizard', id).setScale(1);
+            let friend = new Friend(this, position.x, position.y, 'user-wizard', 'wizard', id).setScale(1);
             this.friends.add(friend);
             this.friendDict[id] = friend;
         }    
     }.bind(this))
   }
-/** 
- * @socketEventHandlers
- * @description
- * socket.on('event', eventHandler) */
+
   setEventHandlers(){
+    // Description
+    // socket.on('event', eventHandler)
+  
+    // New user message received
     this.socket.on('stateUpdate', this.onStateUpdate.bind(this));
+    this.socket.on("LOOP_POSITION", this.onStateUpdate.bind(this));
   }
 
-  changeScene(newScene, data){
+  changeScene(newScene, index){
     this.game.events.emit("changeScene", newScene);
     this.cameras.main.fadeOut(1000, 0, 0, 0)
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
-        this.scene.start(newScene, data);
+        // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
+        // this.doUpdate = false
+        this.scene.start(newScene, {index : index, prevScene: this.key}) ;
     })  
-  } 
+  }   
+    // if (newScene === 'Study'){
+    //   this.scene.start(newScene);
+    // }
+    // else{
+    //   this.cameras.main.fadeOut(1000, 0, 0, 0)
+    //   this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+    //       // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
+    //       // this.doUpdate = false
+    //       this.scene.start(newScene);
+    //   })  
+    // }
 }

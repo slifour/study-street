@@ -26,7 +26,7 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
 
   init(){
     this.setCollideWorldBounds(true);
-    this.initialize({name : 'User', group : 1, position : {x : this.x, y : this.y}}, this.scene);
+    this.initialize({id : 'user', group : 1, x : this.x, y : this.y}, this.scene);
 
     /* Status display */
     this.setInteractive();
@@ -38,7 +38,17 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
 
   /** initialize : tell server to create this user */
   initialize(userData) {    
+    console.log('initialize')
     this.socket.emit('initialize', userData);
+    const payload = [this.scene.prevScene, this.scene.key];
+    const request = {
+      requestUser: "eunki",
+      requestKey: "",
+      requestType: "REQUEST_CHANGE_SCENE",
+      payload : payload
+    }
+    this.socket.emit(request);
+    console.log('request : ', request);
   };
 
   /** sendPosition : tell server to move this user */

@@ -63,7 +63,6 @@ export default class Library extends MapScene {
         this.socket.on('newGroup', this.onNewGroup.bind(this))
         this.socket.on("goalUpdate", this.onGoalUpdate.bind(this));
         this.game.events.on('libraryToRest', () => {
-            console.log('toRestScene')
             this.changeScene('Rest')
         })
     }
@@ -133,7 +132,6 @@ export default class Library extends MapScene {
     setDeskCollider() {
         Object.keys(this.desks).forEach(key =>{
             let desk = this.desks[key];
-            console.log(desk)
             desk.getAll().forEach(sprite => {
                 this.physics.add.collider(this.user, sprite);
             })
@@ -172,7 +170,6 @@ export default class Library extends MapScene {
             if (Object.keys(this.groupAreas).includes(groupId)){
                 let groupArea = this.groupAreas[groupId]
                 groupArea.updateBooks(value) 
-
                 console.log(groupId, value);
             }           
         }        
