@@ -24,11 +24,9 @@ export default function ChecklistPersonal() {
         setChecklist(payload[0]);
         setQuests(payload[1]);
         let tempQuests = {...payload[1]};
-
         let tempAcceptedQuests = [];
         for (let quest in tempQuests) {
             if (tempQuests[quest].acceptedUsers.includes(loginUser.userID)) {
-                console.log(tempQuests[quest]);
                 tempAcceptedQuests.push(tempQuests[quest].questID);
             }
         }
@@ -42,7 +40,7 @@ export default function ChecklistPersonal() {
 
     const makePayload = useCallback(() => ({
         userID: loginUser.userID,
-        checklist: localChecklist
+        updateChecklist: localChecklist
     }), [loginUser.userID, localChecklist]);
 
     const [request, innerReloadTimeRef] = useRequest({
@@ -63,6 +61,7 @@ export default function ChecklistPersonal() {
             returnComponents.push(
                 <div className={styles.checklistBoxContainer}>
                     <SingleChecklist
+                        key={clist.checklistID}
                         checklistID={clist.checklistID}
                         content={clist.content}
                         isDone={clist.isDone}
@@ -87,6 +86,7 @@ export default function ChecklistPersonal() {
             returnComponents.push(
                 <div className={styles.checklistBoxContainer}>
                     <SingleChecklist
+                        key={quests[quest].questID}
                         questID={quests[quest].questID}
                         content={quests[quest].type}
                         isDone={isDone}
@@ -111,7 +111,7 @@ export default function ChecklistPersonal() {
             content: inputValue,
             isDone: false
         }
-        localChecklist = {...checklist, ...updateList};
+        localChecklist = {...updateList};
         setChecklist((checklist)=> ({...checklist, ...updateList}));
         setInputValue('Click to write a to-do');
         setInput(false);

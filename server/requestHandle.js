@@ -441,8 +441,9 @@ const onRequestPersonalChecklist = (socket, request) => {
   const responseType = ResponseType.PERSONAL_CHECKLIST;
 
   //handle setter
-  if (Object.keys(payload.checklist).length !==0 ) {
-    userList[payload.userID].checklist = payload.checklist;
+  if (Object.keys(payload.updateChecklist).length !==0 ) {
+    let tempChecklist = {...userList[payload.userID].checklist};
+    userList[payload.userID].checklist = {...tempChecklist, ...payload.updateChecklist};
   }
 
   //handle getter
@@ -462,7 +463,10 @@ const onRequestToggleChecklist = (socket, request) => {
   const {requestUser, requestKey, payload} = request;
   const responseType = ResponseType.TOGGLE_CHECKLIST;
 
-  userList[payload.userID].checklist[payload.checklistID].isDone = payload.isDone;
+  if (payload.checklistID != null) {
+    console.log(true);
+    userList[payload.userID].checklist[payload.checklistID].isDone = payload.isDone;
+  }
 
   return socket.emit(responseType, {
     requestKey,
@@ -475,8 +479,8 @@ const onRequestToggleChecklist = (socket, request) => {
 const onRequestAcceptQuest = (socket, request) => {
   const {requestUser, requestKey, payload} = request;
   const responseType = ResponseType.ACCEPT_QUEST;
-
   const curGroupID = userList[payload.userID].curGroup;
+
   groupList[curGroupID].quests[payload.questID].acceptedUsers.push(payload.userID);
 
   return socket.emit(responseType, {
