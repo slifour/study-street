@@ -2,8 +2,9 @@ const chance = require("chance").Chance();
 const { RequestType, ResponseType, ResponseStatus } = require("./requestType");
 let { userList, groupList, invitationList, goalList, bookList } = require("./database");
 
+let env;
 
-module.exports = onRequest = (socket, requestName, request) => {
+const onRequest = (socket, requestName, request) => {
   console.log("Got request:", request);
   let requestUser, requestKey, requestType, payload;
   try {
@@ -23,6 +24,15 @@ module.exports = onRequest = (socket, requestName, request) => {
     case RequestType.PENDING_INVITE_LIST: onRequestPendingInviteList(socket, request); break;
     case RequestType.CREATE_GROUP: onRequestCreateGroup(socket, request); break;
     case RequestType.JOIN_GROUP: onRequestJoinGroup(socket, request); break;
+    case RequestType.TODAY_STUDY_TIME: onRequestTodayStudyTime(socket, request); break;
+    case RequestType.UPDATE_TODAY_STUDY_TIME: onRequestUpdateTodayStudyTime(socket, request); break;
+    case RequestType.CHANGE_SCENE: onRequestChangeScene(socket, request); break;
+    case RequestType.INITIALIZE: onRequestInitialize(socket, request); break;
+    case RequestType.CURRENT_GROUP : onRequestCurrentGroup(socket, request); break;
+    case RequestType.PERSONAL_CHECKLIST : onRequestPersonalChecklist(socket, request); break;
+    case RequestType.TOGGLE_CHECKLIST : onRequestToggleChecklist(socket, request); break;
+    case RequestType.ACCEPT_QUEST : onRequestAcceptQuest(socket, request); break;
+    default: break;
   }
   socket.emit("response", response);
 }
@@ -218,6 +228,12 @@ const onRequestCreateGroup = (socket, request) => {
     colors: payload.colors || defaultColors
   };
 
+  const sideEffectResponseType = 'RESPONSE_NEW_GROUP';
+    
+  env.io.emit(sideEffectResponseType, {
+    payload : groupList[groupID]
+  });
+
   return socket.emit(responseType, {
     requestKey,
     responseType,
@@ -259,4 +275,224 @@ const onRequestJoinGroup = (socket, request) => {
     status: ResponseStatus.OK,
     payload: {}
   });
+};
+
+const onRequestInitialize = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.INITIALIZE;
+
+  let prevScene, currentScene;
+  try {
+    ({prevScene, currentScene} = payload);
+  } catch {
+    return responseFail(socket, requestKey, responseType, "Invalid scene.");
+  }
+  socket.leave(prevScene);
+  socket.join(currentScene);
+
+  switch (currentScene) {
+    case "Home": ; break;
+    case "Library":  ; break;
+    case "Study": ; break;
+    case "Rest": ; break;
+  }
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: {}
+  });    
+};
+
+
+
+const onRequestTodayStudyTime = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.TODAY_STUDY_TIME;
+
+  if (!requestUser) {
+    return responseFail(socket, requestKey, responseType, "Login is required.");
+  }
+
+  let user;
+  if (payload.userID) {
+    if (userList[userID]) {
+      user = userList[userID];
+    } else {
+      return responseFail(socket, requestKey, responseType, "User does not exist.");
+    }
+  } else {
+    user = userList[requestUser];
+  }
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: user.todayStudyTime || 0
+  });
 }
+
+const onRequestChangeScene = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.CHANGE_SCENE;
+
+  let prevScene, currentScene;
+  try {
+    ({prevScene, currentScene} = payload);
+  } catch {
+    return responseFail(socket, requestKey, responseType, "Invalid scene.");
+  }
+
+  let id = socket.id;
+
+  if (prevScene !== null){
+    socket.leave(prevScene);
+  }
+  socket.join(currentScene);
+
+  switch (prevScene) {
+    case "Home": ; break;
+    case "Library": env.libraryRoom.remove(socket); break;
+    case "Study": ; break;
+    case "Rest": env.restRoom.remove(socket); break;
+  }
+
+  switch (currentScene) {
+    case "Home": ; break;
+    case "Library": env.roomDict[id] = env.libraryRoom; env.libraryRoom.update(socket, 300, 300);  break;
+    case "Study": ; break;
+    case "Rest": env.roomDict[id] = env.restRoom; env.restRoom.update(socket, 300, 300); break;
+  }
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: {}
+  });    
+};
+
+const onRequestUpdateTodayStudyTime = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.UPDATE_TODAY_STUDY_TIME;
+
+  if (!requestUser) {
+    return responseFail(socket, requestKey, responseType, "Login is required.");
+  }
+
+  let user;
+  if (payload.userID) {
+    if (userList[userID]) {
+      user = userList[userID];
+    } else {
+      return responseFail(socket, requestKey, responseType, "User does not exist.");
+    }
+  } else {
+    user = userList[requestUser];
+  }
+
+  if (!Number.isInteger(payload)) {
+    return responseFail(socket, requestKey, responseType, "Invalid payload");
+  }
+
+  user.todayStudyTime = payload;
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: {}
+  });
+}
+
+const onRequestCurrentGroup = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.CURRENT_GROUP;
+
+  const curGroupID = userList[payload.userID].curGroup;
+  let wrap = [];
+  let curGroupInfo = null;
+  let curGroupMemberInfo = {}; 
+  if (payload.userID) {
+    curGroupInfo = groupList[curGroupID];
+    for (let user in userList) {
+      if (curGroupInfo.member.includes(userList[user].userID)) {
+        curGroupMemberInfo[userList[user].userID] = userList[user];
+      }
+    }
+  } else {
+    return responseFail(socket, requestKey, responseType, "Invalid payload");
+  }
+
+  wrap = [curGroupInfo, curGroupMemberInfo]
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: wrap
+  })
+}
+
+const onRequestPersonalChecklist = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.PERSONAL_CHECKLIST;
+
+  //handle setter
+  if (Object.keys(payload.updateChecklist).length !==0 ) {
+    let tempChecklist = {...userList[payload.userID].checklist};
+    userList[payload.userID].checklist = {...tempChecklist, ...payload.updateChecklist};
+  }
+
+  //handle getter
+  let wrap = [];
+  wrap[0] = userList[payload.userID].checklist;
+  wrap[1] = groupList[userList[payload.userID].curGroup].quests;
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: wrap
+  })
+}
+
+const onRequestToggleChecklist = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.TOGGLE_CHECKLIST;
+
+  if (payload.checklistID != null) {
+    console.log(true);
+    userList[payload.userID].checklist[payload.checklistID].isDone = payload.isDone;
+  }
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: {}
+  })
+}
+
+const onRequestAcceptQuest = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.ACCEPT_QUEST;
+  const curGroupID = userList[payload.userID].curGroup;
+
+  groupList[curGroupID].quests[payload.questID].acceptedUsers.push(payload.userID);
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: {}
+  })
+}
+
+const initRequestHandle = envParam => {
+  env = envParam;
+};
+
+module.exports = { onRequest, initRequestHandle };

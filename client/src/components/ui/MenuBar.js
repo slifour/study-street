@@ -1,14 +1,14 @@
-import React from "react";
-import styles from "./ui.module.css";
-import IconButton from "./IconButton";
+import React, { useContext } from "react";
+import { GameContext } from "../../App";
+import MenuBarDefault from "./MenuBarDefault";
+import MenuBarStudy from "./Study/MenuBarStudy";
 
 export default function MenuBar() {
-    return (
-        <div className={styles.menuBar}>
-            <IconButton iconName={"today"}/>
-            <IconButton iconName={"list_alt"}/>
-            <IconButton iconName={"logout"}/>
-            <IconButton iconName={"settings"}/>
-        </div>
-    )
+  const { scene } = useContext(GameContext);
+  return (
+    <>
+      { scene !== "Study" ? <MenuBarDefault/> : null }
+      { scene === "Study" ? <MenuBarStudy/> : null }
+    </>
+  );
 }

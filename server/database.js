@@ -23,26 +23,47 @@ class appointmentGoal extends Goal {
   }
 }
 
+//curGroup(string groupID) 추가
 let userList = {
   "eunki": {
     "userID": "eunki",
     "userName": "은기",
     "status": "Developing user data system",
+    "curGroup" : "a",
+    "todayStudyTime": 7200 * 1000,
+    "checklist" : {
+      "8d4jnx" : {
+          "checklistID" : "8d4jnx",
+          "content" : "Presentation Preparation",
+          "isDone" : false
+      },
+      "tx3b4e" : {
+          "checklistID" : "tx3b4e",
+          "content" : "Reading Response",
+          "isDone" : true
+      }
+    }
   },
   "haeseul": {
     "userID": "haeseul",
     "userName": "해슬",
+    "todayStudyTime": 7200 * 1000,
     "status": "Making chatting system",
+    "curGroup" : "a"
   },
   "hyeon": {
     "userID": "hyeon",
     "userName": "현",
+    "todayStudyTime": 7200 * 1000,
     "status": "Putting map objects",
+    "curGroup" : "b"
   },
   "jeonghoon": {
     "userID": "jeonghoon",
     "userName": "정훈",
+    "todayStudyTime": 7200 * 1000,
     "status": "Designing figma prototype",
+    "curGroup" : "b"
   },
 };
 
@@ -52,14 +73,35 @@ let groupList = {
     groupName: "We love study",
     leader: "eunki",
     member: ["eunki", "haeseul"],
-    colors: ['#F79489', '#F9F1F0']
+    colors: ['#F79489', '#F9F1F0'],
+    quests: {
+      "eq2dm5" : {
+          questID : "eq2dm5",
+          type : "Attendance",
+          content : "11/14 (Sun) 10:30",
+          acceptedUsers : ["eunki", "haeseul"],
+          doneUsers : ["haeseul"],
+          participatingUsers : [],
+          notYetUsers : ["eunki"]
+      },
+      "nbxm3m" : {
+          questID : "nbxm3m",
+          type : "Goal",
+          content : "3 hours",
+          acceptedUsers : ["haeseul"],
+          doneUsers : [],
+          participatingUsers : ["haeseul"],
+          notYetUsers : []
+      }
+    }
   },
   "b": {
     groupID: "b",
     groupName: "We love slifour",
     leader: "hyeon",
     member: ["eunki", "hyeon", "jeonghoon"],
-    colors: ['#003B73', '#BFD7ED']
+    colors: ['#003B73', '#BFD7ED'],
+    quests: {}
   },
 };
 
