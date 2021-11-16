@@ -74,14 +74,6 @@ export default class MapScene extends Phaser.Scene {
 
     this.physics.add.collider(this.user, this.belowPlayer1);
     this.physics.add.collider(this.user, this.world1);
-
-    // this.physics.add.overlap(
-    //     this.bufferToFirst,
-    //     this.user,
-    //     this.handleEnterBuffer,
-    //     undefined,
-    //     this
-    // );
   }
 
   createFriend(){
@@ -90,10 +82,10 @@ export default class MapScene extends Phaser.Scene {
       console.log(this.friends)  
   }
 
-    /** createPortal
-     * @parameter x, y, deskKey : fspritekey for desk, chairkey : spritekey for chair
-     * @return Desk : extends sprite, defined in entity/Desk.js
-     */
+  /** createPortal
+   * @parameter x, y, deskKey : fspritekey for desk, chairkey : spritekey for chair
+   * @return Desk : extends sprite, defined in entity/Desk.js
+   */
   createPortal(position){       
       this.portal = this.add.circle(position.x, position.y, 200, 0xffffff, 0.5);
       this.portalCollider = this.add.circle(position.x, position.y, 150);
