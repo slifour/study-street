@@ -69,9 +69,7 @@
        setEventHandlers(socket);      
        logUsers()
      });
-   }
- 
-   
+   }  
  
    /** Event Handlers */
    const setEventHandlers = (socket) => {
@@ -96,9 +94,7 @@
  
      Object.values(RequestType).forEach( requestType => {
        socket.on(requestType, onRequest.bind(null, socket, requestType));      
-     });
-     updateDate(socket);    
- 
+     }); 
    }
    
    const onRequestMove = (socket, position) => {
@@ -318,6 +314,7 @@
    }
      
    return {
+     init
    }
  }
  
