@@ -77,19 +77,21 @@ const SocketIOServer = () => {
       console.log("New client connected");
       socket.emit("socket.id", socket.id);      
       console.log(socket.id);
+      env.libraryRoom.init(io, socket);
+      env.restRoom.init(io, socket);
       setEventHandlers(socket);      
       logUsers()
     });
   }
 
+  
+
   /** Event Handlers */
   const setEventHandlers = (socket) => {
-    env.libraryRoom.init(io, socket);
-    env.restRoom.init(io, socket);
 
     /** socket.on('event', eventHandler.bind(null, socket)) */
     socket.on("disconnect", onDisconnect.bind(null, socket))
-    socket.on("REQUEST_MOVE", onRequestMove.bind(null, socket))  
+    // socket.on("REQUEST_MOVE", onRequestMove.bind(null, socket))  
     
     socket.on("sceneUpdate", onSceneUpdate.bind(null, socket))  
     // socket.on("initialize", onInitialize.bind(null, socket))  
@@ -97,16 +99,32 @@ const SocketIOServer = () => {
     socket.on("userProfileRequest", onUserProfileRequest.bind(null, socket))    
     socket.on("newArtifact", onNewArtifact.bind(null, socket))
     socket.on("initializeLibrary", onIntializeLibrary.bind(null,socket))
-    socket.on("REQUEST_CURRENT_GROUP", onRequestCurrentGroup.bind(null, socket))
-    socket.on("REQUEST_PERSONAL_CHECKLIST", onRequestPersonalChecklist.bind(null, socket))
-    socket.on("REQUEST_TOGGLE_CHECKLIST", onRequestToggleChecklist.bind(null, socket))
-    socket.on("REQUEST_ACCEPT_QUEST", onRequestAcceptQuest.bind(null, socket))
 
     Object.values(RequestType).forEach( requestType => {
       socket.on(requestType, onRequest.bind(null, socket, requestType));      
     });
     updateDate(socket);    
 
+  }
+  
+  let isChangedGroupList = true;
+  const emitLoop = (stateChanged) => {
+    isEmittingUpdates = true;        
+    if (stateChanged) {
+        stateChanged = false;
+        broadcast("LOOP_POSITION", positionList);
+        console.log("LOOP_POSITION", room)
+    }        
+    if (getNumUsers() > 1) {
+        setTimeout(emitLoop.bind(this), updateInterval);
+    } 
+    else {
+        isEmittingUpdates = false;
+    }
+  }
+
+  const setLoops = () => {
+    
   }
 
   const onNewArtifact = (socket) => {
@@ -140,12 +158,11 @@ const SocketIOServer = () => {
     user.position = positionData;
   }
   
-  const onRequestMove = (socket, position) => {
-    let id = socket.id;
-    if (env.roomDict[id]) {
-      env.roomDict[id].update(socket, position.x, position.y);
-    }
-  }
+  // const onRequestMove = (socket, id, position) => {
+  //   if (roomDict[id] !== undefined){
+  //     roomDict[id].update(socket, position.x, position.y);
+  //   }
+  // }
 
   const onSceneUpdate = (socket, scene) => {
     console.log('Client moved to {} scene'.format(scene))
@@ -269,90 +286,6 @@ const SocketIOServer = () => {
     /** Methods */
     init 
   }
-}
-
-const onRequestCurrentGroup = (socket, request) => {
-  const {requestUser, requestKey, payload} = request;
-  const responseType = ResponseType.CURRENT_GROUP;
-
-  const curGroupID = userList[payload.userID].curGroup;
-  let wrap = [];
-  let curGroupInfo = null;
-  let curGroupMemberInfo = {}; 
-  if (payload.userID) {
-    curGroupInfo = groupList[curGroupID];
-    for (let user in userList) {
-      if (curGroupInfo.member.includes(userList[user].userID)) {
-        curGroupMemberInfo[userList[user].userID] = userList[user];
-      }
-    }
-  } else {
-    return responseFail(socket, requestKey, responseType, "Invalid payload");
-  }
-
-  wrap = [curGroupInfo, curGroupMemberInfo]
-
-  return socket.emit(responseType, {
-    requestKey,
-    responseType,
-    status: ResponseStatus.OK,
-    payload: wrap
-  })
-}
-
-const onRequestPersonalChecklist = (socket, request) => {
-  const {requestUser, requestKey, payload} = request;
-  const responseType = ResponseType.PERSONAL_CHECKLIST;
-
-  //handle setter
-  if (Object.keys(payload.updateChecklist).length !==0 ) {
-    let tempChecklist = {...userList[payload.userID].checklist};
-    userList[payload.userID].checklist = {...tempChecklist, ...payload.updateChecklist};
-  }
-
-  //handle getter
-  let wrap = [];
-  wrap[0] = userList[payload.userID].checklist;
-  wrap[1] = groupList[userList[payload.userID].curGroup].quests;
-
-  return socket.emit(responseType, {
-    requestKey,
-    responseType,
-    status: ResponseStatus.OK,
-    payload: wrap
-  })
-}
-
-const onRequestToggleChecklist = (socket, request) => {
-  const {requestUser, requestKey, payload} = request;
-  const responseType = ResponseType.TOGGLE_CHECKLIST;
-
-  if (payload.checklistID != null) {
-    console.log(true);
-    userList[payload.userID].checklist[payload.checklistID].isDone = payload.isDone;
-  }
-
-  return socket.emit(responseType, {
-    requestKey,
-    responseType,
-    status: ResponseStatus.OK,
-    payload: {}
-  })
-}
-
-const onRequestAcceptQuest = (socket, request) => {
-  const {requestUser, requestKey, payload} = request;
-  const responseType = ResponseType.ACCEPT_QUEST;
-  const curGroupID = userList[payload.userID].curGroup;
-
-  groupList[curGroupID].quests[payload.questID].acceptedUsers.push(payload.userID);
-
-  return socket.emit(responseType, {
-    requestKey,
-    responseType,
-    status: ResponseStatus.OK,
-    payload: {}
-  })
 }
 
 module.exports = SocketIOServer
