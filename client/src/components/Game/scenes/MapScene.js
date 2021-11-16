@@ -40,7 +40,7 @@ export default class MapScene extends Phaser.Scene {
     });
     this.load.html('newArtifact', 'assets/NewArtifact.html')
     this.load.html('alert', 'assets/NewAlert.html')
-    this.load.image('portal', 'assets/images/glow.png');
+    // this.load.image('portal', 'assets/images/glow.png');
   }
 
   create() {    

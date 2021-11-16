@@ -328,6 +328,20 @@
     font-size: 14px;
 }
 
+.participatingTag {
+    margin-left: 40px;
+    padding: 10px 35px;
+    background: #F8F8F8;
+    border-radius: 14.5px;
+
+    color: #0C0C0C;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+
 .yetTag {
     margin-left: 40px;
     padding: 10px 35px;
