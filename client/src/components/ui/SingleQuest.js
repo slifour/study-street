@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
+
+import React, { useState, useContext, useCallback } from 'react';
 import styles from './checklist.module.css'
 import styled from 'styled-components';
+
+import { LoginUserContext } from '../../App';
+import { ReloadContext } from "../request/ReloadContext";
+import useLiveReload from '../request/useLiveReload';
+import useRequest from '../request/useRequest';
 
 const GaugeBox = styled.div`
     position : absolute;
@@ -10,9 +16,33 @@ const GaugeBox = styled.div`
 `
 
 export default function SingleQuest(props) {
-
+    const {loginUser} = useContext(LoginUserContext);
+    const {setReloadTime} = useContext(ReloadContext);
     const [isAccepted, setAccepted] = useState(props.isAccepted);
     const [expand, setExpand] = useState(false);
+
+    //**socket related functions**
+    const onResponseOK = useCallback(({payload}) => {
+        setReloadTime(new Date());
+    }, [setReloadTime]);
+
+    const onResponseFail = useCallback(({payload}) => {
+    }, []);
+
+    const makePayload = useCallback(() => ({
+        questID: props.questID,
+        userID: loginUser.userID
+    }), [loginUser.userID]);
+
+    const [request, innerReloadTimeRef] = useRequest({
+        requestType: "REQUEST_CURRENT_GROUP",
+        responseType: "RESPONSE_CURRENT_GROUP",
+        onResponseOK,
+        onResponseFail,
+        makePayload
+    });
+
+    useLiveReload({request, innerReloadTimeRef});
 
     const getHeader = () => {
         if (isAccepted) {
@@ -32,6 +62,7 @@ export default function SingleQuest(props) {
         setAccepted(true)
         setExpand(true)
         //socket emit
+        request();
     }
 
     const getIcon = () => {

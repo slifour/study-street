@@ -1,6 +1,8 @@
 const chance = require("chance").Chance();
 const { RequestType, ResponseType, ResponseStatus } = require("./requestType");
 let { userList, groupList, invitationList, goalList, bookList } = require("./database");
+const { default: socket } = require("../client/src/socket");
+const { request } = require("express");
 
 
 module.exports = onRequest = (socket, requestName, request) => {
@@ -23,6 +25,10 @@ module.exports = onRequest = (socket, requestName, request) => {
     case RequestType.PENDING_INVITE_LIST: onRequestPendingInviteList(socket, request); break;
     case RequestType.CREATE_GROUP: onRequestCreateGroup(socket, request); break;
     case RequestType.JOIN_GROUP: onRequestJoinGroup(socket, request); break;
+    case RequestType.CURRENT_GROUP : onRequestCurrentGroup(socket, request); break;
+    case RequestType.PERSONAL_CHECKLIST : onRequestPersonalChecklist(socket, request); break;
+    case RequestType.TOGGLE_CHECKLIST : onRequestToggleChecklist(socket, request); break;
+    case RequestType.ACCEPT_QUEST : onRequestAcceptQuest(socket, request); break;
   }
   socket.emit("response", response);
 }
@@ -259,4 +265,84 @@ const onRequestJoinGroup = (socket, request) => {
     status: ResponseStatus.OK,
     payload: {}
   });
+}
+
+const onRequestCurrentGroup = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.CURRENT_GROUP;
+
+  const curGroupID = userList[payload.userID].curGroup;
+  let wrap = [];
+  let curGroupInfo = null;
+  let curGroupMemberInfo = {}; 
+  if (payload.userID) {
+    curGroupInfo = groupList[curGroupID];
+    for (let user in userList) {
+      if (curGroupInfo.member.includes(userList[user].userID)) {
+        curGroupMemberInfo[userList[user].userID] = userList[user];
+      }
+    }
+  } else {
+    return responseFail(socket, requestKey, responseType, "Invalid payload");
+  }
+
+  wrap = [curGroupInfo, curGroupMemberInfo]
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: wrap
+  })
+}
+
+const onRequestPersonalChecklist = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.PERSONAL_CHECKLIST;
+
+  //handle setter
+  if (Object.keys(payload.checklist).length !==0 ) {
+    userList[payload.userID].checklist = payload.checklist;
+  }
+
+  //handle getter
+  let wrap = [];
+  wrap[0] = userList[payload.userID].checklist;
+  wrap[1] = groupList[userList[payload.userID].curGroup].quests;
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: wrap
+  })
+}
+
+const onRequestToggleChecklist = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.TOGGLE_CHECKLIST;
+
+  userList[payload.userID].checklist[payload.checklistID].isDone = payload.isDone;
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: {}
+  })
+}
+
+const onRequestAcceptQuest = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.ACCEPT_QUEST;
+
+  const curGroupID = userList[payload.userID].curGroup;
+  groupList[curGroupID].quests[payload.questID].acceptedUsers.push(payload.userID);
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: {}
+  })
 }
