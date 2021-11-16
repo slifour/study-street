@@ -30,6 +30,8 @@ export default class Status extends GameObjects.Container {
     
     this.add(this.graphics);
     this.add(this.textView);
+
+    this.setDepth(50);
   }
   update() { 
     if (!this.active) return;

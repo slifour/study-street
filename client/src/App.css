@@ -3,6 +3,10 @@
 body {
   font-family: 'Lato', sans-serif;
   overflow: hidden;
+  margin: 0;
+  -ms-user-select: none; 
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .content {
@@ -10,4 +14,15 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+}
+
+.fade-in {
+  transition: opacity 1s ease;
+}
+.fade-out {
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.open-in {
+  opacity: 100;
 }

@@ -2,6 +2,12 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import socket from "../../socket";
 import { LoginUserContext } from "../../App";
 import uniqueString from 'unique-string';
+import styled from "styled-components";
+
+const StyledLogin = styled.div`
+  position: absolute;
+  right: 10%;
+`;
 
 function Login() {
   const [userID, setUserID] = useState("");
@@ -77,10 +83,10 @@ function Login() {
     {
       loginUser ? 
       null :
-      <div>
+      <StyledLogin>
         ID: <input onChange={onChange} onKeyUp={onLoginKeyUp} value={userID}></input>
         <button onClick={onLoginClick}>Log in</button>
-      </div>
+      </StyledLogin>
     }
     </>
   );

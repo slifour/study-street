@@ -1,6 +1,12 @@
 import Phaser from 'phaser';
 import socket from '../../../socket';
 import Status from './Status';
+import Name from './Name';
+import request from '../request'
+/**
+ * Reference
+ * https://stackoverflow.com/questions/66616153/pathfinding-animation-in-phaser * 
+ */
 
 export default class User extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, spriteKey, animSuffix) {
@@ -11,9 +17,6 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
     this.scene.physics.world.enable(this);
     this.stop = true
     this.socket = socket
-    this.setCollideWorldBounds(true);
-    this.initialize({name : 'User', group : 1, position : {x : this.x, y : this.y}}, this.scene)
-
     this.animName = {
       'idle': 'user-idle-' + animSuffix,
       'left': 'user-left-' + animSuffix,
@@ -21,24 +24,32 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
       'right': 'user-right-' + animSuffix,
       'down': 'user-down-' + animSuffix,
     }
+  }
 
+  init(){
+    // this.setCollideWorldBounds(true);
+    // this.initialize({currentScene : this.scene.key});
+    this.initialize({prevScene : this.scene.prevScene, currentScene : this.scene.key});
     /* Status display */
     this.setInteractive();
     this.prepareStatusView();
+    // this.prepareName();
     this.on('pointerover', this.onPointerOver);
     this.on('pointerout', this.onPointerOut);
   }
 
-  /** Socket emit methods */
-
   /** initialize : tell server to create this user */
-  initialize(userData) {    
-    this.socket.emit('initialize', userData);
+  initialize(payload) {    
+    console.log('initialize :', payload)
+    request.request("REQUEST_CHANGE_SCENE", "RESPONSE_CHANGE_SCENE", payload)
+
+    // request(requestType, responseType, makePayload, onRequest, onResponseOK, onResponseFail, socket)
+
   };
 
   /** sendPosition : tell server to move this user */
-  sendPosition(positionData) {
-    this.socket.emit('positionUpdate', positionData);
+  requestMove(positionData) {
+    this.socket.emit('REQUEST_MOVE', positionData);
   };
 
   /** Update methods */
@@ -90,6 +101,12 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
     this.statusView.setActive(false).setVisible(false);
   }
 
+  prepareName() {
+    const initialtext = "Name";
+    this.nameView = new Name(this.scene, this, initialtext);
+    this.scene.add.existing(this.nameView);
+  }
+
   onPointerOver() {
     /* 플레이어를 호버할 때 status view를 보여주기 */
     const loginUser = this.registry.get("loginUser");
@@ -108,10 +125,39 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
   /** @param {Phaser.Types.Input.Keyboard.CursorKeys} cursors */
   update(cursors) {
     this.statusView.update();
+    // this.nameView.update();
     this.updateMovement(cursors);
     let positionData = {x : this.x, y : this.y};
     if (!this.stop){
-      this.sendPosition(positionData);
+      this.requestMove(positionData);
     }
   }
 }
+
+  /** Socket emit methods */
+  // request(requestType, responseType, makePayload, onRequest, onResponseOK, onResponseFail, socket) {
+
+  //   usedRequestKeyRef.current = uniqueString();
+    
+  //   socket.emit(requestType, {
+  //     requestUser: loginUser.userID,
+  //     requestKey: usedRequestKeyRef.current,
+  //     requestType,
+  //     payload: makePayload ? makePayload() : {}
+  //   });
+
+  //   socket.on(responseType, onResponse);    
+  // }
+
+  // onresponse(requestKey, status, payload) {
+  //   if (requestKey === usedRequestKeyRef.current) {
+  //     switch (status) {
+  //       case "STATUS_OK": 
+  //         onResponseOK && onResponseOK({requestKey, status, payload});
+  //         break;
+  //       case "STATUS_FAIL":
+  //         onResponseFail && onResponseFail({requestKey, status, payload});
+  //         break;
+  //     }
+  //   }
+  // }

@@ -3,9 +3,9 @@ import Phaser from 'phaser';
 import React from 'react';
 
 // Import your Scenes
-import { HomeScene } from './scenes/HomeScene';
 import Library from './scenes/LibraryScene' ;
 import Rest from './scenes/RestScene';
+import Study from './scenes/StudyScene';
 
 export default class Game extends React.Component {
   componentDidMount() {
@@ -24,8 +24,8 @@ export default class Game extends React.Component {
         // width: 910,
         // height: 910,
       },
-      scene: [Library, Rest],
-      // scene: [HomeScene, Library, Rest],
+      backgroundColor: '#000000',
+      scene: [Library, Study, Rest],
       dom: {
           createContainer: true
       },

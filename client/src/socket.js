@@ -12,7 +12,10 @@
  */
 import socketIOClient from "socket.io-client";
 
-const ENDPOINT = "http://localhost:4001";
+// const ENDPOINT = "http://localhost:4001";
+const ENDPOINT = process.env.NODE_ENV === "production" ? 
+  "https://study-street-server.herokuapp.com" : "http://localhost:4001";
+
 const socket = socketIOClient(ENDPOINT);
 
 export default socket;

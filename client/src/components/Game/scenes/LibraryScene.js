@@ -1,134 +1,86 @@
-import Phaser from 'phaser';
-import User from '../entity/User';
-import Friend from '../entity/Friend';
-import socket from '../../../socket';
-import { createCharacterAnimsGirl, createCharacterAnimsWizard } from '../anims/CharacterAnims';
 import GroupArea from '../entity/GroupArea';
 import Desk from '../entity/Desk';
 import Tooltip from '../entity/Tooltip';
 import Book from '../entity/Book';
-// import socketIOClient from "socket.io-client";
-// const ENDPOINT = "http://localhost:4001";
+import MapScene from './MapScene';
 
-export default class Library extends Phaser.Scene {
+export default class Library extends MapScene {
     constructor() {
       super('Library');
-      this.socket = socket;   
     }
 
-    init() {
-        console.log('Welcome to Library');
-        this.bufferWidth = 10
-        this.firstOverlap = true 
+    init(data) {
+        super.init(data);              
         this.groupAreas = {};      
         this.desks = {}
         this.borderWidth = 3  
+        this.nextdeskId = 0;
     };
 
-    firstOverlap(){
-        return this.firstOverlap
-
-
-    }
-
     preload() {
-        // this.load.image("library", "assets/map/library_small.png");
-        // this.load.image('map_library', 'assets/map/map_library.png');
+        super.preload()
         this.load.image('desk', 'assets/images/desk_4.png');
         this.load.image('chair', 'assets/images/chair.png');
         this.load.image('sitShadow', 'assets/images/sitShadow.png');
         this.load.image('sitText', 'assets/images/sitText.png');
         this.load.image('bookshelf', 'assets/images/book-shelf.png');
         this.load.image('book-side', 'assets/images/book-red.png');
-        // this.load.image('book-right', 'assets/images/book-right.png');
-        // this.load.image('book-center', 'assets/images/book-center.png');
-        // this.load.image('book-left', 'assets/images/book-left.png');
 
-        // map in json format
         this.load.image('libraryTiles1', 'assets/map/libraryTiles1.png');
         this.load.image('libraryTiles2', 'assets/map/libraryTiles2.png');
         this.load.image('libraryTiles3', 'assets/map/libraryTiles3.png');
-
         this.load.tilemapTiledJSON('libraryMap', 'assets/map/libraryMap.json');
-
-        this.load.spritesheet('user-girl', 'assets/spriteSheets/user_1.png', {
-            frameWidth: 32 * (100/3),
-            frameHeight: 42 * (100/3)
-        });
-        this.load.spritesheet('user-wizard', 'assets/spriteSheets/wizard.png', {
-            frameWidth: 60,
-            frameHeight: 90
-        });
-        this.load.spritesheet('booksheet', 'assets/spriteSheets/booksheet.png', {
-            frameWidth: 28,
-            frameHeight: 35
-        });
-        this.load.html('newArtifact', 'assets/NewArtifact.html')
-        this.load.html('alert', 'assets/NewAlert.html')
     }
 
-    /*
-     * Map 에 create 해야할 sprites 
-     */    
-
-    createGroupArea(groupKey){
-        let groupArea = new GroupArea(this, 500, 400)
-        groupArea.init('desk', 'chair', 'bookshelf')
-        // this.nextBookPosition = groupArea.positions[0]
-        groupArea.setPosition(500, 400)
-        this.groupAreas[groupKey] = groupArea
-    }
-
-    createChair() {
-
-    }
-    /*
-     * Create
-     */
     create() {
-        console.log('library create')
-        this.otherUsers = this.physics.add.group();
-        /**
-         * If pointerdown (마우스 클릭) -> handleEnterBuffer() 를 호출해서 restScene 으로 이동
-         * 조건을 scene 아무데나 pointerdown 에서 'Quick Rest' react component를 클릭할 때로 변경해야 함.
-         * 이동 전에 Are you sure to go to rest? 툴팁이 한 번 뜨면 좋을 것 같다. 
-         */
-        // this.input.on('pointerdown', function(){
-        //     this.handleEnterBuffer();
-        // //     // this.scene.start('Rest');
-        // //     // this.scene.launch('Rest')
-        // //     // console.log("FirstScene -> LoadScene. Input : pointerdown")
-        // //     // this.scene.resucme('LoadScene');  
-        // //     // console.log("LoadScene resumed")
-        // //     // this.scene.stop('FirstScene');
-        //  }, this);
-        // create map     
-        this.createMap();        
-        // this.createAnimations();
-        createCharacterAnimsWizard(this.anims);
-        createCharacterAnimsGirl(this.anims);
-        this.cursors = this.input.keyboard.createCursorKeys();
-
-        this.assignGroupArea(2);
-
-        this.createUser();
-        this.createFriend();
+        this.createMap();    
+        super.create();    
+        this.setDeskCollider()
         this.setEventHandlers();
         this.socket.emit("initializeLibrary");
-
-        this.assignGroupArea(2);
-        // this.aGrid = new AlignGrid({scene:this, rows:20, cols:20})
-        // this.aGrid.showNumbers();
-
+        let portalPosition = {x : this.world1.displayWidth/2, y : this.world1.displayHeight};
+        portalPosition.x = 1000;
+        portalPosition.y = 250;
+        super.createPortal(portalPosition);
+        this.assignGroupArea("Team Slifour", ["ff0000"]);
     }
 
     update() {
-        this.user.update(this.cursors);
-        Object.values(this.friendDict).forEach(friend => {friend.update();});
+        super.update(); 
     }
 
+    /** setEventHandlers
+     * @description set event handlers     
+     */
+     setEventHandlers(){
+        super.setEventHandlers()
+        // Description
+        // socket.on('event', eventHandler)
+        this.socket.on('newArtifact', this.onNewArtifact.bind(this));
+        // this.socket.on('newGroup', this.onNewGroup.bind(this))
+        this.socket.on("goalUpdate", this.onGoalUpdate.bind(this));
+        this.game.events.on('libraryToRest', () => {
+            this.changeScene('Rest')
+        })
+        this.socket.on("RESPONSE_NEW_GROUP", this.onResponseNewGroup.bind(this));
+    }
+
+
+    /** Create() Helper Functions  */
+
+    /**
+     * createGroupArea
+     * @param groupKey : key to manage group areas
+     */
+    // createGroupArea(groupName, colors){
+    //     let groupArea = new GroupArea(this, 500, 400)
+    //     groupArea.init('desk', 'chair', 'bookshelf')
+    //     // this.nextBookPosition = groupArea.positions[0]
+    //     groupArea.setPosition(500, 400)
+    //     this.groupAreas[groupKey] = groupArea
+    // }
+
     createMap() {
-        // create the map
         this.map = this.make.tilemap({ key: 'libraryMap' });
         const tileset1 = this.map.addTilesetImage('libraryTiles1', 'libraryTiles1');
         const tileset2 = this.map.addTilesetImage('libraryTiles2', 'libraryTiles2');
@@ -145,7 +97,7 @@ export default class Library extends Phaser.Scene {
         this.world1.setScale(1.2);      
 
         // Group Area Example (Manual)
-        this.createGroupArea('a');
+        // this.createGroupArea('a');
 
         // Create desks
         this.deskPositions = [{x:500, y:450}, {x:1000, y:450}, {x:1500, y: 450}]
@@ -154,110 +106,85 @@ export default class Library extends Phaser.Scene {
             let desk = this.createDesk(position.x, position.y, 'desk', 'chair');
             this.desks[deskIndex] = desk;
             deskIndex += 1;  
-
         })
 
         // don't go out of the map
-        this.physics.world.bounds.width = this.map.displayWidth;
-        this.physics.world.bounds.height = this.map.displayHeight;
-        this.bufferToFirst = this.add.rectangle(this.map.displayWidth-this.bufferWidth/2, this.map.displayHeight/2, this.bufferWidth, this.map.displayHeight, 0xff0000);
-        this.physics.add.existing(this.bufferToFirst)
+        // console.log(this.belowPlayer1.displayWidth, this.belowPlayer1.displayHeight)
+        // console.log(this.world1.displayWidth, this.world1.displayHeight)
+        // console.log(this.map.widthInPixels, this.map.heightInPixels)
+        // this.physics.world.bounds.width = this.belowPlayer1.displayWidth;
+        // this.physics.world.bounds.height = this.belowPlayer1.displayHeight;
+        // this.cameras.main.setBounds(0, 0, this.belowPlayer1.displayWidth, this.belowPlayer1.displayHeight);
+        // this.bufferToFirst = this.add.rectangle(this.map.displayWidth-this.bufferWidth/2, this.map.displayHeight/2, this.bufferWidth, this.map.displayHeight, 0xff0000);
+        // this.physics.add.existing(this.bufferToFirst)
     }
 
+    /** createDesk
+     * @parameter x, y, deskKey : spritekey for desk, chairkey : spritekey for chair
+     * @return Desk : extends sprite, defined in entity/Desk.js
+     */
     createDesk(x, y, deskKey, chairKey) {
         return new Desk(this, x, y, deskKey, chairKey);    
     }  
 
-    /**assignGroupArea
-     * @parameter deskId: id of desk to assign, groupId : to be implemented
-     * 
-     */
-    assignGroupArea(deskId){        
-        let desk = this.desks[deskId];
-        let container = this.add.container(desk.x, desk.y); 
-        container.setSize(350, 300);        
-        let border = this.add.rectangle(0, 0, container.width, container.height);
-        border.setStrokeStyle(this.borderWidth, 0xff0000)        
-        border.setDepth(-1);
-        container.add(border);
-        // container.add(desk)
-    }
-
-    createUser() {
-        this.user = new User(this, 800, 400, 'user-girl', 'girl').setScale(3/100 * 1.2);
-        this.user.setDepth(1);
-
-        this.updateCamera();
-
-        this.physics.add.collider(this.user, this.spawns);
-        this.physics.add.collider(this.user, this.belowPlayer1);
-        this.physics.add.collider(this.user, this.world1);
-
+    setDeskCollider() {
         Object.keys(this.desks).forEach(key =>{
             let desk = this.desks[key];
-            console.log(desk)
             desk.getAll().forEach(sprite => {
                 this.physics.add.collider(this.user, sprite);
             })
         })
-
-
-
-        // this.physics.add.overlap(
-        //     this.bufferToFirst,
-        //     this.user,
-        //     this.handleEnterBuffer,
-        //     undefined,
-        //     this
-        // );
     }
 
-    createFriend(){
-        this.friends =this.add.group();
-        this.friendDict = {}
-        console.log(this.friends)  
+    /** assignGroupArea
+     * @parameter deskId: id of desk to assign, groupId : to be implemented
+     * 
+     */
+    assignGroupArea(groupName, colors){      
+        let colorMain = colors[0]
+        let deskId = this.nextdeskId;  
+        let desk = this.desks[deskId];
+        let container = this.add.container(desk.x, desk.y); 
+        container.setSize(350, 350);        
+        let border = this.add.rectangle(0, 0, container.width, container.height);
+        let name = this.add.text(-container.width/2, container.height/2, groupName, { 
+            fontSize: '16px', 
+            fontFamily: 'Lato',
+            color: colorMain,
+            align:'center', });
+        name.setOrigin(0,1);
+        border.setStrokeStyle(this.borderWidth, colorMain).setDepth(-100);
+        container.add(border);
+        container.add(name);
+        this.nextdeskId += 1;
+        // container.add(desk)
     }
 
-    handleEnterBuffer(){
-        // this.scene.start('Rest');
-        // this.physics.destroy(this.bufferToFirst)
-        this.firstOverlap = false
-        console.log('handleEnterBuffer')        
-        this.toRestScene();
-    }     
-
-    toRestScene(){
-        this.cameras.main.fadeOut(1000, 0, 0, 0)
-        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
-            // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
-            // this.doUpdate = false
-            this.scene.start('Rest');
-        })  
+    /** toRestScene
+     * @description move to rest scene     
+     */
+    changeScene(newScene, data){        
+        super.changeScene(newScene, data);
     }
-
-    updateCamera() {
-        // limit camera to map
-        this.cameras.main.setBounds(0, 0, this.map.displayWidth, this.map.displayHeight);
-        this.cameras.main.startFollow(this.user);
-        this.cameras.main.roundPixels = true; // avoid tile bleed
-    }
-
-    setEventHandlers(){
-        // Description
-        // socket.on('event', eventHandler)
-      
-        // New user message received
-        this.socket.on('stateUpdate', this.onStateUpdate.bind(this));
-        this.socket.on('newArtifact', this.onNewArtifact.bind(this));
-        this.socket.on('newGroup', this.onNewGroup.bind(this))
-        this.socket.on("goalUpdate", this.onGoalUpdate.bind(this));
-        this.game.events.on('toRestScene', () => {
-            this.toRestScene()
-        })
-      }
     
-    onNewGroup(){
-        this.createGroupArea()
+    /** 
+     * onGoalupdate
+     * @param bookList
+    */
+    onGoalUpdate(bookList){
+        console.log('onGoalUpdate')
+        for (const [groupId, value] of Object.entries(bookList)) {
+            if (Object.keys(this.groupAreas).includes(groupId)){
+                let groupArea = this.groupAreas[groupId]
+                groupArea.updateBooks(value) 
+                console.log(groupId, value);
+            }           
+        }        
+    }
+  
+    onResponseNewGroup(request){
+        const {payload} = request;
+        this.assignGroupArea(payload.groupName, payload.colors)
     }  
 
     onNewArtifact(data){
@@ -287,60 +214,4 @@ export default class Library extends Phaser.Scene {
         // this.newArtifact = new Book(this, screenCenterX, screenCenterY, 'book-front');
         // // tooltipContainer.add(this.newArtifact)        
     }
-
-    // onArtifactTooltipClicked(){
-    //     this.tooltip.destroy()
-    //     this.cameras.main.startFollow(book);
-    //     this.physics.moveToObject(book, this.nextBookPosition[this.nextBookIndex].x, this.nextBookPosition[this.nextBookIndex].y, 300);
-    //     if (book.x === this.nextBookPosition.x){
-    //         this.cameras.main.startFollow(this.user);
-    //     }        
-    //     this.nextBookIndex += 1;
-    // }
-
-    onStateUpdate(users){
-        if(this.friends === undefined) {return;}
-        Object.keys(users).forEach(function(id) {        
-            if (id === this.socket.id) {return;}
-
-            console.log('Not returned');
-            let user = users[id]
-            if (Object.keys(this.friendDict).includes(id)){
-                console.log(id, this.socket.id);
-                this.friendDict[id].updateMovement(user.position);
-            } else {        
-                let friend = new Friend(this, user.position.x, user.position.y, 'user-wizard', 'wizard', id).setScale(1);
-                this.friends.add(friend);
-                this.friendDict[id] = friend;
-            }    
-        }.bind(this))
-    }
-
-/** 
- * let bookList = {
-  "a": {
-    0 : [1,3,1,1,1],
-    1 : [5,3,2,3],
-  },
-  "b": {
-  },  
 }
- * @param {*} bookList 
- */
-    onGoalUpdate(bookList){
-        console.log('onGoalUpdate')
-        for (const [groupId, value] of Object.entries(bookList)) {
-            if (Object.keys(this.groupAreas).includes(groupId)){
-                let groupArea = this.groupAreas[groupId]
-                groupArea.updateBooks(value) 
-
-                console.log(groupId, value);
-            }           
-        }        
-    }
-
-}
-
-// module.exports = {
-//     LibraryScene
-// };
