@@ -52,6 +52,7 @@ const SocketIOServer = () => {
   let libraryRoom = new Rooms('Library');
   let restRoom = new Rooms('Rest');
   let roomDict = {};
+
   /** Methods */
   /** Initialize */  
   const init = (server) => {
@@ -67,15 +68,17 @@ const SocketIOServer = () => {
       console.log("New client connected");
       socket.emit("socket.id", socket.id);      
       console.log(socket.id);
+      libraryRoom.init(io, socket);
+      restRoom.init(io, socket);
       setEventHandlers(socket);      
       logUsers()
     });
   }
 
+  
+
   /** Event Handlers */
   const setEventHandlers = (socket) => {
-    libraryRoom.init(io, socket);
-    restRoom.init(io, socket);
 
     /** socket.on('event', eventHandler.bind(null, socket)) */
     socket.on("disconnect", onDisconnect.bind(null, socket))
@@ -93,6 +96,26 @@ const SocketIOServer = () => {
     });
     updateDate(socket);    
 
+  }
+  
+  let isChangedGroupList = true;
+  const emitLoop = (stateChanged) => {
+    isEmittingUpdates = true;        
+    if (stateChanged) {
+        stateChanged = false;
+        broadcast("LOOP_POSITION", positionList);
+        console.log("LOOP_POSITION", room)
+    }        
+    if (getNumUsers() > 1) {
+        setTimeout(emitLoop.bind(this), updateInterval);
+    } 
+    else {
+        isEmittingUpdates = false;
+    }
+  }
+
+  const setLoops = () => {
+    
   }
 
   const onRequest = (socket, requestName, request) => {
@@ -137,7 +160,6 @@ const SocketIOServer = () => {
       payload: { msg }
     });
   };
-
 
   const onRequestMyGroupList = (socket, request) => {
     const {requestUser, requestKey} = request;
@@ -379,7 +401,7 @@ const SocketIOServer = () => {
 
     switch (currentScene) {
       case "Home": ; break;
-      case "Library":  ; break;
+      case "Library": ; break;
       case "Study": ; break;
       case "Rest": ; break;
     }
