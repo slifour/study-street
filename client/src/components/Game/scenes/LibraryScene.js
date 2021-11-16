@@ -144,12 +144,13 @@ export default class Library extends MapScene {
         const colorMain = colors[0];
         /** get Id of next desk prepared to be assigned */
         let deskId = this.nextdeskId;  
-        let desk = this.desks[deskId];
+        let desk = this.desks[deskId];        
 
         /** Create Container, children = [border, groupName] */
         let container = this.add.container(desk.x, desk.y); 
         container.setSize(350, 350);        
         let border = this.add.rectangle(0, 0, container.width, container.height);
+        console.log(groupNameText)
         let groupName = this.add.text(-container.width/2, container.height/2, groupNameText, { 
             fontSize: '16px', 
             fontFamily: 'Lato',
@@ -157,21 +158,22 @@ export default class Library extends MapScene {
             align:'center', });
         groupName.setOrigin(0,1);
         border.setStrokeStyle(this.borderWidth, colorMain)
+        console.log(container)
         container.add(border);
         container.add(groupName);
-        container.setDepth(-100);
+        container.setDepth(0);
         this.nextdeskId += 1;
 
         /** Group border appears gradually based on tween (animation) */
-        // container.alpha = 0;
-        // const duration = 1000;
-        // let moveTween = this.tweens.add({
-        //   targets : container,
-        //   alpha: 1,
-        //   ease: 'Sine.easeInOut',
-        //   duration: duration,
-        //   repeat : 0,
-        // })
+        container.alpha = 0;
+        const duration = 2000;
+        let moveTween = this.tweens.add({
+          targets : container,
+          alpha: 1,
+          ease: 'Sine.easeInOut',
+          duration: duration,
+          repeat : 0,
+        })
         console.log("assignGroupArea")
     }
 

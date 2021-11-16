@@ -9,19 +9,25 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
     this.scene = scene;
     this.scene.add.existing(this);
     this.scene.physics.world.enable(this);
-    this.id = id
+    this.id = id;
     this.dir = dir;    
     this.gap = 50;
     this.allowed = true;
     console.log('New Chair:', x, y);
   }
 
-  init(desk){    
+  init(desk, interactive = true){    
     this.desk = desk;        
-    this.tooltip = new TooltipStatic(this.scene, this.x+this.desk.x, this.y+this.desk.y, "");
-    console.log('init(chiar):', this.tooltip.x, this.tooltip.y)
+    console.log('init(chiar):', this.x, this.desk.x, this.y, this.desk.y);
+    this.tooltip = new TooltipStatic(this.scene, this.x+this.desk.x, this.y+this.desk.y, "");    
+    this.scene.add.existing(this.tooltip);
+    this.scene.physics.world.enable(this.tooltip);
+    console.log('init(chiar):', this.tooltip.x, this.tooltip.y);
+    if(!interactive){
+      return;
+    }
     this.setInteractive();
-    this.setInteractions(true);    
+    this.setInteractions();    
   }
 
   setInteractions(){
@@ -63,7 +69,8 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
     else{
       text= "Allowed only for groupName";
     }
-    this.tooltip.setText(text);
+    console.log(text);
+    this.tooltip.update(text);
     this.tooltip.setActive(true).setVisible(true);
 
     console.log(this.tooltip.active, this.tooltip.visible)

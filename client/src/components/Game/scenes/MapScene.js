@@ -26,10 +26,12 @@ export default class MapScene extends Phaser.Scene {
 
   init(data) {   
     this.socket = socket; 
-    this.id = this.registry.get("loginUser");
     this.prevScene = (data === undefined) ? undefined : data.prevScene
     this.friendDict = {};
     console.log("Welcome to ", this.key);  
+    if(this.registry.get("loginUser")){
+      this.id = this.registry.get("loginUser").userID;
+    }    
   }
 
   preload() {
@@ -106,25 +108,28 @@ export default class MapScene extends Phaser.Scene {
 
   onLoopPosition(positionList){
     console.log('update :', this.friendDict);
-    if(this.friendDict === undefined) {return;}
-    Object.keys(positionList).forEach(function(id) {        
-        if (id === this.id) {return;}
-        console.log('Not returned');
-        let position = positionList[id]
-        if (Object.keys(this.friendDict).includes(id)){
-            this.friendDict[id].updateMovement(position.x, position.y);
-        } else {        
-            let friend = new Friend(this, position.x, position.y, 'user-wizard', 'wizard', id).setScale(1);
-            friend.init();
-            // this.friends.add(friend);
-            this.friendDict[id] = friend;
-        }    
+    if(this.friendDict === undefined) {return;}    
+    Object.keys(positionList).forEach(function(id) {  
+      console.log(id, this.id);      
+      if (id === this.id) {return;}
+      console.log('Not returned');
+      let position = positionList[id]
+      if (Object.keys(this.friendDict).includes(id)){
+          this.friendDict[id].updateMovement(position.x, position.y);
+      } else {        
+          let friend = new Friend(this, position.x, position.y, 'user-wizard', 'wizard', id).setScale(1);
+          friend.init();
+          // this.friends.add(friend);
+          this.friendDict[id] = friend;
+      }    
     }.bind(this))
   }
 
   onResponseRemoveFriend(id){
-    this.friendDict[id].destroy();
-    delete this.friendDict[id];
+    if (Object.keys(this.friendDict).includes(id)){
+      this.friendDict[id].destroy();
+      delete this.friendDict[id];
+    }
   }
 
   setEventHandlers(){

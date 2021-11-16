@@ -45,6 +45,5 @@ export default class Desk extends Phaser.GameObjects.Container {
       
     }
 
-
   }
 }

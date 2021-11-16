@@ -62,7 +62,7 @@ export default class Study extends Phaser.Scene {
     this.createDesk(0, 0, 'desk', 'chair');
     const chair = this.desk.getAt(this.index);
     chair.sit();
-    this.cameras.main.centerOn(this.desk.x + this.cameras.main.width/4 , this.desk.y);
+    this.cameras.main.centerOn(this.desk.x + this.cameras.main.width/4 , this.desk.y - this.cameras.main.height/4 );
     this.setEventHandlers();
 
     // createCharacterAnimsWizard(this.anims);
@@ -84,23 +84,23 @@ export default class Study extends Phaser.Scene {
     this.desk = new Desk(this, x, y, deskKey, chairKey, false);    
   };    
 
-  onStateUpdate(users){
-    if(this.friends === undefined) {return;}
-    Object.keys(users).forEach(function(id) {        
-        if (id === this.socket.id) {return;}
+  // onStateUpdate(users){
+  //   if(this.friends === undefined) {return;}
+  //   Object.keys(users).forEach(function(id) {        
+  //       if (id === this.socket.id) {return;}
 
-        console.log('Not returned');
-        let user = users[id]
-        if (Object.keys(this.friendDict).includes(id)){
-            console.log(id, this.socket.id);
-            this.friendDict[id].updateMovement(user.position);
-        } else {        
-            let friend = new Friend(this, user.position.x, user.position.y, 'user-wizard', 'wizard', id).setScale(1);
-            this.friends.add(friend);
-            this.friendDict[id] = friend;
-        }    
-    }.bind(this))
-  }
+  //       console.log('Not returned');
+  //       let user = users[id]
+  //       if (Object.keys(this.friendDict).includes(id)){
+  //           console.log(id, this.socket.id);
+  //           this.friendDict[id].updateMovement(user.position);
+  //       } else {        
+  //           let friend = new Friend(this, user.position.x, user.position.y, 'user-wizard', 'wizard', id).setScale(1);
+  //           this.friends.add(friend);
+  //           this.friendDict[id] = friend;
+  //       }    
+  //   }.bind(this))
+  // }
 
   setEventHandlers(){
     this.game.events.on('studyToLibrary', () => {
@@ -110,7 +110,7 @@ export default class Study extends Phaser.Scene {
     // socket.on('event', eventHandler)
   
     // New user message received
-    this.socket.on('stateUpdate', this.onStateUpdate.bind(this));
+    // this.socket.on('stateUpdate', this.onStateUpdate.bind(this));
   }
 
   changeScene(newScene){
