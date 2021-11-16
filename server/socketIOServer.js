@@ -286,8 +286,9 @@ const SocketIOServer = () => {
     }
 
     let groupName;
+    let colors;
     try {
-      ({groupName} = payload);
+      ({groupName, colors} = payload);
       if (groupName === "") throw new Error();
     } catch {
       return responseFail(socket, requestKey, responseType, "Invalid request: Group name is required.");
@@ -311,8 +312,14 @@ const SocketIOServer = () => {
       groupName,
       leader: requestUser,
       member: [requestUser],
-      colors: payload.colors || defaultColors
+      colors: colors || defaultColors
     };
+
+    const sideEffectResponseType = 'RESPONSE_NEW_GROUP'
+    
+    io.emit(sideEffectResponseType, {
+      payload : groupList[groupID]
+    })
 
     return socket.emit(responseType, {
       requestKey,

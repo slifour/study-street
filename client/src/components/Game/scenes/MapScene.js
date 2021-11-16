@@ -60,6 +60,11 @@ export default class MapScene extends Phaser.Scene {
     this.createFriend();
   }
 
+  update() {
+    this.user.update(this.cursors);
+    Object.values(this.friendDict).forEach(friend => {friend.update();});
+  };
+
   createUser() {
     this.user = new User(this, 800, 400, 'user-girl', 'girl').setScale(3/100 * 1.2);
     this.user.init();
@@ -127,6 +132,7 @@ export default class MapScene extends Phaser.Scene {
             this.friendDict[id].updateMovement(position.x, position.y);
         } else {        
             let friend = new Friend(this, position.x, position.y, 'user-wizard', 'wizard', id).setScale(1);
+            friend.init();
             this.friends.add(friend);
             this.friendDict[id] = friend;
         }    

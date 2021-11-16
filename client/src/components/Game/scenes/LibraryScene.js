@@ -11,11 +11,10 @@ export default class Library extends MapScene {
 
     init(data) {
         super.init(data);              
-        this.bufferWidth = 10
-        this.firstOverlap = true 
         this.groupAreas = {};      
         this.desks = {}
         this.borderWidth = 3  
+        this.nextdeskId = 0;
     };
 
     preload() {
@@ -43,12 +42,11 @@ export default class Library extends MapScene {
         portalPosition.x = 1000;
         portalPosition.y = 250;
         super.createPortal(portalPosition);
-        this.assignGroupArea(2);
+        this.assignGroupArea("Team Slifour", ["ff0000"]);
     }
 
     update() {
-        this.user.update(this.cursors);
-        Object.values(this.friendDict).forEach(friend => {friend.update();});
+        super.update(); 
     }
 
     /** setEventHandlers
@@ -59,11 +57,12 @@ export default class Library extends MapScene {
         // Description
         // socket.on('event', eventHandler)
         this.socket.on('newArtifact', this.onNewArtifact.bind(this));
-        this.socket.on('newGroup', this.onNewGroup.bind(this))
+        // this.socket.on('newGroup', this.onNewGroup.bind(this))
         this.socket.on("goalUpdate", this.onGoalUpdate.bind(this));
         this.game.events.on('libraryToRest', () => {
             this.changeScene('Rest')
         })
+        this.socket.on("RESPONSE_NEW_GROUP", this.onResponseNewGroup.bind(this));
     }
 
 
@@ -73,13 +72,13 @@ export default class Library extends MapScene {
      * createGroupArea
      * @param groupKey : key to manage group areas
      */
-    createGroupArea(groupKey){
-        let groupArea = new GroupArea(this, 500, 400)
-        groupArea.init('desk', 'chair', 'bookshelf')
-        // this.nextBookPosition = groupArea.positions[0]
-        groupArea.setPosition(500, 400)
-        this.groupAreas[groupKey] = groupArea
-    }
+    // createGroupArea(groupName, colors){
+    //     let groupArea = new GroupArea(this, 500, 400)
+    //     groupArea.init('desk', 'chair', 'bookshelf')
+    //     // this.nextBookPosition = groupArea.positions[0]
+    //     groupArea.setPosition(500, 400)
+    //     this.groupAreas[groupKey] = groupArea
+    // }
 
     createMap() {
         this.map = this.make.tilemap({ key: 'libraryMap' });
@@ -98,7 +97,7 @@ export default class Library extends MapScene {
         this.world1.setScale(1.2);      
 
         // Group Area Example (Manual)
-        this.createGroupArea('a');
+        // this.createGroupArea('a');
 
         // Create desks
         this.deskPositions = [{x:500, y:450}, {x:1000, y:450}, {x:1500, y: 450}]
@@ -141,14 +140,23 @@ export default class Library extends MapScene {
      * @parameter deskId: id of desk to assign, groupId : to be implemented
      * 
      */
-    assignGroupArea(deskId){        
+    assignGroupArea(groupName, colors){      
+        let colorMain = colors[0]
+        let deskId = this.nextdeskId;  
         let desk = this.desks[deskId];
         let container = this.add.container(desk.x, desk.y); 
-        container.setSize(350, 300);        
+        container.setSize(350, 350);        
         let border = this.add.rectangle(0, 0, container.width, container.height);
-        border.setStrokeStyle(this.borderWidth, 0xff0000)        
-        border.setDepth(-100);
+        let name = this.add.text(-container.width/2, container.height/2, groupName, { 
+            fontSize: '16px', 
+            fontFamily: 'Lato',
+            color: colorMain,
+            align:'center', });
+        name.setOrigin(0,1);
+        border.setStrokeStyle(this.borderWidth, colorMain).setDepth(-100);
         container.add(border);
+        container.add(name);
+        this.nextdeskId += 1;
         // container.add(desk)
     }
 
@@ -174,8 +182,9 @@ export default class Library extends MapScene {
         }        
     }
   
-    onNewGroup(){
-        this.createGroupArea()
+    onResponseNewGroup(request){
+        const {payload} = request;
+        this.assignGroupArea(payload.groupName, payload.colors)
     }  
 
     onNewArtifact(data){

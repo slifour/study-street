@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import socket from '../../../socket';
 import Status from './Status';
+import Name from './Name';
 import request from '../request'
 /**
  * Reference
@@ -26,12 +27,13 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
   }
 
   init(){
-    this.setCollideWorldBounds(true);
+    // this.setCollideWorldBounds(true);
     // this.initialize({currentScene : this.scene.key});
     this.initialize({prevScene : this.scene.prevScene, currentScene : this.scene.key});
     /* Status display */
     this.setInteractive();
     this.prepareStatusView();
+    // this.prepareName();
     this.on('pointerover', this.onPointerOver);
     this.on('pointerout', this.onPointerOut);
   }
@@ -99,6 +101,12 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
     this.statusView.setActive(false).setVisible(false);
   }
 
+  prepareName() {
+    const initialtext = "Name";
+    this.nameView = new Name(this.scene, this, initialtext);
+    this.scene.add.existing(this.nameView);
+  }
+
   onPointerOver() {
     /* 플레이어를 호버할 때 status view를 보여주기 */
     const loginUser = this.registry.get("loginUser");
@@ -117,6 +125,7 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
   /** @param {Phaser.Types.Input.Keyboard.CursorKeys} cursors */
   update(cursors) {
     this.statusView.update();
+    // this.nameView.update();
     this.updateMovement(cursors);
     let positionData = {x : this.x, y : this.y};
     if (!this.stop){

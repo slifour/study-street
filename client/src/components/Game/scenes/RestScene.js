@@ -33,9 +33,8 @@ export default class Rest extends MapScene {
     };
 
     update() {
-        this.user.update(this.cursors);
-        Object.values(this.friendDict).forEach(friend => {friend.update();});
-    };
+        super.update(); 
+    }
 
     /**assignGroupArea
      * @parameter deskId: id of desk to assign, groupId : to be implemented
