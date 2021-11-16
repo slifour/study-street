@@ -26,259 +26,19 @@ const SocketIOServer = () => {
    *    <function to excess from outssocket.ide>
    * }
    */
-    const responseFail = (socket, requestKey, responseType, msg) => {
-     socket.emit(responseType, {
-       requestKey,
-       responseType,
-       status: ResponseStatus.FAIL,
-       payload: { msg }
-     });
-   };
- 
-   const onRequestMyGroupList = (socket, request) => {
-     const {requestUser, requestKey} = request;
-     const responseType = ResponseType.MY_GROUP_LIST;
- 
-     if (!requestUser) {
-       return responseFail(socket, requestKey, responseType, "Login is required.");
-     };
- 
-     let myGroupList = Object.values(groupList)
-         .filter(({member}) => member.includes(requestUser));
- 
-     return socket.emit(responseType, {
-       requestKey, 
-       responseType,
-       status: ResponseStatus.OK,
-       payload: myGroupList
-     });
-   };
- 
-   const onRequestInviteFriend = (socket, request) => {
-     const {requestUser, requestKey, payload} = request;
-     const responseType = ResponseType.INVITE_FRIEND;
- 
-     if (!requestUser) {
-       return responseFail(socket, requestKey, responseType, "Login is required.");
-     }
-     
-     let groupID, friendID;
-     try {
-       ({groupID, friendID} = payload);
-     } catch {
-       return responseFail(socket, requestKey, responseType, "Invalid request.");
-     }
-     
-     if (groupList[groupID].member.includes(friendID)) {
-       return responseFail(socket, requestKey, responseType, "Already in group.");
-     }
-     
-     const invitationKey = `${groupID} ${friendID}`;
-     invitationList[invitationKey] = {
-       groupID,
-       friendID,
-       inviteTime: new Date()
-     };
- 
-     return socket.emit(responseType, {
-       requestUser,
-       responseType,
-       status: ResponseStatus.OK,
-       payload: {}
-     });
-   }
- 
-   const onRequestLogin = (socket, request) => {
-     const {requestUser, requestKey, payload} = request;
-     const responseType = ResponseType.LOGIN;
- 
-     console.log("onRequestLogin: ", request); 
- 
-     let userID;
-     try {
-       ({userID} = payload);
-     } catch {
-       return responseFail(socket, requestKey, responseType, "Invalid request.");
-     }
- 
-     if (userList[userID]) {
-       return socket.emit(responseType, {
-         requestKey,
-         responseType,
-         status: ResponseStatus.OK,
-         payload: userList[userID]
-       });
-     } else {
-       return responseFail(socket, requestKey, responseType, "Failed to login.");
-     }
-   }
- 
-   const onRequestMyProfile = (socket, userID) => {
-     const {requestUser, requestKey, payload} = request;
-     const responseType = ResponseType.MY_PROFILE;
- 
-     if (!requestUser) {
-       return responseFail(socket, requestKey, responseType, "Login is required.");
-     }
- 
-     return socket.emit(responseType, {
-       requestKey,
-       responseType,
-       status: ResponseStatus.OK,
-       payload: userList[userID]
-     });
-   }
- 
-   const onNewArtifact = (socket) => {
-     console.log('server : newArtifact')
-     data = {
-       goal : 'Study everyday',
-       group : 'Slifour'
-     }
-     socket.emit("newArtifact", data)
-   }
- 
-   /* Home scene */
-   const onUserLoginRequest = (socket, userID) => {
-     if (!userList[userID]) {
-       socket.emit("userLoginFail");
-     } else {
-       socket.emit("userLoginOK", userList[userID]);
-     }
-   }
-   
-   const onUserProfileRequest = (socket, userID) => {
-     socket.emit("userProfile", userList[userID]);
-   }
- 
-   /* 아직 오류 있음; 추가적인 구조 수정 필요 */
-   /*const onUserParticipatedGroupRequest = (socket, userID) => {
-     let response = [];
-     Object.entries(groupList).forEach(([key, value]) => {
-       if (value.member[userID] !== undefined) {
-         response.append(value);
-       }
-     });
-     socket.emit("userParticipatedGroup", response);
-   }*/
- 
-   /* 아직 오류 있음 */
-   /*const onCreateGroup = (socket, groupID, groupName, colors) => {
-     if (groupList[groupID]) {
-       socket.emit("alreadyExistingGroup");
-     } else {
-       
-     }
-   }*/
- 
-   /* 아직 오류 있음 */
-   const onJoinGroup = (socket, groupID, userID) => {
-     socket.join(groupList[groupID]);
-     memList = groupList[groupID].member;
-     memList.append(userID);
-       /*, () => {
-       console.log(userID + ' join a ' + room[groupID]);
-       io.to(room[groupID]).emit("joinGroup", groupID, userID);
-     });*/
-   }
- 
-     /* 아직 오류 있음 */
-   const onLeaveGroup = (socket, groupID, userID) => {
-     socket.leave(groupList[groupID]);
-     memList = groupList[groupID].member;
-     memList.remove(userID);
-       /*, () => {
-       console.log(userID + ' leave a ' + room[groupID]);
-       io.to(room[groupID]).emit("leaveGroup", groupID, userID);
-     });*/
-   }
-   
-   /* 아직 오류 있음 */
-   /*const onSendGroupMessage = (socket, groupID, userID, msg) => {
-     a = groupID;
-     console.log('${userID} : ${msg}');
-     socket.to(groupList[a].member).emit('group chat message', {
-       username: userID,
-       message: msg
-     });
-   }*/
- 
-   /* 아직 오류 있음 */
-   const onJoinChat = (socket, userID) => {
-     if (addedUser) return;
-     // we store the username in the socket session for this client
-    //socket.username = username;
-    addedUser = true;
-    /*socket.emit('login', {
-      numUsers: numUsers
-    });*/
-    // echo globally (all clients) that a person has connected
-    /*socket.broadcast.emit('user joined', {
-      username: userID
-      //numUsers: numUsers
-    });*/
-   }
-   
-   /* 아직 오류 있음 */
-   const onSendPrivateMessage = (socket, user1ID, user2ID, msg) => {
-     console.log('${user1ID} : ${msg}');
-     socket.to(userList[user1ID]).emit('chat message', {
-       username: user2ID,
-       message: msg
-     });
-   }
- 
-   /* 아직 오류 있음 */
-   const onUpdateUserStatus = (socket, userID, stat) => {
-     if (!userList[userID]) {
-       socket.emit("findingGroupFail");
-     } else {
-       let user = userList[userID];
-       user.status = stat;
-     }
-   }
- 
-   const onPositionUpdate = (socket, positionData) => {
-     if (!Object.keys(users).includes(socket.id)){
-       return
-     }
-     stateChanged = true;
-     let user = users[socket.id];
-     user.position = positionData;
-   }
-   
-   const onSceneUpdate = (socket, scene) => {
-     console.log('Client moved to {} scene'.format(scene))
-     stateChanged = true;
-     let user = users[socket.id];
-     user.scene = scenes[newScene]
-     socket.join(newScene);    
-     socket.leave(prevScene);
-   }
-   
-   const onIntializeLibrary = (socket) =>{
-     socket.emit("goalUpdate", bookList);
-   }
- 
-   const onInitialize = (socket, data) => {
-     console.log("New user initialized");
-     stateChanged = true;    
-     let newUser = createUser(socket.id, data.name, data.group, data.position, data.scene); // Create a new user object
-     users[socket.id] = newUser;  // Add the newly created user to game state.
-     socket.broadcast.emit("initialize", socket.id, data.name, data.group, data.position)
-   
-     if (numUsers() === 1 && !isEmittingUpdates) { //On first user joined, start update emit loop
-       emitStateUpdateLoop('room');
-     }
-   }
- 
-   /** Helpers */
- 
-   /** 
-    * Loop that emits real-time data 
-    * - positions {socket.id : {x:x, y:y}}
+
+  /** Variables */
+  /** 
+   * @type {Object.<string, {
+   *  flipX: boolean,
+   *  x: number,
+   *  y: number,
+   *  userId: string,
+   *  scene: string
+   * }>}
    */
   const users = {}; // users data structure
+
 
   let stateChanged = false // flag whether state is changed = for transmission efficientcy
   let isEmittingUpdates = false // flag whether server is emitting updates = to prevent redundant emission and coliision
@@ -289,6 +49,7 @@ const SocketIOServer = () => {
   let io
   let { userList, groupList, invitationList, goalList, bookList } = require("./database");
   let interval;
+  let addedUser = false
 
   let libraryRoom = new Rooms('Library');
   let restRoom = new Rooms('Rest');
@@ -321,14 +82,13 @@ const SocketIOServer = () => {
     /** socket.on('event', eventHandler.bind(null, socket)) */
     socket.on("disconnect", onDisconnect.bind(null, socket))
     socket.on("REQUEST_MOVE", onRequestMove.bind(null, socket))  
-    /*socket.on("userParticipatedGroupRequest", onUserParticipatedGroupRequest.bind(null, socket))*/
     /* socket.on("createGroup", onCreateGroup(null, socket)) */
     socket.on("joinGroup", onJoinGroup.bind(null, socket))
     socket.on("leaveGroup", onLeaveGroup.bind(null, socket))
     //socket.on("sendGroupMessage", onSendGroupMessage.bind(null, socket))
-    socket.on("add user", onJoinChat(null, socket))
+    socket.on("add user", onJoinChat.bind(null, socket))
+    socket.on("chatdisconnect", onLeaveChat.bind(null, socket))
     socket.on("chat message", onSendPrivateMessage.bind(null, socket))
-    socket.on("updateUserStatus", onUpdateUserStatus.bind(null, socket))
     socket.on("sceneUpdate", onSceneUpdate.bind(null, socket))  
     // socket.on("initialize", onInitialize.bind(null, socket))  
     socket.on("userLoginRequest", onUserLoginRequest.bind(null, socket))
@@ -680,6 +440,70 @@ const SocketIOServer = () => {
     });    
   };
 
+  /* 아직 오류 있음 */
+  const onJoinGroup = (socket, groupID, userID) => {
+    socket.join(groupList[groupID]);
+    memList = groupList[groupID].member;
+    memList.append(userID);
+      /*, () => {
+      console.log(userID + ' join a ' + room[groupID]);
+      io.to(room[groupID]).emit("joinGroup", groupID, userID);
+    });*/
+  }
+
+    /* 아직 오류 있음 */
+  const onLeaveGroup = (socket, groupID, userID) => {
+    socket.leave(groupList[groupID]);
+    memList = groupList[groupID].member;
+    memList.remove(userID);
+      /*, () => {
+      console.log(userID + ' leave a ' + room[groupID]);
+      io.to(room[groupID]).emit("leaveGroup", groupID, userID);
+    });*/
+  }
+  
+  /* 아직 오류 있음 */
+  /*const onSendGroupMessage = (socket, groupID, userID, msg) => {
+    a = groupID;
+    console.log('${userID} : ${msg}');
+    socket.to(groupList[a].member).emit('group chat message', {
+      username: userID,
+      message: msg
+    });
+  }*/
+
+  /* 아직 오류 있음 */
+  const onJoinChat = (socket, userID) => {
+    if (addedUser) return;
+    // we store the username in the socket session for this client
+    socket.username = username;
+    console.log("connected : "+userID);
+    addedUser = true;
+    socket.emit('chatconnect');
+    // echo globally (all clients) that a person has connected
+    socket.broadcast.emit('user joined', {
+      username: userID
+    });
+  }
+
+  const onLeaveChat = (socket, userID) => {
+      if (addedUser) {
+        console.log("disconnected : "+userID);
+        // echo globally that this client has left
+        socket.broadcast.emit('user left', {
+          username: userID
+        });
+      }
+  }
+
+  /* 아직 오류 있음 */
+  const onSendPrivateMessage = (socket, senduserID, msg) => {
+    console.log('${senduserID} : ${msg}');
+    socket.broadcast.emit('chat message', { //to(userList[user1ID])
+      username: senduserID,
+      message: msg
+    });
+  }
 
   const onNewArtifact = (socket) => {
     console.log('server : newArtifact')

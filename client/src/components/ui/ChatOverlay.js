@@ -1,4 +1,5 @@
 import React, { useState, useLocation, useEffect } from 'react';
+import { LoginUserContext } from "../../App";
 import socket from '../../socket';
 import styles from "./ui.module.css";
 import styled from 'styled-components';
@@ -17,38 +18,28 @@ const StyledIcon = styled.div`
     background: ${props => props.color};
 `;
 
-function addChat () {
-    /* implement here */
-}
-
 //const socketIo = require("socket.io");
 
 export default function ChatOverlay(props) {
     const shortenName = props.userId.substr(0, 2).toUpperCase();
 
-    //const location = useLocation();
-    //const nickname = location.state.nickname;
+    const loginUser = LoginUserContext();
+    const nickname = loginUser.state.userID;
     const [chats, setchats] = useState([]);
     const [isConnected, setIsConnected] = useState(socket.connected);
     const [Msg, setMessage] = useState(null);
 
-    const addChatMessage = (data) => {
-        let message = '';
-        if (data.numUsers === 1) {
-        message += `there's 1 participant`;
-        } else {
-        message += `there are ${data.numUsers} participants`;
-        }
+    const addChatMessage = () => {
+        let message = 'Connected to chat';
         setchats(chats.concat(message));
     }
 
     useEffect(() => {
         
         socket.emit('add user', props.userId);
-        
-        socket.on('login', (data) => {
+        socket.on('chatconnect', () => {
         setIsConnected(true);    
-        addChatMessage(data);
+        addChatMessage();
         });
         socket.on('user joined', (data) =>{
         setchats(chats.concat(`${data.username} joined`));
@@ -56,23 +47,23 @@ export default function ChatOverlay(props) {
         socket.on('user left', (data) => {
         setchats(chats.concat(`${data.username} left`));
         });
-        socket.on('disconnect', () => {
+        socket.on('chatdisconnect', () => {
         setIsConnected(false);
         });
         socket.on('chat message', (data) => {
-        setchats(chats.concat(`${props.userId} : ${data.message}`)); //수정 필요
+        setchats(chats.concat(`${data.username} : ${data.message}`)); //수정 필요
         });
         return () => {
-        socket.off('login');
-        socket.off('disconnect');
+        socket.off('chatconnect');
+        socket.off('chatdisconnect');
         socket.off('chat message');
         };
     });
 
     const sendMessage = () => {
         console.log(Msg);
-        setchats(chats.concat(`${props.userId} : ${Msg}`));
-        socket.emit('chat message', Msg);
+        setchats(chats.concat(`${nickname} : ${Msg}`));
+        socket.emit('chat message', nickname, Msg);
         setMessage('');
     }
 
