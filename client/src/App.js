@@ -33,7 +33,7 @@ function App() {
     if (game.current !== null && game.current.game) {
       game.current.game.registry.set("loginUser", loginUser);
     }
-  }, [loginUser])
+  }, [game.current, loginUser]);
 
   useEffect(() => {
     let timeout = null;
