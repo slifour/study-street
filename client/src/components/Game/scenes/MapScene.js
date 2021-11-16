@@ -6,7 +6,6 @@ import { createCharacterAnimsGirl, createCharacterAnimsWizard } from '../anims/C
 import Study from './StudyScene';
 import GroupArea from '../entity/GroupArea';
 import Desk from '../entity/Desk';
-import Tooltip from '../entity/Tooltip';
 import Book from '../entity/Book';
 // import socketIOClient from "socket.io-client";
 // const ENDPOINT = "http://localhost:4001";

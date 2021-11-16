@@ -90,9 +90,9 @@ const SocketIOServer = () => {
   const setEventHandlers = (socket) => {
 
     /** socket.on('event', eventHandler.bind(null, socket)) */
+    socket.on("REQUEST_MOVE", onRequestMove.bind(null, socket))  
+
     socket.on("disconnect", onDisconnect.bind(null, socket))
-    // socket.on("REQUEST_MOVE", onRequestMove.bind(null, socket))  
-    
     socket.on("sceneUpdate", onSceneUpdate.bind(null, socket))  
     // socket.on("initialize", onInitialize.bind(null, socket))  
     socket.on("userLoginRequest", onUserLoginRequest.bind(null, socket))
@@ -105,6 +105,13 @@ const SocketIOServer = () => {
     });
     updateDate(socket);    
 
+  }
+
+  const onRequestMove = (socket, position) => {
+    let id = socket.id
+    if (env.roomDict[id] !== undefined){
+      env.roomDict[id].update(socket, id, position.x, position.y);
+    }
   }
   
   let isChangedGroupList = true;
