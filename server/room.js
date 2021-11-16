@@ -34,8 +34,7 @@ module.exports = class Rooms {
         return (Object.keys(this.positionList).length);
     }
 
-    update(socket, x, y){
-        let id = socket.id;
+    update(socket, id, x, y){
         this.positionList[id] = {x:x, y:y};
         console.log(this.positionList[id]);
         this.stateChanged = true;
@@ -45,8 +44,7 @@ module.exports = class Rooms {
         }
     }
 
-    remove(socket){
-        let id = socket.id;
+    remove(socket, id){
         if (!Object.keys(this.positionList).includes(id)){
             return;
         }

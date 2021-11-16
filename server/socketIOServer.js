@@ -82,7 +82,7 @@ const SocketIOServer = () => {
 
     /** socket.on('event', eventHandler.bind(null, socket)) */
     socket.on("disconnect", onDisconnect.bind(null, socket))
-    socket.on("REQUEST_MOVE", onRequestMove.bind(null, socket))  
+    // socket.on("REQUEST_MOVE", onRequestMove.bind(null, socket))  
     
     socket.on("sceneUpdate", onSceneUpdate.bind(null, socket))  
     // socket.on("initialize", onInitialize.bind(null, socket))  
@@ -142,6 +142,7 @@ const SocketIOServer = () => {
       case RequestType.JOIN_GROUP: onRequestJoinGroup(socket, request); break;
       case RequestType.CHANGE_SCENE: onRequestChangeScene(socket, request); break;
       case RequestType.INITIALIZE: onRequestInitialize(socket, request); break;
+      case RequestType.MOVE: onRequestMove(socket, request); break;
     }
     socket.emit("response", response);
   }
@@ -425,8 +426,6 @@ const SocketIOServer = () => {
       return responseFail(socket, requestKey, responseType, "Invalid scene.");
     }
 
-    let id = socket.id;
-
     if (prevScene !== null){
       socket.leave(prevScene);
     }
@@ -441,9 +440,9 @@ const SocketIOServer = () => {
 
     switch (currentScene) {
       case "Home": ; break;
-      case "Library": roomDict[id] = libraryRoom; libraryRoom.update(socket, 300, 300);  break;
+      case "Library": roomDict[requestUser] = libraryRoom; libraryRoom.update(socket, requestUser, 300, 300);  break;
       case "Study": ; break;
-      case "Rest": roomDict[id] = restRoom; restRoom.update(socket, 300, 300); break;
+      case "Rest": roomDict[requestUser] = restRoom; restRoom.update(socket, requestUser, 300, 300); break;
     }
 
     return socket.emit(responseType, {
@@ -454,6 +453,27 @@ const SocketIOServer = () => {
     });    
   };
 
+  const onRequestMove = (socket, request) => {
+    const {requestUser, requestKey, payload} = request;
+    const responseType = ResponseType.CHANGE_SCENE;
+
+    let position;
+    try {
+      ({position} = payload);
+    } catch {
+      return responseFail(socket, requestKey, responseType, "Invalid scene.");
+    }
+    if (roomDict[requestUser] !== undefined){
+      roomDict[requestUser].update(socket, requestUser, position.x, position.y);
+    }
+
+    return socket.emit(responseType, {
+      requestKey,
+      responseType,
+      status: ResponseStatus.OK,
+      payload: {}
+    });    
+  };
 
   const onNewArtifact = (socket) => {
     console.log('server : newArtifact')
@@ -486,10 +506,11 @@ const SocketIOServer = () => {
     user.position = positionData;
   }
   
-  const onRequestMove = (socket, position) => {
-    let id = socket.id;
-    roomDict[id].update(socket, position.x, position.y);
-  }
+  // const onRequestMove = (socket, id, position) => {
+  //   if (roomDict[id] !== undefined){
+  //     roomDict[id].update(socket, position.x, position.y);
+  //   }
+  // }
 
   const onSceneUpdate = (socket, scene) => {
     console.log('Client moved to {} scene'.format(scene))

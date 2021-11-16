@@ -10,6 +10,7 @@ module.exports.RequestType = { // they are also used as socket event name
   CREATE_GROUP: "REQUEST_CREATE_GROUP",
   JOIN_GROUP: "REQUEST_JOIN_GROUP",
   CHANGE_SCENE: "REQUEST_CHANGE_SCENE",
+  MOVE: "REQUEST_MOVE",
   INITIALIZE: "REQUEST_INITIALIZE",
   // 앞으로 더 만들기
 };
@@ -24,6 +25,7 @@ module.exports.ResponseType = {
   CREATE_GROUP: "RESPONSE_CREATE_GROUP",
   JOIN_GROUP: "RESPONSE_JOIN_GROUP",
   CHANGE_SCENE: "RESPONSE_CHANGE_SCENE",
+  MOVE: "RESPONSE_MOVE",
   INITIALIZE: "RESPONSE_INITIALIZE",
   // 앞으로 더 만들기
 };

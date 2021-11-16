@@ -1,6 +1,6 @@
 import GroupArea from '../entity/GroupArea';
 import Desk from '../entity/Desk';
-import Tooltip from '../entity/Tooltip';
+import HtmlModal from '../entity/HtmlModal';
 import Book from '../entity/Book';
 import MapScene from './MapScene';
 
@@ -140,24 +140,39 @@ export default class Library extends MapScene {
      * @parameter deskId: id of desk to assign, groupId : to be implemented
      * 
      */
-    assignGroupArea(groupName, colors){      
-        let colorMain = colors[0]
+    assignGroupArea(groupNameText, colors){      
+        const colorMain = colors[0];
+        /** get Id of next desk prepared to be assigned */
         let deskId = this.nextdeskId;  
         let desk = this.desks[deskId];
+
+        /** Create Container, children = [border, groupName] */
         let container = this.add.container(desk.x, desk.y); 
         container.setSize(350, 350);        
         let border = this.add.rectangle(0, 0, container.width, container.height);
-        let name = this.add.text(-container.width/2, container.height/2, groupName, { 
+        let groupName = this.add.text(-container.width/2, container.height/2, groupNameText, { 
             fontSize: '16px', 
             fontFamily: 'Lato',
             color: colorMain,
             align:'center', });
-        name.setOrigin(0,1);
-        border.setStrokeStyle(this.borderWidth, colorMain).setDepth(-100);
+        groupName.setOrigin(0,1);
+        border.setStrokeStyle(this.borderWidth, colorMain)
         container.add(border);
-        container.add(name);
+        container.add(groupName);
+        container.setDepth(-100);
         this.nextdeskId += 1;
-        // container.add(desk)
+
+        /** Group border appears gradually based on tween (animation) */
+        // container.alpha = 0;
+        // const duration = 1000;
+        // let moveTween = this.tweens.add({
+        //   targets : container,
+        //   alpha: 1,
+        //   ease: 'Sine.easeInOut',
+        //   duration: duration,
+        //   repeat : 0,
+        // })
+        console.log("assignGroupArea")
     }
 
     /** toRestScene
@@ -192,11 +207,11 @@ export default class Library extends MapScene {
         
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
         const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
-        let tooltip = new Tooltip(this, screenCenterX, screenCenterY, 'book-front', 'newArtifact');
+        let htmlModal = new HtmlModal(this, screenCenterX, screenCenterY, 'book-front', 'newArtifact');
         this.time.addEvent({
             delay: 1000,
             callback: ()=>{
-              tooltip.onArtifactTooltipClicked(this.nextBookPosition)
+              htmlModal.onArtifacthtmlModalClicked(this.nextBookPosition)
             },
             loop: false
         })
