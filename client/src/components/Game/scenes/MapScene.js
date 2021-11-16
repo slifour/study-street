@@ -28,8 +28,10 @@ export default class MapScene extends Phaser.Scene {
   }
 
   init(data) {   
-    this.prevScene = data == undefined ? undefined : data.prevScene
+    console.log('init :', data);
+    this.prevScene = (data === undefined) ? undefined : data.prevScene
     console.log("Welcome to ", this.key);  
+    this.friendDict = {};
   }
 
   preload() {
@@ -65,7 +67,6 @@ export default class MapScene extends Phaser.Scene {
 
     this.updateCamera();
 
-    this.physics.add.collider(this.user, this.spawns);
     this.physics.add.collider(this.user, this.belowPlayer1);
     this.physics.add.collider(this.user, this.world1);
 
@@ -80,7 +81,7 @@ export default class MapScene extends Phaser.Scene {
 
   createFriend(){
       this.friends =this.add.group();
-      this.friendDict = {}
+      
       console.log(this.friends)  
   }
 
@@ -88,9 +89,9 @@ export default class MapScene extends Phaser.Scene {
      * @parameter x, y, deskKey : fspritekey for desk, chairkey : spritekey for chair
      * @return Desk : extends sprite, defined in entity/Desk.js
      */
-  createPortal(x, y){       
-      this.portal = this.add.circle(x, y, 200, 0xffffff, 0.5);
-      this.portalCollider = this.add.circle(x, y, 150);
+  createPortal(position){       
+      this.portal = this.add.circle(position.x, position.y, 200, 0xffffff, 0.5);
+      this.portalCollider = this.add.circle(position.x, position.y, 150);
       this.physics.world.enable(this.portalCollider);
       this.portal.setScale(1, 0.2);
       this.portalCollider.setScale(1, 0.2);
@@ -114,8 +115,8 @@ export default class MapScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, this.belowPlayer1.displayWidth, this.belowPlayer1.displayHeight);
   }
 
-  onStateUpdate(positionList){
-    console.log('update');
+  onLoopPosition(positionList){
+    console.log('update :', this.friendDict);
     if(this.friends === undefined) {return;}
     Object.keys(positionList).forEach(function(id) {        
         if (id === this.socket.id) {return;}
@@ -123,7 +124,7 @@ export default class MapScene extends Phaser.Scene {
         let position = positionList[id]
         if (Object.keys(this.friendDict).includes(id)){
             console.log(id, this.socket.id);
-            this.friendDict[id].updateMovement(position);
+            this.friendDict[id].updateMovement(position.x, position.y);
         } else {        
             let friend = new Friend(this, position.x, position.y, 'user-wizard', 'wizard', id).setScale(1);
             this.friends.add(friend);
@@ -132,13 +133,21 @@ export default class MapScene extends Phaser.Scene {
     }.bind(this))
   }
 
+  onRemoveFriend(id){
+    this.friendDict[id].destroy();
+    delete this.friendDict[id];
+  }
+
   setEventHandlers(){
     // Description
     // socket.on('event', eventHandler)
   
     // New user message received
-    this.socket.on('stateUpdate', this.onStateUpdate.bind(this));
-    this.socket.on("LOOP_POSITION", this.onStateUpdate.bind(this));
+    // this.socket.on('stateUpdate', this.onStateUpdate.bind(this));
+    if(this.socket !== undefined){
+      this.socket.on("LOOP_POSITION", this.onLoopPosition.bind(this));
+      this.socket.on("RESPONSE_REMOVE_FRIEND", this.onRemoveFriend.bind(this));
+    }
   }
 
   changeScene(newScene, index){
@@ -147,7 +156,10 @@ export default class MapScene extends Phaser.Scene {
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
         // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
         // this.doUpdate = false
-        this.scene.start(newScene, {index : index, prevScene: this.key}) ;
+        let data = {index : index, prevScene: this.key};
+        console.log('this.scene.start:', data);
+        this.socket.removeAllListeners();
+        this.scene.start(newScene, data);
     })  
   }   
     // if (newScene === 'Study'){

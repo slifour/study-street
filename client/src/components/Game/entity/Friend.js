@@ -4,10 +4,12 @@ import Status from './Status';
 export default class Friend extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, spriteKey, animSuffix, id) {
     super(scene, x, y, spriteKey);
+    this.velocity = 200;
     this.scene = scene;
     this.scene.add.existing(this);
     this.scene.physics.world.enable(this);
     this.id = id;
+    // this.setCollideWorldBounds(true);
 
     this.animName = {
       'idle': 'user-idle-' + animSuffix,
@@ -34,8 +36,46 @@ export default class Friend extends Phaser.Physics.Arcade.Sprite {
     this.play(state, true);    
   }
 
-  updateMovement(position) {
-    this.setPosition(position.x, position.y);
+  updateMovement(x, y) {
+    console.log("Friend.updateMovement()", x, y)
+
+    this.stop = true;
+    let animState = this.animName.idle;
+
+    // Move left
+    if (this.x > x) {
+      animState = this.animName.left;
+      this.stop = false;
+    } 
+    // Move right
+    else if (this.x < x) {
+      animState = this.animName.right;
+      this.stop = false;
+    }
+    // Move up
+    if (this.y < y) {
+      animState = this.animName.up;
+      this.stop = false;
+    }
+    // Move down
+    else if (this.y > y) {
+      animState = this.animName.down;
+      this.stop = false;
+    }
+
+    this.updateAnimation(animState)
+    
+    // this.setPosition(x, y);
+    let duration = Phaser.Math.Distance.Between(this.x, this.y, x, y) / this.velocity;
+    let moveTween = this.scene.tweens.add({
+      targets : this,
+      x : x,
+      y: y,
+      ease : 'Linear',
+      duration: duration,
+      repeat : 0,
+    })
+
   }
 
   /* Status display methods */

@@ -1,13 +1,6 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
 import styles from "./ui.module.css";
-import { LoginUserContext } from '../../App';
-import socket from '../../socket';
-import GroupIcon from './GroupIcon';
 import OverlayButton from './OverlayButton';
-import GroupMemberList from './GroupMemberList';
-import uniqueString from 'unique-string';
-import styled from 'styled-components';
-import Modal from 'react-overlays/Modal';
 import { GameContext } from '../../App';
 // import Button from 'react-bootstrap/Button'
 

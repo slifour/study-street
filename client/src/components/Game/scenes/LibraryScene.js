@@ -9,8 +9,8 @@ export default class Library extends MapScene {
       super('Library');
     }
 
-    init() {
-        super.init();              
+    init(data) {
+        super.init(data);              
         this.bufferWidth = 10
         this.firstOverlap = true 
         this.groupAreas = {};      
@@ -39,10 +39,9 @@ export default class Library extends MapScene {
         this.setDeskCollider()
         this.setEventHandlers();
         this.socket.emit("initializeLibrary");
-        let x = this.world1.displayWidth/2;
-        let y = this.world1.displayHeight;
-        x = 1000;
-        y = 250;
+        let portalPosition = {x : this.world1.displayWidth/2, y : this.world1.displayHeight};
+        portalPosition.x = 1000;
+        portalPosition.y = 250;
         super.createPortal(x, y);
         this.assignGroupArea(2);
     }
