@@ -73,6 +73,7 @@ export default function ChecklistGroup() {
                     notYetUsers = {JSON.parse(JSON.stringify(notYetUsers))}
                     percentGauge = {percentGauge}
                     key = {quest.questID}
+                    questID = {quest.questID}
                 ></SingleQuest>)
             
             doneUsers = [];

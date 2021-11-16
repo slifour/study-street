@@ -4,7 +4,6 @@ import styles from './checklist.module.css'
 
 import { LoginUserContext } from '../../App';
 import { ReloadContext } from "../request/ReloadContext";
-import useLiveReload from '../request/useLiveReload';
 import useRequest from '../request/useRequest';
 
 export default function SingleChecklist(props) {
@@ -33,34 +32,32 @@ export default function SingleChecklist(props) {
         return styles.checklistContent;
     }
 
-    //no need of payload
-    // const onResponseOK = useCallback(({payload}) => {
-    //     setReloadTime(new Date());
-    // }, [setReloadTime]);
+    const onResponseOK = useCallback(({payload}) => {
+        setReloadTime(new Date());
+    }, [setReloadTime]);
 
-    // const onResponseFail = useCallback(({payload}) => {
-    // }, []);
+    const onResponseFail = useCallback(({payload}) => {
+    }, []);
 
-    // const makePayload = useCallback(() => ({
-    //     userID: loginUser.userID,
-    //     checklistID: props.checklistID,
-    //     isDone: isDone
-    // }), [isDone]);
+    const makePayload = useCallback(() => ({
+        userID: loginUser.userID,
+        checklistID: props.checklistID,
+        isDone: isDone
+    }), [isDone]);
 
-    // const [request, innerReloadTimeRef] = useRequest({
-    //     requestType: "REQUEST_TOGGLE_CHECKLIST",
-    //     responseType: "RESPONSE_TOGGLE_CHECKLIST",
-    //     onResponseOK,
-    //     onResponseFail,
-    //     makePayload
-    // });
-
-    // useLiveReload({request, innerReloadTimeRef});
+    const [request, innerReloadTimeRef] = useRequest({
+        requestType: "REQUEST_TOGGLE_CHECKLIST",
+        responseType: "RESPONSE_TOGGLE_CHECKLIST",
+        onResponseOK,
+        onResponseFail,
+        makePayload
+    });
 
     const handleToggle = () => {
-        setDone(!isDone);
-        //socket emit
-        // request();
+        if (props.groupParticipation == '') {
+            setDone(!isDone);
+            request();
+        }
     }
 
     return(

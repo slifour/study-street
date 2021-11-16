@@ -5,7 +5,6 @@ import styled from 'styled-components';
 
 import { LoginUserContext } from '../../App';
 import { ReloadContext } from "../request/ReloadContext";
-import useLiveReload from '../request/useLiveReload';
 import useRequest from '../request/useRequest';
 
 const GaugeBox = styled.div`
@@ -24,7 +23,7 @@ export default function SingleQuest(props) {
     //**socket related functions**
     const onResponseOK = useCallback(({payload}) => {
         setReloadTime(new Date());
-    }, [setReloadTime]);
+      }, [setReloadTime]);
 
     const onResponseFail = useCallback(({payload}) => {
     }, []);
@@ -35,14 +34,12 @@ export default function SingleQuest(props) {
     }), [loginUser.userID]);
 
     const [request, innerReloadTimeRef] = useRequest({
-        requestType: "REQUEST_CURRENT_GROUP",
-        responseType: "RESPONSE_CURRENT_GROUP",
+        requestType: "REQUEST_ACCEPT_QUEST",
+        responseType: "RESPONSE_ACCEPT_QUEST",
         onResponseOK,
         onResponseFail,
         makePayload
     });
-
-    useLiveReload({request, innerReloadTimeRef});
 
     const getHeader = () => {
         if (isAccepted) {
