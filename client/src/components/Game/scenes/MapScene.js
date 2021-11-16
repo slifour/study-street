@@ -21,17 +21,16 @@ import Book from '../entity/Book';
 
 export default class MapScene extends Phaser.Scene {
   constructor(key) {
-    super(key);
-    this.socket = socket;   
+    super(key);  
     this.key = key;    
-    this.world1 = null;
   }
 
   init(data) {   
-    console.log('init :', data);
+    this.socket = socket; 
+    this.id = this.registry.get("loginUser");
     this.prevScene = (data === undefined) ? undefined : data.prevScene
-    console.log("Welcome to ", this.key);  
     this.friendDict = {};
+    console.log("Welcome to ", this.key);  
   }
 
   preload() {
@@ -52,12 +51,15 @@ export default class MapScene extends Phaser.Scene {
   }
 
   create() {    
+    /** Create Animations */
     createCharacterAnimsWizard(this.anims);
     createCharacterAnimsGirl(this.anims);
+
+    /** Create Inputs */
     this.cursors = this.input.keyboard.createCursorKeys();
 
+    /** Create User Avatar */
     this.createUser();
-    this.createFriend();
   }
 
   update() {
@@ -69,37 +71,20 @@ export default class MapScene extends Phaser.Scene {
     this.user = new User(this, 800, 400, 'user-girl', 'girl').setScale(3/100 * 1.2);
     this.user.init();
     this.user.setDepth(1);
-
-    this.updateCamera();
-
     this.physics.add.collider(this.user, this.belowPlayer1);
     this.physics.add.collider(this.user, this.world1);
 
-    // this.physics.add.overlap(
-    //     this.bufferToFirst,
-    //     this.user,
-    //     this.handleEnterBuffer,
-    //     undefined,
-    //     this
-    // );
+    this.updateCamera();
   }
 
-  createFriend(){
-      this.friends =this.add.group();
-      
-      console.log(this.friends)  
-  }
-
-    /** createPortal
-     * @parameter x, y, deskKey : fspritekey for desk, chairkey : spritekey for chair
-     * @return Desk : extends sprite, defined in entity/Desk.js
-     */
+  /** createPortal
+   * @parameter x, y, deskKey : fspritekey for desk, chairkey : spritekey for chair
+   * @return Desk : extends sprite, defined in entity/Desk.js
+   */
   createPortal(position){       
-      this.portal = this.add.circle(position.x, position.y, 200, 0xffffff, 0.5);
-      this.portalCollider = this.add.circle(position.x, position.y, 150);
+      this.portal = this.add.circle(position.x, position.y, 200, 0xffffff, 0.5).setScale(1, 0.2);
+      this.portalCollider = this.add.circle(position.x, position.y, 150).setScale(1, 0.2);
       this.physics.world.enable(this.portalCollider);
-      this.portal.setScale(1, 0.2);
-      this.portalCollider.setScale(1, 0.2);
       this.portalCollider.body.setImmovable(true);
       this.physics.add.collider(this.user, this.portalCollider, (() => {
           this.user.disableBody(false);
@@ -124,11 +109,10 @@ export default class MapScene extends Phaser.Scene {
     console.log('update :', this.friendDict);
     if(this.friends === undefined) {return;}
     Object.keys(positionList).forEach(function(id) {        
-        if (id === this.socket.id) {return;}
+        if (id === this.id) {return;}
         console.log('Not returned');
         let position = positionList[id]
         if (Object.keys(this.friendDict).includes(id)){
-            console.log(id, this.socket.id);
             this.friendDict[id].updateMovement(position.x, position.y);
         } else {        
             let friend = new Friend(this, position.x, position.y, 'user-wizard', 'wizard', id).setScale(1);
@@ -139,7 +123,7 @@ export default class MapScene extends Phaser.Scene {
     }.bind(this))
   }
 
-  onRemoveFriend(id){
+  onResponseRemoveFriend(id){
     this.friendDict[id].destroy();
     delete this.friendDict[id];
   }
@@ -152,7 +136,7 @@ export default class MapScene extends Phaser.Scene {
     // this.socket.on('stateUpdate', this.onStateUpdate.bind(this));
     if(this.socket !== undefined){
       this.socket.on("LOOP_POSITION", this.onLoopPosition.bind(this));
-      this.socket.on("RESPONSE_REMOVE_FRIEND", this.onRemoveFriend.bind(this));
+      this.socket.on("RESPONSE_REMOVE_FRIEND", this.onResponseRemoveFriend.bind(this));
     }
   }
 

@@ -1,6 +1,7 @@
 
 
 import Phaser from 'phaser';
+import Tooltip from './Tooltip';
 
 export default class Chair extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, spriteKey, dir, id = 0) {
@@ -11,6 +12,7 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
     this.id = id
     this.dir = dir;    
     this.gap = 50;
+    this.allowed = true;
     console.log('New Chair:', x, y)
   }
 
@@ -19,10 +21,10 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
       this.setInteractive();
     }
     this.desk = desk;    
-    this.setInteractions();
+    this.setInteractions(true);
   }
 
-  setInteractions(){
+  setInteractions(allowed){
     this.on('pointerover', this.onPointerOver, this); 
     this.on('pointerout', this.onPointerout, this); 
     this.on('pointerdown', this.onPointerDown, this); 
@@ -42,9 +44,10 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
   }
 
   onPointerDown(){
-    console.log("onPointerDown()")
+    if(!this.allowed){
+      return;
+    }
     if (this.scene.user === undefined) {
-      console.log('user undefined')
       return;  
     }    
     this.sit();
@@ -52,18 +55,27 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
   }
 
   onPointerOver(){
-    console.log("onPointerOver()")
-    this.setScale(1.2)
+    if(this.allowed){
+      this.setScale(1.2);
+    }
+    else{
+      this.onPointOverNotAllowed();
+    }
     // if (this.alert !== undefined){
     //   this.alert.setPosition(this.alert.x + this.displayWidth*(this.size/1.5-this.size/2), this.alert.y - this.displayHeight*0.1)
     // }
   }  
 
   onPointerout(){
-    this.resetScale()
+    this.resetScale();
     // if (this.alert !== undefined){
     //   Phaser.Display.Align.To.TopCenter(this.alert, this, 0);
     // }
+  }
+
+  onPointOverNotAllowed(){
+    const textNotAllowed = "Allowed only for groupName"
+    const tooltip = new Tooltip(this.scene, this, textNotAllowed)
   }
 
   resetScale(){
