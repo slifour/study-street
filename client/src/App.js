@@ -1,12 +1,12 @@
 import React, { useRef, useEffect, useState } from "react";
 import './App.css';
-import MenuBar from "./components/ui/MenuBar";
 import Game from "./components/Game";
 import Login from "./components/User/LogIn";
 import Avatars from "./components/ui/Avatars";
-import {GroupListButton} from "./components/ui/GroupList";
 import {ConfirmAlert, QuickMoveButton} from "./components/ui/QuickMove";
 import HomeMain from "./components/ui/Home/HomeMain";
+import MenuBar from "./components/ui/MenuBar";
+import StudyMain from "./components/ui/Study/StudyMain";
 
 
 /* Example of LoginUserContext value
@@ -33,7 +33,7 @@ function App() {
     if (game.current !== null && game.current.game) {
       game.current.game.registry.set("loginUser", loginUser);
     }
-  }, [loginUser])
+  }, [game.current, loginUser]);
 
   useEffect(() => {
     let timeout = null;
@@ -62,19 +62,19 @@ function App() {
       <GameContext.Provider value={ {scene, emitToGame} }>
       <div className={fadeProp.fade}>
         <div className="content">
-          <HomeMain></HomeMain>
+          { scene === "Home" || scene === "Library" ? <HomeMain/> : null }
           <MenuBar/>
-          {/* <Avatars/> */}
-          {/* <GroupListButton></GroupListButton> */}
-          <QuickMoveButton></QuickMoveButton>
-          <ConfirmAlert show = {showConfirmAlert} setShow = {setshowConfirmAlert}></ConfirmAlert>
+          { scene !== "Home" && scene !== "Library" ? <Avatars/> : null } {/* TODO: Home scene을 만들어 Library scene과 분리하기 */}
+          { scene === "Study" ? <StudyMain/> : null }
+          <QuickMoveButton emitToGame = {emitToGame}/>
+          <ConfirmAlert show = {showConfirmAlert} setShow = {setshowConfirmAlert}/>
         </div>
         <div className="game-container">
           <Game ref={game}/>
         </div>
       </div>
       <div>
-        <Login></Login>
+        <Login/>
         {/* <UserInfo></UserInfo> */}
         {/* <InvitationView></InvitationView> */}
         {/* <GroupView></GroupView>     */}

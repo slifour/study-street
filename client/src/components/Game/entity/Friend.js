@@ -1,4 +1,7 @@
 import Phaser, { GameObjects } from "phaser";
+import uniqueString from 'unique-string';
+import socket from '../../../socket';
+import { getParsedDuration } from '../utils/Time';
 import Status from './Status';
 
 export default class Friend extends GameObjects.Container{
@@ -35,8 +38,12 @@ export default class Friend extends GameObjects.Container{
     this.prepareStatusView();
     /* Status display */
     this.setInteractive();
-    this.on('pointerover', this.onPointerOver);
-    this.on('pointerout', this.onPointerOut);   
+    this.on('pointerover', this.onPointerOver); 
+    this.on('pointerout', this.onPointerOut);
+
+    this.requestKey = null;
+    this.onResponseOK = null;
+    this.onResponseFail = null;
   }
 
   /* Status display methods */
@@ -48,19 +55,55 @@ export default class Friend extends GameObjects.Container{
   }
 
   onPointerOver() {
+    console.log("PointOver")
     /* 플레이어를 호버할 때 status view를 보여주기 */
-    const dummyUser = {
-        "userID": "hyeon",
-        "userName": "현",
-        "status": "Developing objects in virtual space",
+
+    // TODO: 씬에 들어온 다른 플레이어의 ID를 가져오기
+    const dummyID = "haeseul";
+
+    const requestType = "REQUEST_MY_PROFILE";
+    const responseType = "RESPONSE_MY_PROFILE";
+    this.requestKey = uniqueString();
+
+    this.onResponseOK = ({payload}) => {
+      console.log("OK: ", payload);
+      this.statusView.text = `${dummyID}: ${getParsedDuration(payload.todayStudyTime)}`;
+      this.statusView.update();
     };
-    this.statusView.text = dummyUser.status;
+    
+    this.onResponseFail = ({payload}) => {
+      console.warn("Phaser: ", payload.msg || "Failed to load friend's profile");
+    };
+    
+    this.onResponse = ({responseType, requestKey, status, payload}) => {
+      if (requestKey === this.requestKey) {
+        console.log("Phaser request: got response ", {responseType, requestKey, status, payload});
+        switch (status) {
+          case "STATUS_OK": 
+            this.onResponseOK && this.onResponseOK({requestKey, status, payload});
+          break;
+          case "STATUS_FAIL":
+            this.onResponseFail && this.onResponseFail({requestKey, status, payload});
+            break;
+        }
+      }
+    }
+
+    socket.on(responseType, this.onResponse);
+
+    socket.emit(requestType, {
+      requestUser: this.scene.game.registry.get("loginUser").userID,
+      requestKey: this.requestKey,
+      requestType,
+      payload: { userID: dummyID }
+    });
     this.statusView.setActive(true).setVisible(true);
-    this.statusView.update();
   }
 
   onPointerOut() {
+    const responseType = "RESPONSE_MY_PROFILE";
     this.statusView.setActive(false).setVisible(false);
+    socket.off(responseType, this.onResponse);
   }
 
   updateMovement(x, y) {
@@ -107,7 +150,6 @@ export default class Friend extends GameObjects.Container{
   update(){
     this.statusView.update();
   }
-
 } 
 
 class FriendSprite extends Phaser.Physics.Arcade.Sprite {
@@ -134,58 +176,4 @@ class FriendSprite extends Phaser.Physics.Arcade.Sprite {
   updateAnimation(state){
     this.play(state, true);    
   }
-
-  /* Status display methods */
-  prepareStatusView() {
-    const initialtext = "Loading status..";
-    this.statusView = new Status(this.scene, this, initialtext);
-    this.scene.add.existing(this.statusView);
-    this.statusView.setActive(false).setVisible(false);
-  }
-
-  onPointerOver() {
-    console.log("PointOver")
-    /* 플레이어를 호버할 때 status view를 보여주기 */
-    const dummyUser = {
-        "userID": "hyeon",
-        "userName": "현",
-        "status": "Developing objects in virtual space",
-    };
-
-    this.statusView.text = dummyUser.status;
-    this.statusView.setActive(true).setVisible(true);
-  }
-
-  onPointerOut() {
-    this.statusView.setActive(false).setVisible(false);
-  }
-
-  update() {
-    this.statusView.update();
-    // this.updateMovement(position);
-  }
 }
-
-  // prepareStatusView(){
-  //   this.textView = this.scene.add.text(0, -(this.avatar.height/2 + this.statusPadding), this.status, { 
-  //   // this.textView = this.scene.add.text(0, 0, this.status, { 
-  //       fontSize: '16px', 
-  //     fontFamily: 'Lato',
-  //     color: '#dddddd', 
-  //     align:'center', });
-  //   this.textView.setOrigin(0.5);
-  //   this.graphics = this.scene.add.graphics(0, 0);
-  //   this.graphics.fillStyle(0x232323, 0.6);
-  
-  //   const width = this.textView.width + 2 * this.paddingX;
-  //   const height = this.textView.height + 2 * this.paddingY;
-  //   const roundRadius = height / 2;
-  //   this.graphics.fillRoundedRect(
-  //     this.textView.x - this.paddingX, this.textView.y - this.paddingY, 
-  //     width, height, roundRadius);
-
-  //   this.graphics.setActive(false)
-  //   this.graphics.setVisible(false);    
-  //   this.textView.setActive(false)
-  //   this.textView.setVisible(false);
-  // } 
