@@ -42,7 +42,7 @@ export default class Library extends MapScene {
         let portalPosition = {x : this.world1.displayWidth/2, y : this.world1.displayHeight};
         portalPosition.x = 1000;
         portalPosition.y = 250;
-        super.createPortal(x, y);
+        super.createPortal(portalPosition);
         this.assignGroupArea(2);
     }
 

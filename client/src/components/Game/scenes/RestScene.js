@@ -28,9 +28,6 @@ export default class Rest extends MapScene {
         super.create();    
         this.setEventHandlers();
         let portalPosition = {x : this.world1.displayWidth/2, y : this.world1.displayHeight};
-        let portalX = ;
-        let portalY = ;
-        // x = 1000;
         portalPosition.y = 0;
         super.createPortal(portalPosition);
     };
