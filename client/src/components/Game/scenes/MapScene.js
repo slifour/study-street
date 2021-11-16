@@ -106,7 +106,7 @@ export default class MapScene extends Phaser.Scene {
 
   onLoopPosition(positionList){
     console.log('update :', this.friendDict);
-    if(this.friends === undefined) {return;}
+    if(this.friendDict === undefined) {return;}
     Object.keys(positionList).forEach(function(id) {        
         if (id === this.id) {return;}
         console.log('Not returned');
@@ -116,7 +116,7 @@ export default class MapScene extends Phaser.Scene {
         } else {        
             let friend = new Friend(this, position.x, position.y, 'user-wizard', 'wizard', id).setScale(1);
             friend.init();
-            this.friends.add(friend);
+            // this.friends.add(friend);
             this.friendDict[id] = friend;
         }    
     }.bind(this))

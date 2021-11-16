@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useState, useEffect } from "react"
 import HomeUserAvatar from "./HomeUserAvatar";
 import GroupIconList from "./GroupIconList";
 import CreateGroupButton from "./CreateGroupButton";
@@ -10,6 +10,7 @@ import styles from "./home.module.scss";
 import HomeInfoCreateGroup from "./HomeInfoCreateGroup";
 import HomeInfoGotInvitation from "./HomeInfoGotInvitation";
 import { LoginUserContext } from "../../../App";
+import { GameContext } from "../../../App";
 import HomeInfoCloseButton from "./HomeInfoCloseButton";
 import { ReloadContext } from "../../request/ReloadContext";
 
@@ -24,6 +25,11 @@ export default function HomeMain(props) {
   const [currentGroup, setCurrentGroup] = useState(null); // group
   const [reloadTime, setReloadTime] = useState(new Date());
   const {loginUser} = useContext(LoginUserContext);
+  const {disableInput} = useContext(GameContext);
+
+  // useEffect(() => {
+  //   disableInput();
+  // }, [])
 
   const onSetGroup = group => {
     setCurrentGroup(group);
