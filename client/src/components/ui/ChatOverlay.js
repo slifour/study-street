@@ -1,4 +1,4 @@
-import React, { useState, useLocation, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LoginUserContext } from "../../App";
 import socket from '../../socket';
 import styles from "./ui.module.css";
@@ -37,6 +37,7 @@ export default function ChatOverlay(props) {
     useEffect(() => {
         
         socket.emit('add user', props.userId);
+
         socket.on('chatconnect', () => {
         setIsConnected(true);    
         addChatMessage();
@@ -53,6 +54,7 @@ export default function ChatOverlay(props) {
         socket.on('chat message', (data) => {
         setchats(chats.concat(`${data.username} : ${data.message}`)); //수정 필요
         });
+
         return () => {
         socket.off('chatconnect');
         socket.off('chatdisconnect');
