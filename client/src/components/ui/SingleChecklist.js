@@ -10,6 +10,7 @@ export default function SingleChecklist(props) {
     const {loginUser} = useContext(LoginUserContext);
     const {setReloadTime} = useContext(ReloadContext);
     const [isDone, setDone] = useState(props.isDone);
+    let localDone = props.isDone;
 
     const getIconStyle = () => {
         if (isDone) {
@@ -42,8 +43,8 @@ export default function SingleChecklist(props) {
     const makePayload = useCallback(() => ({
         userID: loginUser.userID,
         checklistID: props.checklistID,
-        isDone: isDone
-    }), [isDone]);
+        isDone: localDone
+    }), [localDone]);
 
     const [request, innerReloadTimeRef] = useRequest({
         requestType: "REQUEST_TOGGLE_CHECKLIST",
@@ -55,6 +56,7 @@ export default function SingleChecklist(props) {
 
     const handleToggle = () => {
         if (props.groupParticipation == '') {
+            localDone = !isDone;
             setDone(!isDone);
             request();
         }
