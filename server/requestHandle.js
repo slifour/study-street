@@ -23,6 +23,8 @@ module.exports = onRequest = (socket, requestName, request) => {
     case RequestType.PENDING_INVITE_LIST: onRequestPendingInviteList(socket, request); break;
     case RequestType.CREATE_GROUP: onRequestCreateGroup(socket, request); break;
     case RequestType.JOIN_GROUP: onRequestJoinGroup(socket, request); break;
+    case RequestType.TODAY_STUDY_TIME: onRequestTodayStudyTime(socket, request); break;
+    case RequestType.UPDATE_TODAY_STUDY_TIME: onRequestUpdateTodayStudyTime(socket, request); break;
   }
   socket.emit("response", response);
 }
@@ -252,6 +254,66 @@ const onRequestJoinGroup = (socket, request) => {
   }
 
   delete invitationList[inviteKey];
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: {}
+  });
+}
+
+const onRequestTodayStudyTime = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.TODAY_STUDY_TIME;
+
+  if (!requestUser) {
+    return responseFail(socket, requestKey, responseType, "Login is required.");
+  }
+
+  let user;
+  if (payload.userID) {
+    if (userList[userID]) {
+      user = userList[userID];
+    } else {
+      return responseFail(socket, requestKey, responseType, "User does not exist.");
+    }
+  } else {
+    user = userList[requestUser];
+  }
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: user.todayStudyTime || 0
+  });
+}
+
+const onRequestUpdateTodayStudyTime = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.UPDATE_TODAY_STUDY_TIME;
+
+  if (!requestUser) {
+    return responseFail(socket, requestKey, responseType, "Login is required.");
+  }
+
+  let user;
+  if (payload.userID) {
+    if (userList[userID]) {
+      user = userList[userID];
+    } else {
+      return responseFail(socket, requestKey, responseType, "User does not exist.");
+    }
+  } else {
+    user = userList[requestUser];
+  }
+
+  if (!Number.isInteger(payload)) {
+    return responseFail(socket, requestKey, responseType, "Invalid payload");
+  }
+
+  user.todayStudyTime = payload;
 
   return socket.emit(responseType, {
     requestKey,

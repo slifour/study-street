@@ -27,8 +27,9 @@ export default function useRequest({
     innerReloadTimeRef.current = new Date();
   }, [loginUser, makePayload, requestType]);
 
-  const onResponse = useCallback(({requestKey, status, payload}) => {
+  const onResponse = useCallback(({responseType, requestKey, status, payload}) => {
     if (requestKey === usedRequestKeyRef.current) {
+      console.log("Use request: got response ", {responseType, requestKey, status, payload});
       switch (status) {
         case "STATUS_OK": 
           onResponseOK && onResponseOK({requestKey, status, payload});

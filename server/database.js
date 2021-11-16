@@ -25,24 +25,28 @@ class appointmentGoal extends Goal {
 
 let userList = {
   "eunki": {
-    "userID": "eunki",
-    "userName": "은기",
-    "status": "Developing user data system",
+    userID: "eunki",
+    userName: "은기",
+    status: "Developing user data system",
+    todayStudyTime: 7200 * 1000, // unit: ms
   },
   "haeseul": {
-    "userID": "haeseul",
-    "userName": "해슬",
-    "status": "Making chatting system",
+    userID: "haeseul",
+    userName: "해슬",
+    status: "Making chatting system",
+    todayStudyTime: 3600 * 1000,
   },
   "hyeon": {
-    "userID": "hyeon",
-    "userName": "현",
-    "status": "Putting map objects",
+    userID: "hyeon",
+    userName: "현",
+    status: "Putting map objects",
+    todayStudyTime: 0,
   },
   "jeonghoon": {
-    "userID": "jeonghoon",
-    "userName": "정훈",
-    "status": "Designing figma prototype",
+    userID: "jeonghoon",
+    userName: "정훈",
+    status: "Designing figma prototype",
+    todayStudyTime: 2400 * 1000,
   },
 };
 
