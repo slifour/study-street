@@ -1,7 +1,9 @@
+
 import React, { useCallback, useContext, useState } from 'react';
 import styles from './checklist.module.css'
 import SingleQuest from './SingleQuest';
 import ChecklistFloat from './ChecklistFloat';
+
 
 import { LoginUserContext } from '../../App';
 import useLiveReload from '../request/useLiveReload';
@@ -38,16 +40,13 @@ export default function ChecklistGroup() {
 
 
     const mapQuests = () => {
-        //console msg
-        console.log(loginUser.userID);
-        console.log(groupInfo);
-        console.log(membersInfo);
         let returnComponents = [];
         let doneUsers = [];
         let participatingUsers = [];
         let notYetUsers = [];
         let isAccepted;
         let percentGauge;
+
         const quests = groupInfo.quests;
         for (let key in quests) {
             let quest = quests[key];

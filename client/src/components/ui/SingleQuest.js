@@ -1,3 +1,4 @@
+
 import React, { useState, useContext, useCallback } from 'react';
 import styles from './checklist.module.css'
 import styled from 'styled-components';
@@ -42,7 +43,7 @@ export default function SingleQuest(props) {
     });
 
     useLiveReload({request, innerReloadTimeRef});
-    
+
     const getHeader = () => {
         if (isAccepted) {
             return styles.groupGoalBoxHeaderExpandable;

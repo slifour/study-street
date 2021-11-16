@@ -33,7 +33,7 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
     let margin = 0;
     if (this.dir === 'down'){
       indexer = 0;
-      margin = -10;
+      margin = -30;
     }
     this.scene.user.setPosition(this.x, this.y + margin);
     this.index = this.desk.getIndex(this)

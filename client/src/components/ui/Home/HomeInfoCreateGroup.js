@@ -7,6 +7,7 @@ import useRequest from "../../request/useRequest";
 export default function HomeInfoCreateGroup() {
   const {setReloadTime} = useContext(ReloadContext);
   const [groupName, setGroupName] = useState("");
+  const [colors, setColors] = useState([]);
 
   const onResponseOK = useCallback(() => {
     setReloadTime(new Date());
@@ -14,7 +15,7 @@ export default function HomeInfoCreateGroup() {
   const onResponseFail = useCallback(({payload}) => {
     alert(payload.msg || "Failed to create a group (client msg)");
   }, []);
-  const makePayload = useCallback(() => ({groupName}), [groupName]);
+  const makePayload = useCallback(() => ({groupName, colors}), [groupName, colors]);
 
   const [request, innerReloadTimeRef] = useRequest({
     requestType: "REQUEST_CREATE_GROUP",

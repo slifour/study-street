@@ -3,6 +3,13 @@ import User from '../entity/User';
 import Friend from '../entity/Friend';
 import socket from '../../../socket';
 import { createCharacterAnimsGirl, createCharacterAnimsWizard } from '../anims/CharacterAnims';
+import Study from './StudyScene';
+import GroupArea from '../entity/GroupArea';
+import Desk from '../entity/Desk';
+import Tooltip from '../entity/Tooltip';
+import Book from '../entity/Book';
+// import socketIOClient from "socket.io-client";
+// const ENDPOINT = "http://localhost:4001";
 /** 
  * class MapScene
  * @ extends : Phaser.Scene 
@@ -20,9 +27,11 @@ export default class MapScene extends Phaser.Scene {
     this.world1 = null;
   }
 
-  init() {    
+  init(data) {   
+    console.log('init :', data);
+    this.prevScene = (data === undefined) ? undefined : data.prevScene
     console.log("Welcome to ", this.key);  
-    this.portalDest = {'Library' : 'Rest', 'Rest' : 'Library'}
+    this.friendDict = {};
   }
 
   preload() {
@@ -38,9 +47,8 @@ export default class MapScene extends Phaser.Scene {
         frameWidth: 28,
         frameHeight: 35
     });
-    this.load.html('newArtifact', 'assets/NewArtifact.html')
-    this.load.html('alert', 'assets/NewAlert.html')
-    // this.load.image('portal', 'assets/images/glow.png');
+    this.load.html('newArtifact', 'assets/NewArtifact.html');
+    this.load.html('alert', 'assets/NewAlert.html');
   }
 
   create() {    
@@ -52,6 +60,11 @@ export default class MapScene extends Phaser.Scene {
     this.createFriend();
   }
 
+  update() {
+    this.user.update(this.cursors);
+    Object.values(this.friendDict).forEach(friend => {friend.update();});
+  };
+
   createUser() {
     this.user = new User(this, 800, 400, 'user-girl', 'girl').setScale(3/100 * 1.2);
     this.user.init();
@@ -59,7 +72,6 @@ export default class MapScene extends Phaser.Scene {
 
     this.updateCamera();
 
-    this.physics.add.collider(this.user, this.spawns);
     this.physics.add.collider(this.user, this.belowPlayer1);
     this.physics.add.collider(this.user, this.world1);
 
@@ -74,7 +86,7 @@ export default class MapScene extends Phaser.Scene {
 
   createFriend(){
       this.friends =this.add.group();
-      this.friendDict = {}
+      
       console.log(this.friends)  
   }
 
@@ -82,24 +94,23 @@ export default class MapScene extends Phaser.Scene {
      * @parameter x, y, deskKey : fspritekey for desk, chairkey : spritekey for chair
      * @return Desk : extends sprite, defined in entity/Desk.js
      */
-  createPortal(x, y){       
-      this.portal = this.add.circle(x, y, 200, 0xffffff, 0.5);
-      this.portalCollider = this.add.circle(x, y, 150);
+  createPortal(position){       
+      this.portal = this.add.circle(position.x, position.y, 200, 0xffffff, 0.5);
+      this.portalCollider = this.add.circle(position.x, position.y, 150);
       this.physics.world.enable(this.portalCollider);
       this.portal.setScale(1, 0.2);
       this.portalCollider.setScale(1, 0.2);
       this.portalCollider.body.setImmovable(true);
       this.physics.add.collider(this.user, this.portalCollider, (() => {
           this.user.disableBody(false);
-          let newScene = this.portalDest[this.key];
-          this.changeScene(newScene, undefined);
+          let newScene = this.key === 'Library'? 'Rest' : 'Library';
+          this.changeScene(newScene, null);
       }));
   }
 
   updateCamera() {    
     this.cameras.main.startFollow(this.user);
     this.cameras.main.roundPixels = true; // avoid tile bleed
-    console.log('camera', 0, 0, this.world1.displayWidth, this.world1.displayHeight);
     /**
      * 주석 처리된 경우 카메라가 맵 밖으로까지 이동해서 맵 바깥쪽 어두운 부분이 보입니다.
      * setBounds 를 다음과 같이 하면 카메라가 맵 밖으로 안나가게 가둬둘 수 있습니다. 문제는
@@ -109,36 +120,63 @@ export default class MapScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, this.belowPlayer1.displayWidth, this.belowPlayer1.displayHeight);
   }
 
-  onStateUpdate(users){
+  onLoopPosition(positionList){
+    console.log('update :', this.friendDict);
     if(this.friends === undefined) {return;}
-    Object.keys(users).forEach(function(id) {        
+    Object.keys(positionList).forEach(function(id) {        
         if (id === this.socket.id) {return;}
-
         console.log('Not returned');
-        let user = users[id]
+        let position = positionList[id]
         if (Object.keys(this.friendDict).includes(id)){
             console.log(id, this.socket.id);
-            this.friendDict[id].updateMovement(user.position);
+            this.friendDict[id].updateMovement(position.x, position.y);
         } else {        
-            let friend = new Friend(this, user.position.x, user.position.y, 'user-wizard', 'wizard', id).setScale(1);
+            let friend = new Friend(this, position.x, position.y, 'user-wizard', 'wizard', id).setScale(1);
+            friend.init();
             this.friends.add(friend);
             this.friendDict[id] = friend;
         }    
     }.bind(this))
   }
-/** 
- * @socketEventHandlers
- * @description
- * socket.on('event', eventHandler) */
-  setEventHandlers(){
-    this.socket.on('stateUpdate', this.onStateUpdate.bind(this));
+
+  onRemoveFriend(id){
+    this.friendDict[id].destroy();
+    delete this.friendDict[id];
   }
 
-  changeScene(newScene, data){
+  setEventHandlers(){
+    // Description
+    // socket.on('event', eventHandler)
+  
+    // New user message received
+    // this.socket.on('stateUpdate', this.onStateUpdate.bind(this));
+    if(this.socket !== undefined){
+      this.socket.on("LOOP_POSITION", this.onLoopPosition.bind(this));
+      this.socket.on("RESPONSE_REMOVE_FRIEND", this.onRemoveFriend.bind(this));
+    }
+  }
+
+  changeScene(newScene, index){
     this.game.events.emit("changeScene", newScene);
     this.cameras.main.fadeOut(1000, 0, 0, 0)
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+        // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
+        // this.doUpdate = false
+        let data = {index : index, prevScene: this.key};
+        console.log('this.scene.start:', data);
+        this.socket.removeAllListeners();
         this.scene.start(newScene, data);
     })  
-  } 
+  }   
+    // if (newScene === 'Study'){
+    //   this.scene.start(newScene);
+    // }
+    // else{
+    //   this.cameras.main.fadeOut(1000, 0, 0, 0)
+    //   this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+    //       // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
+    //       // this.doUpdate = false
+    //       this.scene.start(newScene);
+    //   })  
+    // }
 }

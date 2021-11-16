@@ -60,17 +60,18 @@ function App() {
   return (
     <LoginUserContext.Provider value={ {loginUser, setLoginUser} }>
       <GameContext.Provider value={ {scene, emitToGame} }>
-      <div className={fadeProp}>
-      <div className="content">
-        <HomeMain></HomeMain>
-        <MenuBar/>
-        {/* <Avatars/> */}
-        <QuickMoveButton emitToGame = {emitToGame}></QuickMoveButton>
-        <ConfirmAlert show = {showConfirmAlert} setShow = {setshowConfirmAlert}></ConfirmAlert>
-      </div>
-      <div className="game-container">
-        <Game ref={game}/>
-      </div>
+      <div className={fadeProp.fade}>
+        <div className="content">
+          <HomeMain></HomeMain>
+          <MenuBar/>
+          {/* <Avatars/> */}
+          {/* <GroupListButton></GroupListButton> */}
+          <QuickMoveButton></QuickMoveButton>
+          <ConfirmAlert show = {showConfirmAlert} setShow = {setshowConfirmAlert}></ConfirmAlert>
+        </div>
+        <div className="game-container">
+          <Game ref={game}/>
+        </div>
       </div>
       <div>
         <Login></Login>
