@@ -9,8 +9,8 @@ export default class Rest extends MapScene {
     constructor() {
       super('Rest');
     }
-    init() {
-        super.init()
+    init(data) {
+        super.init(data);
         this.game.registry.set("scene", false);
         this.bufferWidth = 10
     };
@@ -27,17 +27,14 @@ export default class Rest extends MapScene {
         this.createMap();    
         super.create();    
         this.setEventHandlers();
-        let x = this.world1.displayWidth/2;
-        let y = this.world1.displayHeight;
-        // x = 1000;
-        y = 0;
-        super.createPortal(x, y);
+        let portalPosition = {x : this.world1.displayWidth/2, y : this.world1.displayHeight};
+        portalPosition.y = 0;
+        super.createPortal(portalPosition);
     };
 
     update() {
-        this.user.update(this.cursors);
-        Object.values(this.friendDict).forEach(friend => {friend.update();});
-    };
+        super.update(); 
+    }
 
     /**assignGroupArea
      * @parameter deskId: id of desk to assign, groupId : to be implemented

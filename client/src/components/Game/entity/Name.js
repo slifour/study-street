@@ -1,6 +1,6 @@
 import Phaser, { GameObjects } from "phaser";
 
-export default class Status extends GameObjects.Container {
+export default class Name extends GameObjects.Container {
   /**
    * @param {Phaser.Scene} scene
    * @param {Phaser.GameObjects.Components.Transform} hostObject
@@ -17,13 +17,13 @@ export default class Status extends GameObjects.Container {
     this.marginY = 55;
 
     this.prevState = {
-      x: this.host.x,
-      y: this.host.y,
+      x: 0,
+      y: 0,
       text: this.text
     };
     
-    this.textView = this.scene.add.text(this.host.x, this.host.y, text, { 
-      fontSize: '16px', 
+    this.textView = this.scene.add.text(0, 0, text, { 
+      fontSize: '12px', 
       fontFamily: 'Lato',
       color: '#dddddd', });
     this.graphics = this.scene.add.graphics();
@@ -31,11 +31,20 @@ export default class Status extends GameObjects.Container {
     this.add(this.graphics);
     this.add(this.textView);
 
-    this.setDepth(50);
-  }
-  update() { 
-    if (!this.active) return;
+    this.graphics.fillStyle(0x232323, 0.6);
+  
+    const width = this.textView.width + 2 * this.paddingX;
+    const height = this.textView.height + 2 * this.paddingY;
+    const roundRadius = height / 2;
+    this.graphics.fillRoundedRect(
+      this.textView.x - this.paddingX, this.textView.y - this.paddingY, 
+      width, height, roundRadius);
 
+    this.update()
+
+  }
+
+  update() { 
     if (
       this.prevState.x !== this.host.x ||
       this.prevState.y !== this.host.y ||
@@ -43,18 +52,8 @@ export default class Status extends GameObjects.Container {
     ) {
       console.log("update status view");
       this.textView.text = this.text;
-      this.textView.x = this.host.x - 0.5 * this.textView.width;
-      this.textView.y = this.host.y - 0.5 * this.textView.height - this.marginY;
-  
-      this.graphics.clear();
-      this.graphics.fillStyle(0x232323, 0.6);
-  
-      const width = this.textView.width + 2 * this.paddingX;
-      const height = this.textView.height + 2 * this.paddingY;
-      const roundRadius = height / 2;
-      this.graphics.fillRoundedRect(
-        this.textView.x - this.paddingX, this.textView.y - this.paddingY, 
-        width, height, roundRadius);
+      this.x = this.host.x - 0.5 * this.textView.width;
+      this.y = this.host.y - 0.5 * this.textView.height - this.marginY;
 
       this.prevState = {
         x: this.host.x,

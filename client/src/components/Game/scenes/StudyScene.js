@@ -19,6 +19,7 @@ import Book from '../entity/Book';
 export default class Study extends Phaser.Scene {
   constructor() {
     super('Study');
+    this.key = 'Study'
     this.socket = socket;       
     console.log("Welcome to ", 'Study'); 
   }
@@ -27,7 +28,8 @@ export default class Study extends Phaser.Scene {
     console.log("Welcome to ", 'Study');  
     this.deskPosition = {x : 0 , y: 0};
     this.desk = null;
-    this.index = data;
+    this.index = data.index;
+    this.prevScene = data.prevScene; 
     console.log(this.index)
   }
 
@@ -58,8 +60,6 @@ export default class Study extends Phaser.Scene {
   create() {    
     this.createUser();
     this.createDesk(0, 0, 'desk', 'chair');
-    // const chairPosition = {x : 0, y : 0};    
-    console.log(this.index)
     const chair = this.desk.getAt(this.index);
     chair.sit();
     this.cameras.main.centerOn(this.desk.x + this.cameras.main.width/4 , this.desk.y);
@@ -115,11 +115,11 @@ export default class Study extends Phaser.Scene {
 
   changeScene(newScene){
     this.game.events.emit("changeScene", newScene);
-    this.cameras.main.fadeOut(1000, 0, 0, 0)
+    this.cameras.main.fadeOut(1000, 0, 0, 0);
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
         // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
         // this.doUpdate = false
-        this.scene.start(newScene);
+        this.scene.start(newScene, {prevScene: this.key});
     })  
 };
 
