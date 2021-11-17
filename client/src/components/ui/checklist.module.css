@@ -542,13 +542,13 @@
 }
 
 .modalContent {
-    height: 100px;
-    position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding-left: 30px;
+    justify-content: left;
+    padding-left: 60px;
     gap: 25px;
+
+    margin: auto 0;
 }
 
 .modalContentText {
@@ -558,7 +558,8 @@
 }
 
 .modalFooter {
-    height: 80px;
+    margin: 20px 0px;
+
     width: 440px;
     display: flex;
     justify-content: right;
@@ -692,4 +693,27 @@
     height: 1px;
     min-height: max-content;
     background-color: #E7E7E7;
+}
+
+.groupGoalInstructionSmall {
+    width: 80%;
+    margin: 0 auto;
+    min-height: min-content;
+    background: #CCCCCC;
+    box-shadow: 0px 4px 4px rgba(238, 238, 238, 0.50);
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 15px;
+    padding: 10px;
+    padding-left: 30px;
+}
+
+.modalContainer {
+    height: 275px;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
 }
