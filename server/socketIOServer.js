@@ -117,6 +117,13 @@ const SocketIOServer = () => {
 
   }
   
+  const onRequestMove = (socket, position) => {
+    let id = socket.id
+    if (env.roomDict[id] !== undefined){
+      env.roomDict[id].update(socket, id, position.x, position.y);
+    }
+  }
+
   let isChangedGroupList = true;
   const emitLoop = (stateChanged) => {
     isEmittingUpdates = true;        
@@ -136,35 +143,6 @@ const SocketIOServer = () => {
   const setLoops = () => {
     
   }
-
-  const onRequest = (socket, requestName, request) => {
-    console.log("Hi");
-    console.log("Got request:", request);
-    let requestUser, requestKey, requestType, payload;
-    try {
-      ({requestUser, requestKey, requestType, payload} = request);
-      if (requestName !== requestType) throw new Error();
-    } catch {
-      console.warn("Invalid request: ", request);
-      responseFail(socket, request.requestKey || "", ResponseType.OTHER, "Invalid request.");
-      return;
-    }
-    let response;
-    console.log('request :', request);
-    switch (requestType) {
-      case RequestType.MY_GROUP_LIST: onRequestMyGroupList(socket, request); break;
-      case RequestType.INVITE_FRIEND: onRequestInviteFriend(socket, request); break;
-      case RequestType.LOGIN: onRequestLogin(socket, request); break;
-      case RequestType.MY_PROFILE: onRequestMyProfile(socket, request); break;
-      case RequestType.PENDING_INVITE_LIST: onRequestPendingInviteList(socket, request); break;
-      case RequestType.CREATE_GROUP: onRequestCreateGroup(socket, request); break;
-      case RequestType.JOIN_GROUP: onRequestJoinGroup(socket, request); break;
-      case RequestType.CHANGE_SCENE: onRequestChangeScene(socket, request); break;
-      case RequestType.INITIALIZE: onRequestInitialize(socket, request); break;
-    }
-    socket.emit("response", response);
-  }
-
 
   /* 아직 오류 있음 */
   const onJoinGroup = (socket, groupID, userID) => {
@@ -187,22 +165,12 @@ const SocketIOServer = () => {
       io.to(room[groupID]).emit("leaveGroup", groupID, userID);
     });*/
   }
-  
-  /* 아직 오류 있음 */
-  /*const onSendGroupMessage = (socket, groupID, userID, msg) => {
-    a = groupID;
-    console.log('${userID} : ${msg}');
-    socket.to(groupList[a].member).emit('group chat message', {
-      username: userID,
-      message: msg
-    });
-  }*/
 
   /* 아직 오류 있음 */
   const onJoinChat = (socket, userID) => {
     if (addedUser) return;
     // we store the username in the socket session for this client
-    socket.username = username;
+    //socket.username = username;
     console.log("connected : "+userID);
     addedUser = true;
     socket.emit('chatconnect');
@@ -223,9 +191,19 @@ const SocketIOServer = () => {
   }
 
   /* 아직 오류 있음 */
-  const onSendPrivateMessage = (socket, senduserID, msg) => {
+  /*const onSendGroupMessage = (socket, groupID, userID, msg) => {
+    a = groupID;
+    console.log('${userID} : ${msg}');
+    socket.to(groupList[a].member).emit('group chat message', {
+      username: userID,
+      message: msg
+    });
+  }*/
+
+  /* 아직 오류 있음 */
+  const onSendPrivateMessage = (socket, senduserID, receiveuserID, msg) => {
     console.log('${senduserID} : ${msg}');
-    socket.broadcast.emit('chat message', { //to(userList[user1ID])
+    socket.to(userList[receiveuserID]).emit('chat message', {
       username: senduserID,
       message: msg
     });
