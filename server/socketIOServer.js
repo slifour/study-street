@@ -77,20 +77,22 @@ const SocketIOServer = () => {
       console.log("New client connected");
       socket.emit("socket.id", socket.id);      
       console.log(socket.id);
+      env.libraryRoom.init(io, socket);
+      env.restRoom.init(io, socket);
       setEventHandlers(socket);      
       logUsers()
     });
   }
 
+  
+
   /** Event Handlers */
   const setEventHandlers = (socket) => {
-    env.libraryRoom.init(io, socket);
-    env.restRoom.init(io, socket);
 
     /** socket.on('event', eventHandler.bind(null, socket)) */
-    socket.on("disconnect", onDisconnect.bind(null, socket))
     socket.on("REQUEST_MOVE", onRequestMove.bind(null, socket))  
-    
+
+    socket.on("disconnect", onDisconnect.bind(null, socket))
     socket.on("sceneUpdate", onSceneUpdate.bind(null, socket))  
     // socket.on("initialize", onInitialize.bind(null, socket))  
     socket.on("userLoginRequest", onUserLoginRequest.bind(null, socket))
@@ -108,6 +110,33 @@ const SocketIOServer = () => {
     });
     updateDate(socket);    
 
+  }
+
+  const onRequestMove = (socket, position) => {
+    let id = socket.id
+    if (env.roomDict[id] !== undefined){
+      env.roomDict[id].update(socket, id, position.x, position.y);
+    }
+  }
+  
+  let isChangedGroupList = true;
+  const emitLoop = (stateChanged) => {
+    isEmittingUpdates = true;        
+    if (stateChanged) {
+        stateChanged = false;
+        broadcast("LOOP_POSITION", positionList);
+        console.log("LOOP_POSITION", room)
+    }        
+    if (getNumUsers() > 1) {
+        setTimeout(emitLoop.bind(this), updateInterval);
+    } 
+    else {
+        isEmittingUpdates = false;
+    }
+  }
+
+  const setLoops = () => {
+    
   }
 
   const onNewArtifact = (socket) => {
@@ -141,12 +170,11 @@ const SocketIOServer = () => {
     user.position = positionData;
   }
   
-  const onRequestMove = (socket, position) => {
-    let id = socket.id;
-    if (env.roomDict[id]) {
-      env.roomDict[id].update(socket, position.x, position.y);
-    }
-  }
+  // const onRequestMove = (socket, id, position) => {
+  //   if (roomDict[id] !== undefined){
+  //     roomDict[id].update(socket, position.x, position.y);
+  //   }
+  // }
 
   const onSceneUpdate = (socket, scene) => {
     console.log('Client moved to {} scene'.format(scene))

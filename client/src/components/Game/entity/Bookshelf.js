@@ -3,28 +3,18 @@ import Desk from "./Desk";
 import Books from "./Books";
 import Book from './Book';
 
-export default class GroupArea extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, id = 0, color = '#ff0000', margin = 32, borderMargin = 128) {
+export default class Bookshelf extends Phaser.GameObjects.Container {
+    constructor(scene, x, y, bookshelfKey) {
         console.log(scene, x, y)
         super(scene, x, y);
         this.scene = scene;
         this.scene.add.existing(this);
         this.scene.physics.world.enable(this);
-        this.id = id
-        this.setSize(500, 500);      
-        this.setScale(1, 1);
-        this.borderMargin = borderMargin
-        this.margin = margin
-        this.color = color
         this.x = x
-        this.y = y
-        this.borderWidth = 3 
-        this.color = color
-        console.log('New GroupArea:', x, y)        
+        this.y = y      
     }
 
-    init(deskKey, chairKey, bookshelfKey) {
-        console.log('GroupArea.init():', deskKey, chairKey);        
+    init(bookshelfKey) {     
         this.createBookshelf(bookshelfKey);
         this.createBooks();
         Phaser.Display.Align.To.BottomLeft(this.books, this.bookshelf, -15, 5)
@@ -32,14 +22,12 @@ export default class GroupArea extends Phaser.GameObjects.Container {
 
     createBookshelf(bookshelfKey){
         let margin = -150;
-        let bookshelf = this.scene.physics.add.image(0, margin, bookshelfKey).setScale(1, 1.2);
+        this.bookshelf = this.scene.physics.add.image(0, margin, bookshelfKey).setScale(1, 1.2);
         // bookshelf.setSize(72);
         this.scene.add.existing(bookshelf);
         this.scene.physics.world.enable(bookshelf);
         this.add(bookshelf)
-        this.coordinate = bookshelf.getBottomLeft()
-        console.log(this.coordinate)
-        this.bookshelf = bookshelf
+        this.coordinate = this.bookshelf.getBottomLeft()
     }
 
     createBooks(){
@@ -77,18 +65,4 @@ export default class GroupArea extends Phaser.GameObjects.Container {
             }           
         }  
     } 
-
-    createDesk(deskKey, chairKey) {
-        let margin = 50;
-        console.log('GroupArea.createDesk():', deskKey, chairKey)
-        let desk = new Desk(this.scene, 0, margin, deskKey, chairKey)
-        this.add(desk)
-    }  
-
-    createBorder(){
-        console.log('createBorder:', this.displayWidth, this.displayHeight)
-        let border = this.scene.add.rectangle(0, 0, this. displayWidth + this.borderMargin, this.displayHeight + this.borderMargin);
-        border.setStrokeStyle(this.borderWidth, this.color)
-        this.add(border)
-    }
 }

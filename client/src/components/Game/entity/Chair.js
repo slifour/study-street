@@ -1,6 +1,7 @@
 
 
 import Phaser from 'phaser';
+import TooltipStatic from './TooltipStatic';
 
 export default class Chair extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, spriteKey, dir, id = 0) {
@@ -11,15 +12,16 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
     this.id = id
     this.dir = dir;    
     this.gap = 50;
-    console.log('New Chair:', x, y)
+    this.allowed = true;
+    console.log('New Chair:', x, y);
   }
 
-  init(desk, interactive){
-    if (interactive){
-      this.setInteractive();
-    }
-    this.desk = desk;    
-    this.setInteractions();
+  init(desk){    
+    this.desk = desk;        
+    this.tooltip = new TooltipStatic(this.scene, this.x+this.desk.x, this.y+this.desk.y, "");
+    console.log('init(chiar):', this.tooltip.x, this.tooltip.y)
+    this.setInteractive();
+    this.setInteractions(true);    
   }
 
   setInteractions(){
@@ -42,9 +44,10 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
   }
 
   onPointerDown(){
-    console.log("onPointerDown()")
+    if(!this.allowed){
+      return;
+    }
     if (this.scene.user === undefined) {
-      console.log('user undefined')
       return;  
     }    
     this.sit();
@@ -52,22 +55,38 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
   }
 
   onPointerOver(){
-    console.log("onPointerOver()")
-    this.setScale(1.2)
+    let text = "";
+    if(this.allowed){
+      this.setScale(1.2);
+      text = "Click to Start Study.";
+    }
+    else{
+      text= "Allowed only for groupName";
+    }
+    this.tooltip.setText(text);
+    this.tooltip.setActive(true).setVisible(true);
+
+    console.log(this.tooltip.active, this.tooltip.visible)
     // if (this.alert !== undefined){
     //   this.alert.setPosition(this.alert.x + this.displayWidth*(this.size/1.5-this.size/2), this.alert.y - this.displayHeight*0.1)
     // }
   }  
 
   onPointerout(){
-    this.resetScale()
+    this.resetScale();
+    this.tooltip.setVisible(false);
     // if (this.alert !== undefined){
     //   Phaser.Display.Align.To.TopCenter(this.alert, this, 0);
     // }
   }
 
+  // onPointOverNotAllowed(){
+  //   const textNotAllowed = "Allowed only for groupName";
+  //   const tooltip = new Tooltip(this.scene, this, textNotAllowed);
+  // }
+
   resetScale(){
-    this.setScale(1)
+    this.setScale(1);
   }
 }
 

@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-export default class Tooltip extends Phaser.GameObjects.Container {
+export default class HtmlModal extends Phaser.GameObjects.Container {
   constructor(scene, x, y, htmlKey, id=0) {
     super(scene, x, y);
     this.scene = scene;

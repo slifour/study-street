@@ -5,7 +5,7 @@ import socket from '../../../socket';
 import { createCharacterAnimsGirl, createCharacterAnimsWizard } from '../anims/CharacterAnims';
 import GroupArea from '../entity/GroupArea';
 import Desk from '../entity/Desk';
-import Tooltip from '../entity/Tooltip';
+import Tooltip from '../entity/HtmlModal';
 import Book from '../entity/Book';
 /** 
  * class StudyScene
