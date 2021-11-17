@@ -132,6 +132,11 @@ const onRequestLogin = (socket, request) => {
     return responseFail(socket, requestKey, responseType, "Failed to login.");
   }
 
+  if (!env.useridList[userID]) {
+    let id = socket.id
+    env.useridList[userID] = id;
+  }
+
   // login side effects
   try {
     updateAttendance(userID);
