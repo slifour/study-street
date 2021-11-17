@@ -79,7 +79,8 @@ let groupList = {
           questID : "eq2dm5",
           type : "Attendance",
           content : "11/14 10:30",
-          acceptedUsers : ["eunki", "haeseul"],
+          contentDate : new Date(2021, 10, 14, 10, 30),
+          acceptedUsers : ["eunki", "haeseul"], // TODO: acceptedUsers, doneUsers, notYetUsers 중 하나는 없어도 됨.
           doneUsers : ["haeseul"],
           participatingUsers : [],
           notYetUsers : ["eunki"]
@@ -88,6 +89,7 @@ let groupList = {
           questID : "nbxm3m",
           type : "Goal",
           content : "3 hours",
+          contentDate : 3 * 3600 * 1000,
           acceptedUsers : ["haeseul"],
           doneUsers : [],
           participatingUsers : ["haeseul"],
