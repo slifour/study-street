@@ -471,6 +471,7 @@ const onRequestPersonalChecklist = (socket, request) => {
   let wrap = [];
   wrap[0] = userList[payload.userID].checklist;
   wrap[1] = groupList[userList[payload.userID].curGroup].quests;
+  wrap[2] = groupList[userList[payload.userID].curGroup].groupName;
 
   return socket.emit(responseType, {
     requestKey,
