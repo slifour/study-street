@@ -500,16 +500,43 @@ const onRequestAcceptQuest = (socket, request) => {
 
 const onRequestNewQuest = (socket, request) => {
   const {requestUser, requestKey, payload} = request;
-  const responseType = ResponseType.ACCEPT_QUEST;
+  const responseType = ResponseType.NEW_QUEST;
 
   const curGroupID = userList[payload.userID].curGroup;
-  groupList[curGroupID].quests[payload.quest.questID] = payload.quest;
 
+  //getter
+  let wrap = [];
+  let isNumOfGoalZero = true;
+  let countGoal = 0;
+  const quests = groupList[curGroupID].quests;
+  let dates = [];
+
+  for (let key in quests) {
+      let quest = quests[key];
+      if (quest.acceptedUsers.includes(payload.userID) && quest.type === 'Goal'){
+        countGoal += 1;
+      }
+      if (quest.type === 'Attendance') {
+        dates.push(quest.contentDate);
+      }
+  }
+  if (countGoal > 0) {
+      isNumOfGoalZero = false;
+  }
+
+  wrap[0] = isNumOfGoalZero;
+  wrap[1] = dates;
+
+  if (payload.quest.contentDate !== 0 && payload.quest.contentDate !== null ){
+    groupList[curGroupID].quests[payload.quest.questID] = payload.quest;
+  }
+
+  //setter
   return socket.emit(responseType, {
     requestKey,
     responseType,
     status: ResponseStatus.OK,
-    payload: {}
+    payload: wrap
   })
 }
 
