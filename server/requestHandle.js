@@ -129,11 +129,11 @@ const onRequestLogin = (socket, request) => {
 
   if (!userList[userID]) {
     return responseFail(socket, requestKey, responseType, "Failed to login.");
-  } else {
-    if (!env.useridList[userID]) {
-      let id = socket.id
-      env.useridList[userID] = id;
-    }
+  }
+
+  if (!env.useridList[userID]) {
+    let id = socket.id
+    env.useridList[userID] = id;
   }
 
   // login side effects
