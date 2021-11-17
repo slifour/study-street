@@ -25,7 +25,7 @@ const SocketIOServer = () => {
    * 
    * return {
    *    <variable to excess from outssocket.ide>,
-   *    <function to excess from outssocket.ide>
+   *    <function to excess frc om outssocket.ide>
    * }
    */
 
@@ -40,6 +40,7 @@ const SocketIOServer = () => {
    * }>}
    */
   const users = {}; // users data structure
+  //const useridList = {}; // dictionary with key: user ID, value: user socket ID
 
 
   let stateChanged = false // flag whether state is changed = for transmission efficientcy
@@ -58,7 +59,8 @@ const SocketIOServer = () => {
   let env = {
     libraryRoom: new Rooms('Library'),
     restRoom: new Rooms('Rest'),
-    roomDict: {}
+    roomDict: {},
+    useridList: {}
   };
 
   /** Methods */
@@ -86,20 +88,18 @@ const SocketIOServer = () => {
     });
   }
 
-  
 
   /** Event Handlers */
   const setEventHandlers = (socket) => {
 
     /** socket.on('event', eventHandler.bind(null, socket)) */
-    socket.on("REQUEST_MOVE", onRequestMove.bind(null, socket))  
-
     socket.on("disconnect", onDisconnect.bind(null, socket))
     socket.on("REQUEST_MOVE", onRequestMove.bind(null, socket))  
     /* socket.on("createGroup", onCreateGroup(null, socket)) */
     socket.on("joinGroup", onJoinGroup.bind(null, socket))
     socket.on("leaveGroup", onLeaveGroup.bind(null, socket))
     //socket.on("sendGroupMessage", onSendGroupMessage.bind(null, socket))
+    socket.on("call chat log", onCallChatLog.bind(null, socket))
     socket.on("add user", onJoinChat.bind(null, socket))
     socket.on("chatdisconnect", onLeaveChat.bind(null, socket))
     socket.on("chat message", onSendPrivateMessage.bind(null, socket))
@@ -119,13 +119,6 @@ const SocketIOServer = () => {
 
   }
 
-  const onRequestMove = (socket, position) => {
-    let id = socket.id
-    if (env.roomDict[id] !== undefined){
-      env.roomDict[id].update(socket, id, position.x, position.y);
-    }
-  }
-  
   const onRequestMove = (socket, position) => {
     let id = socket.id
     if (env.roomDict[id] !== undefined){
@@ -210,12 +203,35 @@ const SocketIOServer = () => {
   }*/
 
   /* 아직 오류 있음 */
+  const onCallChatLog = (socket, chatLog) => {
+    console.log('loading chat message...');
+    socket.to().emit('load chat log', {chatlog: chatLog});
+  }
+
+  /* 아직 오류 있음 */
   const onSendPrivateMessage = (socket, senduserID, receiveuserID, msg) => {
-    console.log('${senduserID} : ${msg}');
-    socket.to(userList[receiveuserID]).emit('chat message', {
-      username: senduserID,
-      message: msg
-    });
+    /*if (!userList[receiveuserID]) {
+      socket.emit("chatSendFail");
+    } else {
+      receiveID = useridList[receiveuserID];
+      console.log(`${senduserID} : ${msg}`);
+      socket.to(receiveID).emit('chat message', { //userID? to(receiveuserID)
+        sendname: senduserID,
+        receivename: receiveID,
+        message: msg
+      });
+    }*/
+    console.log("useridlist: ", env.useridList);
+    for(let user in env.useridList){
+      if(user === receiveuserID){
+        console.log(`${senduserID} : ${msg}`);
+        socket.to(env.useridList[user]).emit('chat message', { //userID? to(receiveuserID)
+          sendname: senduserID,
+          //receivename: receive,
+          message: msg
+        });
+      }
+    }
   }
 
   const onNewArtifact = (socket) => {
@@ -232,6 +248,10 @@ const SocketIOServer = () => {
     if (!userList[userID]) {
       socket.emit("userLoginFail");
     } else {
+      /*if (!useridList[userID]) {
+        let id = socket.id
+        useridList[userID] = id;
+      }*/
       socket.emit("userLoginOK", userList[userID]);
     }
   }

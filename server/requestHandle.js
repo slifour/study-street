@@ -128,6 +128,10 @@ const onRequestLogin = (socket, request) => {
   }
 
   if (userList[userID]) {
+    if (!env.useridList[userID]) {
+      let id = socket.id
+      env.useridList[userID] = id;
+    }
     return socket.emit(responseType, {
       requestKey,
       responseType,
