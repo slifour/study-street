@@ -23,9 +23,10 @@ const StyledIcon = styled.div`
 export default function ChatOverlay(props) {
     const shortenName = props.userId.substr(0, 2).toUpperCase();
 
-    const loginUser = LoginUserContext();
-    const nickname = loginUser.state.userID;
+    const {loginUser} = LoginUserContext();
+    const nickname = loginUser.userID;
     const [chats, setchats] = useState([]);
+    const chatlog = [];
     const [isConnected, setIsConnected] = useState(socket.connected);
     const [Msg, setMessage] = useState(null);
 
@@ -36,6 +37,8 @@ export default function ChatOverlay(props) {
 
     useEffect(() => {
         
+        //이전 채팅 기록을 불러오는 함수
+        socket.emit('call chat log', chatlog);
         socket.emit('add user', props.userId);
 
         socket.on('chatconnect', () => {
@@ -44,15 +47,18 @@ export default function ChatOverlay(props) {
         });
         socket.on('user joined', (data) =>{
         setchats(chats.concat(`${data.username} joined`));
+        //setchatlog(chatlog.concat(`${data.username} joined`));
         })
         socket.on('user left', (data) => {
         setchats(chats.concat(`${data.username} left`));
+        //setchatlog(chatlog.concat(`${data.username} left`));
         });
         socket.on('chatdisconnect', () => {
         setIsConnected(false);
         });
         socket.on('chat message', (data) => {
-        setchats(chats.concat(`${data.username} : ${data.message}`)); //수정 필요
+        setchats(chats.concat(`${data.username} : ${data.message}`));
+        //setchatlog(chatlog.concat(`${data.username} : ${data.message}`));
         });
 
         return () => {
@@ -65,7 +71,8 @@ export default function ChatOverlay(props) {
     const sendMessage = () => {
         console.log(Msg);
         setchats(chats.concat(`${nickname} : ${Msg}`));
-        socket.emit('chat message', nickname, Msg);
+        //setchatlog(chatlog.concat(`${nickname} : ${Msg}`));
+        socket.emit('chat message', nickname, props.userId, Msg);
         setMessage('');
     }
 
