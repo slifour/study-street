@@ -9,6 +9,7 @@ import MenuBar from "./components/ui/MenuBar";
 import StudyMain from "./components/ui/Study/StudyMain";
 import styled from "styled-components";
 import Modal from 'react-overlays/Modal';
+import LoginOverlay from "./components/ui/LoginOverlay";
 
 /* Example of LoginUserContext value
   {
@@ -22,8 +23,8 @@ export const GameContext = React.createContext(null);
 
 const StyledModal = styled(Modal)`
     position: fixed;
-    width: 600px;
-    height: 750px;
+    width: 500px;
+    height: 300px;
     z-index: 1100;
     left: 50%;
     top: 50%;
@@ -34,25 +35,13 @@ const StyledModal = styled(Modal)`
     box-shadow: 0px 4px 10px rgba(71, 71, 71, 0.25);
 `;
 
-const Backdrop = styled("div")`
-    position: fixed;
-    z-index: 1040;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: #000;
-    opacity: 0.5;
-`;
-
 function App() {
   
   const [loginUser, setLoginUser] = useState(null);
   const [scene, setScene] = useState("Library");  
   const [showConfirmAlert, setshowConfirmAlert] = useState(false);  
   const game = useRef(null);
-  const [open, setOpen] = useState(false); //to be done
-  const renderBackdrop = (props) => <Backdrop {...props} />;
+  const [open, setOpen] = useState(true);
 
   const [fadeProp, setFadeProp] = useState({
     fade: 'fade-in'
@@ -91,6 +80,10 @@ function App() {
     setIsHome(false);
   }
 
+  const callClose = () => {
+    setOpen(false);
+  }
+
   return (
     <LoginUserContext.Provider value={ {loginUser, setLoginUser} }>
       <GameContext.Provider value={ {
@@ -110,14 +103,9 @@ function App() {
         </div>
       </div>
       <div>
-        <Login/>
         <StyledModal
           show = {open}
-          // renderBackdrop = {renderBackdrop}
-        ><div></div></StyledModal>
-        {/* <UserInfo></UserInfo> */}
-        {/* <InvitationView></InvitationView> */}
-        {/* <GroupView></GroupView>     */}
+        ><LoginOverlay callClose={callClose}></LoginOverlay></StyledModal>
       </div>
       </GameContext.Provider>
     </LoginUserContext.Provider>
