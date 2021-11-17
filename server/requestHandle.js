@@ -30,6 +30,7 @@ const onRequest = (socket, requestName, request) => {
     case RequestType.CHANGE_SCENE: onRequestChangeScene(socket, request); break;
     case RequestType.INITIALIZE: onRequestInitialize(socket, request); break;
     case RequestType.CURRENT_GROUP : onRequestCurrentGroup(socket, request); break;
+    case RequestType.UPDATE_CURRENT_GROUP : onRequestUpdateCurrentGroup(socket, request); break;
     case RequestType.PERSONAL_CHECKLIST : onRequestPersonalChecklist(socket, request); break;
     case RequestType.TOGGLE_CHECKLIST : onRequestToggleChecklist(socket, request); break;
     case RequestType.ACCEPT_QUEST : onRequestAcceptQuest(socket, request); break;
@@ -456,6 +457,33 @@ const onRequestCurrentGroup = (socket, request) => {
     payload: wrap
   })
 }
+
+const onRequestUpdateCurrentGroup = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.UPDATE_CURRENT_GROUP;
+
+  if (!requestUser) {
+    return responseFail(socket, requestKey, responseType, "Login is required.");
+  }
+
+  let curGroup;
+  try {
+    ({curGroup} = payload);
+  } catch {
+    return responseFail(socket, requestKey, responseType, "Invalid payload.");
+  }
+
+  userList[requestUser].curGroup = curGroup;
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: {}
+  })
+}
+
+
 
 const onRequestPersonalChecklist = (socket, request) => {
   const {requestUser, requestKey, payload} = request;
