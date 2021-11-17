@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
-import styles from "./home.module.scss";
+import styles from "./home.module.css";
 
 const StyledAvatar = styled.div`
     box-shadow: 0px 4px 4px rgba(88, 88, 88, 0.25);

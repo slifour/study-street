@@ -1,5 +1,5 @@
 import React, { useContext, useState, useCallback } from 'react';
-import styles from "./home.module.scss";
+import styles from "./home.module.css";
 import styled from 'styled-components';
 import InviteFriendButton from './InviteFriendButton';
 import PendingInviteList from './PendingInviteList';

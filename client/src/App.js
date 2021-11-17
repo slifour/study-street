@@ -57,6 +57,7 @@ function App() {
   const [fadeProp, setFadeProp] = useState({
     fade: 'fade-in'
   });
+  const [isHome, setIsHome] = useState(true);
 
   useEffect(() => {
     if (game.current !== null && game.current.game) {
@@ -85,26 +86,21 @@ function App() {
     }
     console.log('emitToGame', data)
   }) 
-  const disableInput = (boolean => {
-    if (game.current !== null && game.current.game) {
-      game.current.game.input.keyboard.enabled = boolean;
-      game.current.game.input.mouse.enabled = boolean;
-    }
-  }) 
-  const disableKeyboard = (boolean => {
-    if (game.current !== null && game.current.game) {
-      game.current.game.input.keyboard.enabled = boolean;
-    }
-  }) 
+
+  const onWalkToLibrary = () => {
+    setIsHome(false);
+  }
 
   return (
     <LoginUserContext.Provider value={ {loginUser, setLoginUser} }>
-      <GameContext.Provider value={ {scene, emitToGame, disableInput} }>
+      <GameContext.Provider value={ {
+        scene, emitToGame, game
+      } }>
       <div className={fadeProp.fade}>
         <div className="content">
-          { scene === "Home" || scene === "Library" ? <HomeMain/> : null }
+          { isHome ? <HomeMain onWalkToLibrary={onWalkToLibrary}/> : null }
           <MenuBar/>
-          { scene !== "Home" && scene !== "Library" ? <Avatars/> : null } {/* TODO: Home scene을 만들어 Library scene과 분리하기 */}
+          { !isHome ? <Avatars/> : null } {/* TODO: Home scene을 만들어 Library scene과 분리하기 */}
           { scene === "Study" ? <StudyMain/> : null }
           <QuickMoveButton emitToGame = {emitToGame}/>
           <ConfirmAlert show = {showConfirmAlert} setShow = {setshowConfirmAlert}/>

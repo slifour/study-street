@@ -1,6 +1,7 @@
 const chance = require("chance").Chance();
 const { RequestType, ResponseType, ResponseStatus } = require("./requestType");
 let { userList, groupList, invitationList, goalList, bookList } = require("./database");
+const { updateTodayStudyTime } = require("./databaseHelper");
 
 let env;
 
@@ -32,6 +33,7 @@ const onRequest = (socket, requestName, request) => {
     case RequestType.PERSONAL_CHECKLIST : onRequestPersonalChecklist(socket, request); break;
     case RequestType.TOGGLE_CHECKLIST : onRequestToggleChecklist(socket, request); break;
     case RequestType.ACCEPT_QUEST : onRequestAcceptQuest(socket, request); break;
+    case RequestType.NEW_QUEST: onRequestNewQuest(socket, request); break;
     // case RequestType.MOVE: onRequestMove(socket, request); break; 
     default: break;
   }
@@ -399,7 +401,11 @@ const onRequestUpdateTodayStudyTime = (socket, request) => {
     return responseFail(socket, requestKey, responseType, "Invalid payload");
   }
 
-  user.todayStudyTime = payload;
+  try {
+    updateTodayStudyTime(requestUser, payload);
+  } catch {
+    return responseFail(socket, requestKey, responseType, "Failed to update value");
+  }
 
   return socket.emit(responseType, {
     requestKey,
@@ -465,12 +471,9 @@ const onRequestPersonalChecklist = (socket, request) => {
 const onRequestToggleChecklist = (socket, request) => {
   const {requestUser, requestKey, payload} = request;
   const responseType = ResponseType.TOGGLE_CHECKLIST;
+  userList[payload.userID].checklist[payload.checklistID].isDone = payload.isDone;
 
-  if (payload.checklistID != null) {
-    console.log(true);
-    userList[payload.userID].checklist[payload.checklistID].isDone = payload.isDone;
-  }
-
+  console.log(userList[payload.userID].checklist)
   return socket.emit(responseType, {
     requestKey,
     responseType,
@@ -485,6 +488,22 @@ const onRequestAcceptQuest = (socket, request) => {
   const curGroupID = userList[payload.userID].curGroup;
 
   groupList[curGroupID].quests[payload.questID].acceptedUsers.push(payload.userID);
+  groupList[curGroupID].quests[payload.questID].notYetUsers.push(payload.userID);
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: {}
+  })
+}
+
+const onRequestNewQuest = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.ACCEPT_QUEST;
+
+  const curGroupID = userList[payload.userID].curGroup;
+  groupList[curGroupID].quests[payload.quest.questID] = payload.quest;
 
   return socket.emit(responseType, {
     requestKey,
@@ -515,6 +534,9 @@ const onRequestAcceptQuest = (socket, request) => {
 //     payload: {}
 //   });    
 // };
+
+
+
 
 const initRequestHandle = envParam => {
   env = envParam;

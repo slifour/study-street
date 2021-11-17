@@ -25,6 +25,7 @@ export default function NewAttendance(props) {
             questID: `${uniqueString()}`,
             type: "Attendance",
             content: `${modifyDateString(date)}`,
+            contentDate: new Date(date),
             acceptedUsers: [loginUser.userID],
             doneUsers: [],
             participatingUsers : [],

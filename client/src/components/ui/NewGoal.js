@@ -26,6 +26,7 @@ export default function NewGoal(props) {
             questID: `${uniqueString()}`,
             type: "Goal",
             content: `${modifyDateString(hour, minute)}`,
+            contentDate: (hour * 3600 + minute * 60) * 1000,
             acceptedUsers: [loginUser.userID],
             doneUsers: [],
             participatingUsers : [],
