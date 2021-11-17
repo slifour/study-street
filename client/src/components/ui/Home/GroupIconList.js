@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import styles from "./home.module.scss";
+import styles from "./home.module.css";
 import GroupAvatarCircle from './GroupAvatarCircle';
 import useRequest from '../../request/useRequest';
 import useLiveReload from '../../request/useLiveReload';

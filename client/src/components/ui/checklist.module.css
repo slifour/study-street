@@ -2,8 +2,8 @@
 
 .tabBox {
     display: flex;
-    width: 800px;
-    height: 900px;
+    width: 600px;
+    height: 750px;
 }
 
 .icons {
@@ -21,6 +21,10 @@
     direction: ltr;
     text-rendering: optimizeLegibility;
     transition: all ease 1s;
+}
+
+.dark .icons {
+    color: #bdbdbd;
 }
 
 .iconsWhiteLarge {
@@ -113,7 +117,7 @@
 }
 
 .groupGoalsContainer {
-    height: 820px;
+    height: 670px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -122,7 +126,7 @@
 }
 
 .groupGoalBox {
-    width: 750px;
+    width: 520px;
     min-height: min-content;
     background: #FFFFFF;
     box-shadow: 0px 4px 4px rgba(238, 238, 238, 0.50);
@@ -183,13 +187,13 @@
 .textTitle {
     font-family: 'Lato', sans-serif;
     font-weight: 600;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .textContent {
     font-family: 'Lato', sans-serif;
     font-weight: 300;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .accept {
@@ -203,12 +207,31 @@
     text-align: center;
     line-height: 40px;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
 
     background: #6FA270;
     box-shadow: 0px 4px 10px rgba(136, 208, 156, 0.15);
     border-radius: 8px;
     cursor: pointer;
+}
+
+.already {
+    width: 120px;
+    height: max-content;
+    margin-left: auto;
+    margin-right: 25px;
+    padding: 6px 0px 10px 0px;
+
+    color: white;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    font-weight: 400;
+    font-size: 15px;
+    white-space: pre-line;
+
+    background: #CCCCCC;
+    box-shadow: 0px 4px 10px rgba(136, 208, 156, 0.15);
+    border-radius: 8px;
 }
 
 .drop {
@@ -221,7 +244,10 @@
 }
 
 .personalContainer {
+    height: 520px;
     padding: 40px;
+    padding-bottom: 150px;
+    overflow: auto;
 }
 
 .groupGoals {
@@ -252,7 +278,11 @@
     font-family: 'Lato', sans-serif;
     text-align: center;
     font-weight: 400;
-    font-size: 20px;
+    font-size: 18px;
+}
+
+.dark .checklistContent {
+    color: #dddddd;
 }
 
 .checklistContentDone {
@@ -262,7 +292,7 @@
     font-family: 'Lato', sans-serif;
     text-align: center;
     font-weight: 400;
-    font-size: 20px;
+    font-size: 18px;
     text-decoration: line-through;
 }
 
@@ -273,7 +303,7 @@
     font-family: 'Lato', sans-serif;
     text-align: center;
     font-weight: 400;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .doneBox {
@@ -407,7 +437,7 @@
 .floatText {
     font-family: 'Lato', sans-serif;
     font-weight: 400;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 45px;
     color: #6FA270;
     z-index: 1040;
@@ -462,7 +492,7 @@
 
     font-family: 'Lato', sans-serif;
     font-weight: 400;
-    font-size: 20px;
+    font-size: 18px;
     background-color: #FBFBFB;
     color: #BBBBBB;
 }
@@ -506,27 +536,30 @@
 .modalTitle {
     font-family: 'Lato', sans-serif;
     font-weight: 700;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 80px;
     color: #6FA270;
 }
 
 .modalContent {
-    height: 100px;
     display: flex;
     align-items: center;
-    padding-left: 30px;
-    gap: 10px;
+    justify-content: left;
+    padding-left: 60px;
+    gap: 25px;
+
+    margin: auto 0;
 }
 
 .modalContentText {
     font-family: 'Lato', sans-serif;
     font-weight: 600;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .modalFooter {
-    height: 80px;
+    margin: 20px 0px;
+
     width: 440px;
     display: flex;
     justify-content: right;
@@ -544,7 +577,7 @@
     text-align: center;
     line-height: 40px;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
 
     background: #F2F2F2;
     box-shadow: 0px 4px 10px rgba(226, 226, 226, 0.15);
@@ -561,7 +594,7 @@
     text-align: center;
     line-height: 40px;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
 
     background: #6FA270;
     box-shadow: 0px 4px 10px rgba(136, 208, 156, 0.15);
@@ -569,16 +602,34 @@
     cursor: pointer;
 }
 
+.createButtonDisabled {
+    width: 120px;
+    height: 40px;
+
+    color: white;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    line-height: 40px;
+    font-weight: 600;
+    font-size: 16px;
+
+    background: #CCCCCC;
+    box-shadow: 0px 4px 10px rgba(136, 208, 156, 0.15);
+    border-radius: 8px;
+}
+
 .picker {
     padding-top: 4px;
     padding-left: 20px;
-    border-radius: 0 0 0 8px;
+    margin-right: 20px;
+    width: 80%;
+    border-radius: 5px 5px 5px 5px;
     border-width: 0;
 
     font-family: 'Lato', sans-serif;
     font-weight: 400;
     font-size: 20px;
-
+    text-align: center;
     background-color: #FBFBFB;
     color: #BBBBBB;
 
@@ -589,6 +640,80 @@
     cursor: pointer;
 }
 
+.picker:hover {
+
+    outline: 2px solid #CDCDCD;
+}
+
 .picker:focus {
     outline: none;
+}
+
+.modalForm {
+    width: 100px;
+}
+
+.groupGoalInstruction {
+    width: 475px;
+    min-height: min-content;
+    background: #CCCCCC;
+    box-shadow: 0px 4px 4px rgba(238, 238, 238, 0.50);
+    border-radius: 14px;
+    margin-top: 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 15px;
+    padding: 15px;
+    padding-left: 30px;
+}
+
+.groupGoalInstructionContent {
+    color: #FFFFFF;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    font-size: 18px;
+}
+
+.groupGoalsName {
+    align-self: stretch;
+    text-align: left;
+    margin: 20px;
+    margin-left: 35px;
+
+    color: #444444;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+}
+
+.dividerGroupGoal {
+    width: 100%;
+    height: 1px;
+    min-height: max-content;
+    background-color: #E7E7E7;
+}
+
+.groupGoalInstructionSmall {
+    width: 80%;
+    margin: 0 auto;
+    min-height: min-content;
+    background: #CCCCCC;
+    box-shadow: 0px 4px 4px rgba(238, 238, 238, 0.50);
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 15px;
+    padding: 10px;
+    padding-left: 30px;
+}
+
+.modalContainer {
+    height: 275px;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
 }

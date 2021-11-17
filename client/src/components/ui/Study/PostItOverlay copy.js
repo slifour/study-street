@@ -18,9 +18,17 @@ const StyledIcon = styled.div`
     background: ${props => props.color};
 `;
 
-//const socketIo = require("socket.io");
+export default function PostList() {
 
-export default function ChatOverlay(props) {
+    let badge
+    return(
+        <div className = {}>
+            
+        </div>
+    )
+}
+
+export default function PostItOverlay(props) {
     const shortenName = props.userId.substr(0, 2).toUpperCase();
 
     const {loginUser} = useContext(LoginUserContext);

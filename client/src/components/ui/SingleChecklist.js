@@ -10,7 +10,6 @@ export default function SingleChecklist(props) {
     const {loginUser} = useContext(LoginUserContext);
     const {setReloadTime} = useContext(ReloadContext);
     const [isDone, setDone] = useState(props.isDone);
-    let localDone = props.isDone;
 
     const getIconStyle = () => {
         if (isDone) {
@@ -20,10 +19,17 @@ export default function SingleChecklist(props) {
     }
 
     const getIcon = () => {
-        if (isDone) {
-            return 'check_box'
-        } 
-        return 'check_box_outline_blank'
+        if (props.groupParticipation !== '') {
+            if (isDone) {
+                return 'done'
+            } 
+            return 'remove'
+        } else {
+            if (isDone) {
+                return 'check_box'
+            } 
+            return 'check_box_outline_blank'
+        }
     }
 
     const getTextStyle = () => {
@@ -43,8 +49,8 @@ export default function SingleChecklist(props) {
     const makePayload = useCallback(() => ({
         userID: loginUser.userID,
         checklistID: props.checklistID,
-        isDone: localDone
-    }), [localDone]);
+        isDone: !isDone
+    }), [isDone]);
 
     const [request, innerReloadTimeRef] = useRequest({
         requestType: "REQUEST_TOGGLE_CHECKLIST",
@@ -56,9 +62,10 @@ export default function SingleChecklist(props) {
 
     const handleToggle = () => {
         if (props.groupParticipation == '') {
-            localDone = !isDone;
-            setDone(!isDone);
             request();
+            setDone(!isDone);
+        } else {
+            props.callSwitch();
         }
     }
 

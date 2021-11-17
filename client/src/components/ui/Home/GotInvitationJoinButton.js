@@ -1,6 +1,6 @@
 import React, {useCallback, useContext} from "react";
 import { ReloadContext } from "../../request/ReloadContext";
-import styles from "./home.module.scss";
+import styles from "./home.module.css";
 import useRequest from "../../request/useRequest";
 
 export default function GotInvitationJoinButton({gotInvitation}) {

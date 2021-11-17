@@ -60,7 +60,7 @@ const exampleResponse = {
 import React, { useCallback, useContext, useState } from "react";
 import { LoginUserContext } from "../../../App";
 import GotInvitationListItem from "./GotInvitationListItem";
-import styles from "./home.module.scss";
+import styles from "./home.module.css";
 import useLiveReload from "../../request/useLiveReload";
 import useRequest from "../../request/useRequest";
 

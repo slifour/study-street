@@ -38,7 +38,26 @@ export default function ChecklistGroup() {
 
     useLiveReload({request, innerReloadTimeRef});
 
+    const callUpdate = () => {
+        request();
+    }
 
+    const checkNumGoalIsZero = () => {
+        let countGoal = 0;
+        const quests = groupInfo.quests;
+        for (let key in quests) {
+            let quest = quests[key];
+            if (quest.acceptedUsers.includes(loginUser.userID) && quest.type === 'Goal'){
+                countGoal += 1;
+            }
+        }
+        if (countGoal > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
     const mapQuests = () => {
         let returnComponents = [];
         let doneUsers = [];
@@ -74,6 +93,7 @@ export default function ChecklistGroup() {
                     percentGauge = {percentGauge}
                     key = {quest.questID}
                     questID = {quest.questID}
+                    isNumOfGoalZero = {checkNumGoalIsZero()}
                 ></SingleQuest>)
             
             doneUsers = [];
@@ -88,10 +108,16 @@ export default function ChecklistGroup() {
     return(
         <div>
             <div className={styles.groupGoalsContainer}>
+                <div className={styles.groupGoalInstruction}>
+                    <div className={styles.iconsWhite}>campaign</div>
+                    <div className={styles.groupGoalInstructionContent}>
+                        Goals will be reset every 5:00 AM.
+                    </div>
+                </div>
                 {mapQuests()}
                 <div className={styles.heightCompensation}></div>
             </div>
-            <ChecklistFloat></ChecklistFloat>
+            <ChecklistFloat callUpdate={callUpdate}></ChecklistFloat>
         </div>
     )
 }

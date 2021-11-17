@@ -96,11 +96,15 @@ export default function SingleQuest(props) {
                     <div className={styles.textTitle}>{props.type}</div>
                     <div className={styles.textContent}>{props.content}</div>
                 </div>
-                { !isAccepted && 
+                { !isAccepted && props.isNumOfGoalZero &&
                     <div
                         className = {styles.accept}
                         onClick = {() => handleAccept()}
                     >Accept</div> }
+                { !isAccepted && !(props.isNumOfGoalZero) &&
+                    <div
+                        className = {styles.already}
+                    >Already{`\n`}have a goal</div> }
                 { isAccepted &&
                     <div className={styles.drop}>
                         <div 

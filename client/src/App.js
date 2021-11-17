@@ -7,7 +7,8 @@ import {ConfirmAlert, QuickMoveButton} from "./components/ui/QuickMove";
 import HomeMain from "./components/ui/Home/HomeMain";
 import MenuBar from "./components/ui/MenuBar";
 import StudyMain from "./components/ui/Study/StudyMain";
-
+import styled from "styled-components";
+import Modal from 'react-overlays/Modal';
 
 /* Example of LoginUserContext value
   {
@@ -19,15 +20,44 @@ import StudyMain from "./components/ui/Study/StudyMain";
 export const LoginUserContext = React.createContext(null);
 export const GameContext = React.createContext(null);
 
+const StyledModal = styled(Modal)`
+    position: fixed;
+    width: 600px;
+    height: 750px;
+    z-index: 1100;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 11px;
+    outline: none;
+    background-color: #FDFDFD;
+    box-shadow: 0px 4px 10px rgba(71, 71, 71, 0.25);
+`;
+
+const Backdrop = styled("div")`
+    position: fixed;
+    z-index: 1040;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #000;
+    opacity: 0.5;
+`;
+
 function App() {
   
   const [loginUser, setLoginUser] = useState(null);
   const [scene, setScene] = useState("Library");  
   const [showConfirmAlert, setshowConfirmAlert] = useState(false);  
   const game = useRef(null);
+  const [open, setOpen] = useState(false); //to be done
+  const renderBackdrop = (props) => <Backdrop {...props} />;
+
   const [fadeProp, setFadeProp] = useState({
     fade: 'fade-in'
   });
+  const [isHome, setIsHome] = useState(true);
 
   useEffect(() => {
     if (game.current !== null && game.current.game) {
@@ -56,26 +86,21 @@ function App() {
     }
     console.log('emitToGame', data)
   }) 
-  const disableInput = (boolean => {
-    if (game.current !== null && game.current.game) {
-      game.current.game.input.keyboard.enabled = boolean;
-      game.current.game.input.mouse.enabled = boolean;
-    }
-  }) 
-  const disableKeyboard = (boolean => {
-    if (game.current !== null && game.current.game) {
-      game.current.game.input.keyboard.enabled = boolean;
-    }
-  }) 
+
+  const onWalkToLibrary = () => {
+    setIsHome(false);
+  }
 
   return (
     <LoginUserContext.Provider value={ {loginUser, setLoginUser} }>
-      <GameContext.Provider value={ {scene, emitToGame, disableInput} }>
+      <GameContext.Provider value={ {
+        scene, emitToGame, game
+      } }>
       <div className={fadeProp.fade}>
         <div className="content">
-          { scene === "Home" || scene === "Library" ? <HomeMain/> : null }
+          { isHome ? <HomeMain onWalkToLibrary={onWalkToLibrary}/> : null }
           <MenuBar/>
-          { scene !== "Home" && scene !== "Library" ? <Avatars/>: null } {/* TODO: Home scene을 만들어 Library scene과 분리하기 */}
+          { !isHome ? <Avatars/> : null } {/* TODO: Home scene을 만들어 Library scene과 분리하기 */}
           { scene === "Study" ? <StudyMain/> : null }
           <QuickMoveButton emitToGame = {emitToGame}/>
           <ConfirmAlert show = {showConfirmAlert} setShow = {setshowConfirmAlert}/>
@@ -86,6 +111,10 @@ function App() {
       </div>
       <div>
         <Login/>
+        <StyledModal
+          show = {open}
+          // renderBackdrop = {renderBackdrop}
+        ><div></div></StyledModal>
         {/* <UserInfo></UserInfo> */}
         {/* <InvitationView></InvitationView> */}
         {/* <GroupView></GroupView>     */}

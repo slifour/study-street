@@ -1,6 +1,6 @@
 import React, {useState, useRef, useContext, useCallback } from "react";
 import GroupColorSelect from "./GroupColorSelect";
-import styles from "./home.module.scss";
+import styles from "./home.module.css";
 import { ReloadContext } from "../../request/ReloadContext";
 import useRequest from "../../request/useRequest";
 
