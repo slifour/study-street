@@ -38,7 +38,10 @@ export default function ChecklistGroup() {
 
     useLiveReload({request, innerReloadTimeRef});
 
-
+    const callUpdate = () => {
+        request();
+    }
+    
     const mapQuests = () => {
         let returnComponents = [];
         let doneUsers = [];
@@ -91,7 +94,7 @@ export default function ChecklistGroup() {
                 {mapQuests()}
                 <div className={styles.heightCompensation}></div>
             </div>
-            <ChecklistFloat></ChecklistFloat>
+            <ChecklistFloat callUpdate={callUpdate}></ChecklistFloat>
         </div>
     )
 }

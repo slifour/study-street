@@ -99,6 +99,11 @@ const SocketIOServer = () => {
     socket.on("userProfileRequest", onUserProfileRequest.bind(null, socket))    
     socket.on("newArtifact", onNewArtifact.bind(null, socket))
     socket.on("initializeLibrary", onIntializeLibrary.bind(null,socket))
+    socket.on("REQUEST_CURRENT_GROUP", onRequestCurrentGroup.bind(null, socket))
+    socket.on("REQUEST_PERSONAL_CHECKLIST", onRequestPersonalChecklist.bind(null, socket))
+    socket.on("REQUEST_TOGGLE_CHECKLIST", onRequestToggleChecklist.bind(null, socket))
+    socket.on("REQUEST_ACCEPT_QUEST", onRequestAcceptQuest.bind(null, socket))
+    socket.on("REQUEST_NEW_QUEST", onRequestNewQuest.bind(null, socket))
 
     Object.values(RequestType).forEach( requestType => {
       socket.on(requestType, onRequest.bind(null, socket, requestType));      
@@ -255,7 +260,7 @@ const SocketIOServer = () => {
 
   /** log */  
   let logUsers = () =>  {
-    console.log("libraryRoom.numUsers :", env.libraryRoom.getNumUsers());
+    // console.log("libraryRoom.numUsers :", env.libraryRoom.getNumUsers());
     setTimeout(logUsers.bind(this), logInterval);
   }   
 
@@ -293,6 +298,103 @@ const SocketIOServer = () => {
     /** Methods */
     init 
   }
+}
+
+const onRequestCurrentGroup = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.CURRENT_GROUP;
+
+  const curGroupID = userList[payload.userID].curGroup;
+  let wrap = [];
+  let curGroupInfo = null;
+  let curGroupMemberInfo = {}; 
+  if (payload.userID) {
+    curGroupInfo = groupList[curGroupID];
+    for (let user in userList) {
+      if (curGroupInfo.member.includes(userList[user].userID)) {
+        curGroupMemberInfo[userList[user].userID] = userList[user];
+      }
+    }
+  } else {
+    return responseFail(socket, requestKey, responseType, "Invalid payload");
+  }
+
+  wrap = [curGroupInfo, curGroupMemberInfo]
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: wrap
+  })
+}
+
+const onRequestPersonalChecklist = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.PERSONAL_CHECKLIST;
+
+  //handle setter
+  if (Object.keys(payload.updateChecklist).length !==0 ) {
+    let tempChecklist = {...userList[payload.userID].checklist};
+    userList[payload.userID].checklist = {...tempChecklist, ...payload.updateChecklist};
+  }
+
+  //handle getter
+  let wrap = [];
+  wrap[0] = userList[payload.userID].checklist;
+  wrap[1] = groupList[userList[payload.userID].curGroup].quests;
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: wrap
+  })
+}
+
+const onRequestToggleChecklist = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.TOGGLE_CHECKLIST;
+  userList[payload.userID].checklist[payload.checklistID].isDone = payload.isDone;
+
+  console.log(userList[payload.userID].checklist)
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: {}
+  })
+}
+
+const onRequestAcceptQuest = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.ACCEPT_QUEST;
+  const curGroupID = userList[payload.userID].curGroup;
+
+  groupList[curGroupID].quests[payload.questID].acceptedUsers.push(payload.userID);
+  groupList[curGroupID].quests[payload.questID].notYetUsers.push(payload.userID);
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: {}
+  })
+}
+
+const onRequestNewQuest = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.ACCEPT_QUEST;
+
+  const curGroupID = userList[payload.userID].curGroup;
+  groupList[curGroupID].quests[payload.quest.questID] = payload.quest;
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: {}
+  })
 }
 
 module.exports = SocketIOServer
