@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from "react";
+import React, { useState, useContext, useCallback, useEffect } from "react";
 import styles from './checklist.module.css'
 import uniqueString from 'unique-string';
 
@@ -11,9 +11,17 @@ export default function NewAttendance(props) {
     const {setReloadTime} = useContext(ReloadContext);
 
     const [date, setDate] = useState('');
+    const [dates, setDates] = useState([]);
+    const [isProper, setIsProper] = useState(true);
+    const [isPast, setIsPast] = useState(false);
+
+    useEffect(() => {
+        request();
+    }, [])
 
     const onResponseOK = useCallback(({payload}) => {
         setReloadTime(new Date());
+        setDates(payload[1]);
     }, [setReloadTime]);
 
     const onResponseFail = useCallback(({payload}) => {
@@ -34,7 +42,6 @@ export default function NewAttendance(props) {
     }), [date]);
 
     const modifyDateString = (dateString) => {
-        console.log(dateString);
         let resultString = '';
 
         if (dateString.slice(5, 6) != '0'){
@@ -45,13 +52,6 @@ export default function NewAttendance(props) {
             resultString += dateString.slice(8, 9);
         }
         resultString += `${dateString.slice(9, 10)} `;
-
-        if (dateString.slice(11, 12) != '0'){
-            resultString += dateString.slice(11, 12);
-        }
-        resultString += `${dateString.slice(12, 13)}:`;
-        resultString += `${dateString.slice(14, 16)}`;
-
         return resultString;
     }
 
@@ -64,6 +64,23 @@ export default function NewAttendance(props) {
     });
 
     const changeDate = (e) => {
+        let currentDate = new Date(e.target.value);
+        let todayDate = new Date();
+        let tempProper = true;
+        dates.forEach(d => {
+            let compareDate = new Date(d);
+            if ((compareDate.getDate() === currentDate.getDate()) &&
+                (compareDate.getMonth() === currentDate.getMonth())) {
+                    tempProper = false;
+            }
+        })
+        if (todayDate >= currentDate) {
+            tempProper = false;
+            setIsPast(true);
+        } else {
+            setIsPast(false);
+        }
+        setIsProper(tempProper);
         setDate(e.target.value);
     }
 
@@ -75,16 +92,36 @@ export default function NewAttendance(props) {
     }
 
     return(
-        <div>
+        <div className={styles.modalContainer}>
             <div className={styles.modalHeader}>
                 <div className={styles.modalTitle}>New Attendance</div>
             </div>
             <div className={styles.divider}></div>
+            {(!isProper && !isPast) &&
+                <div>
+                    <div className={styles.groupGoalInstructionSmall}>
+                        <div className={styles.iconsWhite}>campaign</div>
+                        <div className={styles.groupGoalInstructionContent}>
+                            You already have an attendance at same day.
+                        </div>
+                    </div>
+                </div>
+            }
+            {(!isProper && isPast) &&
+                <div>
+                    <div className={styles.groupGoalInstructionSmall}>
+                        <div className={styles.iconsWhite}>campaign</div>
+                        <div className={styles.groupGoalInstructionContent}>
+                            You have chosen date already past.
+                        </div>
+                    </div>
+                </div>
+            }
             <div className={styles.modalContent}>
                 <div className={styles.modalContentText}>Date</div>
                 <form>
                     <input
-                        type="datetime-local"
+                        type="date"
                         className={styles.picker}
                         onChange={changeDate}
                     ></input>
@@ -92,7 +129,13 @@ export default function NewAttendance(props) {
             </div>
             <div className={styles.modalFooter}>
                 <div className={styles.cancelButton} onClick={props.callClose}>Cancel</div>
-                <div className={styles.createButton} onClick={()=>onCreate()}>Create</div>
+                { (date.toString() !== '') && (isProper) &&
+                    <div className={styles.createButton} onClick={()=>onCreate()}>Create</div>
+                }
+                { ((date.toString() === '') ||
+                    ((date.toString() !== '') && (!isProper))) &&
+                    <div className={styles.createButtonDisabled}>Create</div>
+                }
             </div>
         </div>
     )

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from "react";
+import React, { useState, useContext, useCallback, useEffect } from "react";
 import styles from './checklist.module.css'
 import uniqueString from 'unique-string';
 
@@ -12,9 +12,15 @@ export default function NewGoal(props) {
 
     const [hour, setHour] = useState(0);
     const [minute, setMinute] = useState(0);
+    const [isNumOfGoalZero, setIsNumOfGoalZero] = useState(true);
+
+    useEffect(() => {
+        request();
+    }, [])
 
     const onResponseOK = useCallback(({payload}) => {
         setReloadTime(new Date());
+        setIsNumOfGoalZero(payload[0]);
     }, [setReloadTime]);
 
     const onResponseFail = useCallback(({payload}) => {
@@ -72,11 +78,21 @@ export default function NewGoal(props) {
     }
 
     return(
-        <div>
+        <div className={styles.modalContainer}>
             <div className={styles.modalHeader}>
                 <div className={styles.modalTitle}>New Goal</div>
             </div>
             <div className={styles.divider}></div>
+            {(!isNumOfGoalZero) &&
+                <div>
+                    <div className={styles.groupGoalInstructionSmall}>
+                        <div className={styles.iconsWhite}>campaign</div>
+                        <div className={styles.groupGoalInstructionContent}>
+                            You already have an another goal.
+                        </div>
+                    </div>
+                </div>
+            }
             <div className={styles.modalContent}>
                 <form className={styles.modalForm}>
                     <input
@@ -99,12 +115,14 @@ export default function NewGoal(props) {
                 </form>
                 <div className={styles.modalContentText}>minute</div>
             </div>
+            
             <div className={styles.modalFooter}>
                 <div className={styles.cancelButton} onClick={props.callClose}>Cancel</div>
-                { (minute.toString()!=='0' || hour.toString()!=='0') &&
+                { (minute.toString()!=='0' || hour.toString()!=='0') && (isNumOfGoalZero) &&
                     <div className={styles.createButton} onClick={()=>onCreate()}>Create</div>
                 }
-                { (minute.toString()==='0' && hour.toString()==='0') &&
+                { ((minute.toString()==='0' && hour.toString()==='0') ||
+                    ((minute.toString()!=='0' || hour.toString()!=='0')) && (!isNumOfGoalZero)) &&
                     <div className={styles.createButtonDisabled}>Create</div>
                 }
             </div>
