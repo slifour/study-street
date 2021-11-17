@@ -6,10 +6,10 @@ import ChecklistContainer from './ChecklistContainer';
 
 const StyledModal = styled(Modal)`
     position: fixed;
-    width: 800px;
-    height: 900px;
+    width: 600px;
+    height: 750px;
     z-index: 1040;
-    bottom: -3%;
+    bottom: -1%;
     right: 3%;
     border-radius: 11px;
     outline: none;

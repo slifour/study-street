@@ -78,7 +78,7 @@ let groupList = {
       "eq2dm5" : {
           questID : "eq2dm5",
           type : "Attendance",
-          content : "11/14 (Sun) 10:30",
+          content : "11/14 10:30",
           acceptedUsers : ["eunki", "haeseul"],
           doneUsers : ["haeseul"],
           participatingUsers : [],

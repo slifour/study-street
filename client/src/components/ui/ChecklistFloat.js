@@ -3,6 +3,7 @@ import styles from './checklist.module.css'
 import styled from "styled-components";
 import Modal from 'react-overlays/Modal';
 import NewAttendance from './NewAttendance';
+import NewGoal from './NewGoal';
 
 const StyledModal = styled(Modal)`
     position: fixed;
@@ -29,11 +30,15 @@ const Backdrop = styled("div")`
     opacity: 0.1;
 `;
 
-export default function ChecklistFloat() {
+export default function ChecklistFloat(props) {
     const [open, setOpen] = useState(false);
     const [goal, setGoal] = useState(false);
     const [attendance, setAttendance] = useState(false);
     const renderBackdrop = (props) => <Backdrop {...props} />;
+
+    const callUpdate = () => {
+        props.callUpdate();
+    }
 
     const setClose = () => {
         setOpen(false);
@@ -71,13 +76,13 @@ export default function ChecklistFloat() {
                     show = {goal}
                     onHide = {() => setGoal(false)}
                     renderBackdrop = {renderBackdrop}
-            >
+            ><NewGoal callClose={setClose} callUpdate={callUpdate}></NewGoal>
             </StyledModal>
             <StyledModal
                     show = {attendance}
                     onHide = {() => setAttendance(false)}
                     renderBackdrop = {renderBackdrop}
-            ><NewAttendance callClose={setClose}></NewAttendance>
+            ><NewAttendance callClose={setClose} callUpdate={callUpdate}></NewAttendance>
             </StyledModal>
         </div>
     )
