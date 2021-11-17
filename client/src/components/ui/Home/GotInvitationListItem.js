@@ -1,5 +1,5 @@
 import React, {useState, useCallback} from "react";
-import UserAvatarCircle from "./UserAvatarCircle";
+import UserAvatarCircle from "../UserAvatarCircle";
 import GotInvitationJoinButton from "./GotInvitationJoinButton";
 import useRequest from "../../request/useRequest";
 import useLiveReload from "../../request/useLiveReload";

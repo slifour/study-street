@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from "react";
+import React, { useState, useContext, useCallback, useEffect } from "react";
 import styles from './checklist.module.css'
 import uniqueString from 'unique-string';
 
@@ -12,9 +12,15 @@ export default function NewGoal(props) {
 
     const [hour, setHour] = useState(0);
     const [minute, setMinute] = useState(0);
+    const [isNumOfGoalZero, setIsNumOfGoalZero] = useState(true);
+
+    useEffect(() => {
+        request();
+    }, [])
 
     const onResponseOK = useCallback(({payload}) => {
         setReloadTime(new Date());
+        setIsNumOfGoalZero(payload[0]);
     }, [setReloadTime]);
 
     const onResponseFail = useCallback(({payload}) => {
@@ -36,7 +42,13 @@ export default function NewGoal(props) {
 
     const modifyDateString = (hourString, minuteString) => {
         let resultString = '';
-        resultString += `${hourString} hours ${minuteString} mins`
+        if (minuteString === 0) {
+            resultString += `${hourString} hours`
+        } else if (hourString === 0){
+            resultString += `${minuteString} mins`
+        } else {
+            resultString += `${hourString} hours ${minuteString} mins`
+        }
         return resultString;
     }
 
@@ -50,10 +62,12 @@ export default function NewGoal(props) {
 
     const changeHour = (e) => {
         setHour(e.target.value);
+        console.log(typeof(minute));
     }
 
     const changeMinute = (e) => {
         setMinute(e.target.value);
+        console.log(hour);
     }
 
     const onCreate = () => {
@@ -64,19 +78,28 @@ export default function NewGoal(props) {
     }
 
     return(
-        <div>
+        <div className={styles.modalContainer}>
             <div className={styles.modalHeader}>
                 <div className={styles.modalTitle}>New Goal</div>
             </div>
             <div className={styles.divider}></div>
+            {(!isNumOfGoalZero) &&
+                <div>
+                    <div className={styles.groupGoalInstructionSmall}>
+                        <div className={styles.iconsWhite}>campaign</div>
+                        <div className={styles.groupGoalInstructionContent}>
+                            You already have an another goal.
+                        </div>
+                    </div>
+                </div>
+            }
             <div className={styles.modalContent}>
                 <form className={styles.modalForm}>
                     <input
                         type="number"
                         min="0"
-                        max="23"
-                        placeholder="0"
                         className={styles.picker}
+                        value={hour}
                         onChange={changeHour}
                     ></input>
                 </form>
@@ -85,17 +108,23 @@ export default function NewGoal(props) {
                     <input
                         type="number"
                         min="0"
-                        max="59"
-                        placeholder="0"
                         className={styles.picker}
+                        value={minute}
                         onChange={changeMinute}
                     ></input>
                 </form>
                 <div className={styles.modalContentText}>minute</div>
             </div>
+            
             <div className={styles.modalFooter}>
                 <div className={styles.cancelButton} onClick={props.callClose}>Cancel</div>
-                <div className={styles.createButton} onClick={()=>onCreate()}>Create</div>
+                { (minute.toString()!=='0' || hour.toString()!=='0') && (isNumOfGoalZero) &&
+                    <div className={styles.createButton} onClick={()=>onCreate()}>Create</div>
+                }
+                { ((minute.toString()==='0' && hour.toString()==='0') ||
+                    ((minute.toString()!=='0' || hour.toString()!=='0')) && (!isNumOfGoalZero)) &&
+                    <div className={styles.createButtonDisabled}>Create</div>
+                }
             </div>
         </div>
     )

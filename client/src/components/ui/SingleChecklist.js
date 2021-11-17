@@ -19,10 +19,17 @@ export default function SingleChecklist(props) {
     }
 
     const getIcon = () => {
-        if (isDone) {
-            return 'check_box'
-        } 
-        return 'check_box_outline_blank'
+        if (props.groupParticipation !== '') {
+            if (isDone) {
+                return 'done'
+            } 
+            return 'remove'
+        } else {
+            if (isDone) {
+                return 'check_box'
+            } 
+            return 'check_box_outline_blank'
+        }
     }
 
     const getTextStyle = () => {
@@ -57,6 +64,8 @@ export default function SingleChecklist(props) {
         if (props.groupParticipation == '') {
             request();
             setDone(!isDone);
+        } else {
+            props.callSwitch();
         }
     }
 

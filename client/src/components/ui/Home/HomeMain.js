@@ -13,8 +13,9 @@ import { LoginUserContext } from "../../../App";
 import { GameContext } from "../../../App";
 import HomeInfoCloseButton from "./HomeInfoCloseButton";
 import { ReloadContext } from "../../request/ReloadContext";
+import OverlayButton from "../OverlayButton";
 
-export default function HomeMain(props) {
+export default function HomeMain({onWalkToLibrary}) {
   const SHOW_USER = "SHOW_USER";
   const SHOW_GROUP = "SHOW_GROUP";
   const SHOW_CREATE_GROUP = "SHOW_CREATE_GROUP";
@@ -25,11 +26,21 @@ export default function HomeMain(props) {
   const [currentGroup, setCurrentGroup] = useState(null); // group
   const [reloadTime, setReloadTime] = useState(new Date());
   const {loginUser} = useContext(LoginUserContext);
-  const {disableInput} = useContext(GameContext);
+  const {game, gameEnableInput, gameDisableInput} = useContext(GameContext);
 
-  // useEffect(() => {
-  //   disableInput();
-  // }, [])
+  useEffect(() => {
+    const disableInput = () => {
+      console.log("Game: ", game.current);
+      game.current.game.input.keyboard.enabled = false;
+      game.current.game.input.mouse.enabled = false;
+    } 
+    game.current.game.events.on("ready", disableInput);
+    return () => {
+      game.current.game.events.off("ready", disableInput);
+      game.current.game.input.keyboard.enabled = true;
+      game.current.game.input.mouse.enabled = true;
+    }
+  }, []);
 
   const onSetGroup = group => {
     setCurrentGroup(group);
@@ -54,20 +65,28 @@ export default function HomeMain(props) {
 
   if (!loginUser) {
     return (
-      <div>
-        <div className={styles.sidebar}>
-          <div className={styles.sidebarItem}>
-            Not logged in.
+      <>
+        <div className={styles.backdrop}></div>
+        <div>
+          <div className={styles.sidebar}>
+            <div className={styles.sidebarItem}>
+              Not logged in.
+            </div>
           </div>
+          {/* <div className={styles.infoArea}/> */}
         </div>
-        {/* <div className={styles.infoArea}/> */}
-      </div>
+      </>
     )
   }
 
   return (
     <ReloadContext.Provider value = {{reloadTime, setReloadTime}}>
+      <div className={styles.backdrop}></div>
       <div>
+        <div className={styles.walkButton} onClick={onWalkToLibrary}> 
+          <img src="/assets/images/door.png" alt="Walk to library"/>
+          <p>Walk to library</p>
+        </div>
         <div className={styles.sidebar}>        
           <div onClick={onClickUser}><HomeUserAvatar/></div>
           <GroupIconList onSetGroup={onSetGroup}/>

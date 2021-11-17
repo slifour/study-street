@@ -23,6 +23,10 @@
     transition: all ease 1s;
 }
 
+.dark .icons {
+    color: #bdbdbd;
+}
+
 .iconsWhiteLarge {
     font-family: 'Material Icons';
     font-weight: normal;
@@ -211,6 +215,25 @@
     cursor: pointer;
 }
 
+.already {
+    width: 120px;
+    height: max-content;
+    margin-left: auto;
+    margin-right: 25px;
+    padding: 6px 0px 10px 0px;
+
+    color: white;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    font-weight: 400;
+    font-size: 15px;
+    white-space: pre-line;
+
+    background: #CCCCCC;
+    box-shadow: 0px 4px 10px rgba(136, 208, 156, 0.15);
+    border-radius: 8px;
+}
+
 .drop {
     display: flex;
     justify-content: center;
@@ -256,6 +279,10 @@
     text-align: center;
     font-weight: 400;
     font-size: 18px;
+}
+
+.dark .checklistContent {
+    color: #dddddd;
 }
 
 .checklistContentDone {
@@ -515,13 +542,13 @@
 }
 
 .modalContent {
-    height: 100px;
-    position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding-left: 30px;
+    justify-content: left;
+    padding-left: 60px;
     gap: 25px;
+
+    margin: auto 0;
 }
 
 .modalContentText {
@@ -531,7 +558,8 @@
 }
 
 .modalFooter {
-    height: 80px;
+    margin: 20px 0px;
+
     width: 440px;
     display: flex;
     justify-content: right;
@@ -574,6 +602,22 @@
     cursor: pointer;
 }
 
+.createButtonDisabled {
+    width: 120px;
+    height: 40px;
+
+    color: white;
+    font-family: 'Lato', sans-serif;
+    text-align: center;
+    line-height: 40px;
+    font-weight: 600;
+    font-size: 16px;
+
+    background: #CCCCCC;
+    box-shadow: 0px 4px 10px rgba(136, 208, 156, 0.15);
+    border-radius: 8px;
+}
+
 .picker {
     padding-top: 4px;
     padding-left: 20px;
@@ -607,4 +651,69 @@
 
 .modalForm {
     width: 100px;
+}
+
+.groupGoalInstruction {
+    width: 475px;
+    min-height: min-content;
+    background: #CCCCCC;
+    box-shadow: 0px 4px 4px rgba(238, 238, 238, 0.50);
+    border-radius: 14px;
+    margin-top: 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 15px;
+    padding: 15px;
+    padding-left: 30px;
+}
+
+.groupGoalInstructionContent {
+    color: #FFFFFF;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    font-size: 18px;
+}
+
+.groupGoalsName {
+    align-self: stretch;
+    text-align: left;
+    margin: 20px;
+    margin-left: 35px;
+
+    color: #444444;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+}
+
+.dividerGroupGoal {
+    width: 100%;
+    height: 1px;
+    min-height: max-content;
+    background-color: #E7E7E7;
+}
+
+.groupGoalInstructionSmall {
+    width: 80%;
+    margin: 0 auto;
+    min-height: min-content;
+    background: #CCCCCC;
+    box-shadow: 0px 4px 4px rgba(238, 238, 238, 0.50);
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 15px;
+    padding: 10px;
+    padding-left: 30px;
+}
+
+.modalContainer {
+    height: 275px;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
 }

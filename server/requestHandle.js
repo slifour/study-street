@@ -1,7 +1,7 @@
 const chance = require("chance").Chance();
 const { RequestType, ResponseType, ResponseStatus } = require("./requestType");
 let { userList, groupList, invitationList, goalList, bookList } = require("./database");
-const { updateTodayStudyTime } = require("./databaseHelper");
+const { updateTodayStudyTime, updateAttendance } = require("./databaseHelper");
 
 let env;
 
@@ -127,20 +127,28 @@ const onRequestLogin = (socket, request) => {
     return responseFail(socket, requestKey, responseType, "Invalid request.");
   }
 
-  if (userList[userID]) {
+  if (!userList[userID]) {
+    return responseFail(socket, requestKey, responseType, "Failed to login.");
+  } else {
     if (!env.useridList[userID]) {
       let id = socket.id
       env.useridList[userID] = id;
     }
-    return socket.emit(responseType, {
-      requestKey,
-      responseType,
-      status: ResponseStatus.OK,
-      payload: userList[userID]
-    });
-  } else {
-    return responseFail(socket, requestKey, responseType, "Failed to login.");
   }
+
+  // login side effects
+  try {
+    updateAttendance(userID);
+  } catch {
+    console.warn("Failed to update attendance upon login");
+  }
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: userList[userID]
+  });
 }
 
 const onRequestMyProfile = (socket, request) => {
@@ -374,6 +382,12 @@ const onRequestChangeScene = (socket, request) => {
     case "Rest": env.roomDict[id] = env.restRoom; env.restRoom.setUserId(id, requestUser); env.restRoom.update(socket, requestUser, 300, 300); break;
   }
 
+  try {
+    updateAttendance(requestUser);
+  } catch {
+    return reponseFail(socket, requestKey, responseType, "Failed to update attendance");
+  }
+
   return socket.emit(responseType, {
     requestKey,
     responseType,
@@ -462,6 +476,7 @@ const onRequestPersonalChecklist = (socket, request) => {
   let wrap = [];
   wrap[0] = userList[payload.userID].checklist;
   wrap[1] = groupList[userList[payload.userID].curGroup].quests;
+  wrap[2] = groupList[userList[payload.userID].curGroup].groupName;
 
   return socket.emit(responseType, {
     requestKey,
@@ -493,6 +508,13 @@ const onRequestAcceptQuest = (socket, request) => {
   groupList[curGroupID].quests[payload.questID].acceptedUsers.push(payload.userID);
   groupList[curGroupID].quests[payload.questID].notYetUsers.push(payload.userID);
 
+  // side effects of update accept quest
+  try {
+    updateAttendance(payload.userID);
+  } catch (e) {
+    console.warn("Failed to update attendance");
+  }
+
   return socket.emit(responseType, {
     requestKey,
     responseType,
@@ -503,16 +525,43 @@ const onRequestAcceptQuest = (socket, request) => {
 
 const onRequestNewQuest = (socket, request) => {
   const {requestUser, requestKey, payload} = request;
-  const responseType = ResponseType.ACCEPT_QUEST;
+  const responseType = ResponseType.NEW_QUEST;
 
   const curGroupID = userList[payload.userID].curGroup;
-  groupList[curGroupID].quests[payload.quest.questID] = payload.quest;
 
+  //getter
+  let wrap = [];
+  let isNumOfGoalZero = true;
+  let countGoal = 0;
+  const quests = groupList[curGroupID].quests;
+  let dates = [];
+
+  for (let key in quests) {
+      let quest = quests[key];
+      if (quest.acceptedUsers.includes(payload.userID) && quest.type === 'Goal'){
+        countGoal += 1;
+      }
+      if (quest.type === 'Attendance') {
+        dates.push(quest.contentDate);
+      }
+  }
+  if (countGoal > 0) {
+      isNumOfGoalZero = false;
+  }
+
+  wrap[0] = isNumOfGoalZero;
+  wrap[1] = dates;
+
+  if (payload.quest.contentDate !== 0 && payload.quest.contentDate !== null ){
+    groupList[curGroupID].quests[payload.quest.questID] = payload.quest;
+  }
+
+  //setter
   return socket.emit(responseType, {
     requestKey,
     responseType,
     status: ResponseStatus.OK,
-    payload: {}
+    payload: wrap
   })
 }
 

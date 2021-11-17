@@ -1,8 +1,27 @@
+const Chance = require("chance");
+const chance = new Chance();
+
 /* 
 각 value의 key로 쓰인 userID, groupID 등의 값은 바꾸면 안돼요! 
 그러면 데이터베이스에 있는 값이 정확하다고 보장할 수 없게 됩니다. 
 i.e. 쓰는 사람 입장에서, 본인의 userName은 나중에 바꿀 수 있지만, userID는 바꿀 수 없어요. 
 */
+
+
+const dummyAvatars = [
+  'https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraightStrand&accessoriesType=Prescription01&hairColor=Black&facialHairType=MoustacheMagnum&facialHairColor=BrownDark&clotheType=ShirtScoopNeck&clotheColor=Gray01&eyeType=Side&eyebrowType=SadConcerned&mouthType=Sad&skinColor=Pale',
+  'https://avataaars.io/?avatarStyle=Circle&topType=LongHairDreads&accessoriesType=Kurt&hairColor=BrownDark&facialHairType=MoustacheFancy&facialHairColor=Red&clotheType=ShirtVNeck&clotheColor=Gray02&eyeType=Wink&eyebrowType=RaisedExcitedNatural&mouthType=Default&skinColor=Brown',
+  'https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortWaved&accessoriesType=Wayfarers&hairColor=Blue&facialHairType=BeardLight&facialHairColor=Brown&clotheType=ShirtVNeck&clotheColor=Black&eyeType=Side&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light',
+  'https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortFlat&accessoriesType=Kurt&hairColor=PastelPink&facialHairType=BeardLight&facialHairColor=BlondeGolden&clotheType=BlazerSweater&clotheColor=Gray01&eyeType=Cry&eyebrowType=RaisedExcitedNatural&mouthType=Disbelief&skinColor=Pale',
+  'https://avataaars.io/?avatarStyle=Circle&topType=LongHairDreads&accessoriesType=Sunglasses&hairColor=Platinum&facialHairType=MoustacheFancy&facialHairColor=BlondeGolden&clotheType=BlazerSweater&eyeType=Cry&eyebrowType=FlatNatural&mouthType=ScreamOpen&skinColor=DarkBrown',
+  'https://avataaars.io/?avatarStyle=Circle&topType=LongHairFrida&accessoriesType=Kurt&hairColor=Blue&facialHairType=Blank&facialHairColor=Auburn&clotheType=BlazerShirt&eyeType=Wink&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Brown',
+  'https://avataaars.io/?avatarStyle=Circle&topType=LongHairCurvy&accessoriesType=Kurt&hairColor=Brown&facialHairType=MoustacheMagnum&facialHairColor=Red&clotheType=Hoodie&clotheColor=Blue02&eyeType=Wink&eyebrowType=UpDownNatural&mouthType=ScreamOpen&skinColor=DarkBrown',
+  'https://avataaars.io/?avatarStyle=Circle&topType=Hijab&accessoriesType=Kurt&hatColor=Blue03&hairColor=Black&facialHairType=MoustacheFancy&facialHairColor=Platinum&clotheType=BlazerShirt&clotheColor=Gray02&eyeType=Surprised&eyebrowType=Default&mouthType=Default&skinColor=DarkBrown',
+  'https://avataaars.io/?avatarStyle=Circle&topType=LongHairDreads&accessoriesType=Round&hatColor=Blue02&hairColor=Black&facialHairType=BeardMedium&facialHairColor=BrownDark&clotheType=ShirtVNeck&clotheColor=PastelGreen&eyeType=Happy&eyebrowType=UpDownNatural&mouthType=Smile&skinColor=Pale',
+  'https://avataaars.io/?avatarStyle=Circle&topType=LongHairMiaWallace&accessoriesType=Prescription02&hairColor=Blonde&facialHairType=BeardMedium&facialHairColor=Brown&clotheType=ShirtVNeck&clotheColor=PastelYellow&eyeType=Close&eyebrowType=Default&mouthType=Grimace&skinColor=Black',
+];
+
+
 class Goal {
   constructor(id, startDate, repeat){
     this.id = id;
@@ -29,6 +48,7 @@ let userList = {
     "userID": "eunki",
     "userName": "은기",
     "status": "Developing user data system",
+    "profileImage": dummyAvatars[0],
     "curGroup" : "a",
     "todayStudyTime": 7200 * 1000,
     "checklist" : {
@@ -47,6 +67,7 @@ let userList = {
   "haeseul": {
     "userID": "haeseul",
     "userName": "해슬",
+    "profileImage": dummyAvatars[1],
     "todayStudyTime": 7200 * 1000,
     "status": "Making chatting system",
     "curGroup" : "a"
@@ -54,6 +75,7 @@ let userList = {
   "hyeon": {
     "userID": "hyeon",
     "userName": "현",
+    "profileImage": dummyAvatars[2],
     "todayStudyTime": 7200 * 1000,
     "status": "Putting map objects",
     "curGroup" : "b"
@@ -61,6 +83,7 @@ let userList = {
   "jeonghoon": {
     "userID": "jeonghoon",
     "userName": "정훈",
+    "profileImage": dummyAvatars[3],
     "todayStudyTime": 7200 * 1000,
     "status": "Designing figma prototype",
     "curGroup" : "b"
@@ -78,8 +101,8 @@ let groupList = {
       "eq2dm5" : {
           questID : "eq2dm5",
           type : "Attendance",
-          content : "11/14 10:30",
-          contentDate : new Date(2021, 10, 14, 10, 30),
+          content : "11/18",
+          contentDate : new Date(2021, 10, 18, 0, 0),
           acceptedUsers : ["eunki", "haeseul"], // TODO: acceptedUsers, doneUsers, notYetUsers 중 하나는 없어도 됨.
           doneUsers : ["haeseul"],
           participatingUsers : [],
