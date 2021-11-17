@@ -10,12 +10,13 @@ import useRequest from '../request/useRequest';
 
 //request: user ID, checklist
 //response: user checklist, group quest
-export default function ChecklistPersonal() {
+export default function ChecklistPersonal(props) {
     const [isInput, setInput] = useState(false);
     const [inputValue, setInputValue] = useState('Click to write a to-do');
     const {loginUser} = useContext(LoginUserContext);
     const [checklist, setChecklist] = useState({});
     const [quests, setQuests] = useState({});
+    const [groupName, setGroupName] = useState('');
     const [acceptedQuests, setAcceptedQuests] = useState([]);
     let localChecklist = {};
 
@@ -23,6 +24,7 @@ export default function ChecklistPersonal() {
     const onResponseOK = useCallback(({payload}) => {
         setChecklist(payload[0]);
         setQuests(payload[1]);
+        setGroupName(payload[2]);
         let tempQuests = {...payload[1]};
         let tempAcceptedQuests = [];
         for (let quest in tempQuests) {
@@ -92,6 +94,7 @@ export default function ChecklistPersonal() {
                         isDone={isDone}
                         groupParticipation=
                             {`${quests[quest].doneUsers.length}/${quests[quest].acceptedUsers.length} Done`}
+                        callSwitch={props.callSwitch}
                     ></SingleChecklist>
                 </div>
             )
@@ -122,6 +125,8 @@ export default function ChecklistPersonal() {
         <div className={styles.personalContainer}>
             { (acceptedQuests !== []) &&
                 <div className={styles.groupGoals}>
+                    <div className={styles.groupGoalsName}>Accepted Quest of {groupName}</div>
+                    <div className={styles.dividerGroupGoal}/>
                     {mapChecklistsGroup()}
                 </div>    
             }
