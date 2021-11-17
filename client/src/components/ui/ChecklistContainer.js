@@ -8,7 +8,9 @@ import { ReloadContext } from "../request/ReloadContext";
 export default function ChecklistContainer() {
     const [isPersonal, setPersonal] = useState(true);
     const [reloadTime, setReloadTime] = useState(new Date());
-
+    const callSwitch = () => {
+        setPersonal(!isPersonal);
+    }
     return(
     <ReloadContext.Provider value = {{reloadTime, setReloadTime}}>
         <div>
@@ -16,7 +18,7 @@ export default function ChecklistContainer() {
                 state={isPersonal}
                 setPersonal={setPersonal}
                 ></ChecklistTab>
-            {isPersonal && <ChecklistPersonal></ChecklistPersonal>}
+            {isPersonal && <ChecklistPersonal callSwitch={callSwitch}></ChecklistPersonal>}
             {!isPersonal && <ChecklistGroup></ChecklistGroup>}
         </div>
     </ReloadContext.Provider>

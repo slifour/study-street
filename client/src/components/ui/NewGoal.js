@@ -36,7 +36,13 @@ export default function NewGoal(props) {
 
     const modifyDateString = (hourString, minuteString) => {
         let resultString = '';
-        resultString += `${hourString} hours ${minuteString} mins`
+        if (minuteString === 0) {
+            resultString += `${hourString} hours`
+        } else if (hourString === 0){
+            resultString += `${minuteString} mins`
+        } else {
+            resultString += `${hourString} hours ${minuteString} mins`
+        }
         return resultString;
     }
 
@@ -50,10 +56,12 @@ export default function NewGoal(props) {
 
     const changeHour = (e) => {
         setHour(e.target.value);
+        console.log(typeof(minute));
     }
 
     const changeMinute = (e) => {
         setMinute(e.target.value);
+        console.log(hour);
     }
 
     const onCreate = () => {
@@ -74,9 +82,8 @@ export default function NewGoal(props) {
                     <input
                         type="number"
                         min="0"
-                        max="23"
-                        placeholder="0"
                         className={styles.picker}
+                        value={hour}
                         onChange={changeHour}
                     ></input>
                 </form>
@@ -85,9 +92,8 @@ export default function NewGoal(props) {
                     <input
                         type="number"
                         min="0"
-                        max="59"
-                        placeholder="0"
                         className={styles.picker}
+                        value={minute}
                         onChange={changeMinute}
                     ></input>
                 </form>
@@ -95,7 +101,12 @@ export default function NewGoal(props) {
             </div>
             <div className={styles.modalFooter}>
                 <div className={styles.cancelButton} onClick={props.callClose}>Cancel</div>
-                <div className={styles.createButton} onClick={()=>onCreate()}>Create</div>
+                { (minute.toString()!=='0' || hour.toString()!=='0') &&
+                    <div className={styles.createButton} onClick={()=>onCreate()}>Create</div>
+                }
+                { (minute.toString()==='0' && hour.toString()==='0') &&
+                    <div className={styles.createButtonDisabled}>Create</div>
+                }
             </div>
         </div>
     )
