@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "../ui.module.css";
-import studyStyles from "./study.module.scss";
+import studyStyles from "./study.module.css";
 import IconButton from "../IconButton";
 import ChecklistContainer from "../ChecklistContainer";
 

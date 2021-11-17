@@ -6,7 +6,7 @@ import InvitationButton from "./InvitationButton";
 import SettingButton from "./SettingButton";
 import HomeInfoUser from "./HomeInfoUser";
 import HomeInfoGroup from "./HomeInfoGroup";
-import styles from "./home.module.scss";
+import styles from "./home.module.css";
 import HomeInfoCreateGroup from "./HomeInfoCreateGroup";
 import HomeInfoGotInvitation from "./HomeInfoGotInvitation";
 import { LoginUserContext } from "../../../App";

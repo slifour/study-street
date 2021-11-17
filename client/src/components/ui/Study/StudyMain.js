@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { LoginUserContext } from "../../../App";
 import styles from "../ui.module.css";
 import ClockStudy from "./ClockStudy";
-import studyStyles from "./study.module.scss";
+import studyStyles from "./study.module.css";
 
 export default function StudyMain() {
   const {loginUser} = useContext(LoginUserContext);

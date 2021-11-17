@@ -1,9 +1,9 @@
-$sidebar-width: 110px;
-$infoArea-width: 390px;
+/* $sidebar-width: 110px; */
+/* $infoArea-width: 390px; */
 
 .sidebar {
   height: 100%;
-  width: $sidebar-width;
+  width: 110px;
   position: absolute;
   left: 0;
   top: 0;
@@ -19,9 +19,9 @@ $infoArea-width: 390px;
 
 .infoArea {
   height: 100%;
-  width: $infoArea-width;
+  width: 390px;
   position: absolute;
-  left: $sidebar-width;
+  left: 110px;
   top: 0;
   padding: 47px 37px;
   background-color: #fff;
@@ -54,6 +54,6 @@ $infoArea-width: 390px;
 
 .homeInfoCloseButton {
   position: absolute;
-  left: $sidebar-width + $infoArea-width - 100px;
+  left: 400px;
   top: 30px;
 }
