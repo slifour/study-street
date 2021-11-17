@@ -78,8 +78,8 @@ let groupList = {
       "eq2dm5" : {
           questID : "eq2dm5",
           type : "Attendance",
-          content : "11/14 10:30",
-          contentDate : new Date(2021, 10, 14, 10, 30),
+          content : "11/18",
+          contentDate : new Date(2021, 10, 18, 0, 0),
           acceptedUsers : ["eunki", "haeseul"], // TODO: acceptedUsers, doneUsers, notYetUsers 중 하나는 없어도 됨.
           doneUsers : ["haeseul"],
           participatingUsers : [],
