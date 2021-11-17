@@ -99,10 +99,10 @@ function App() {
       <div className={fadeProp.fade}>
         <div className="content">
           { isHome ? <HomeMain onWalkToLibrary={onWalkToLibrary}/> : null }
-          <MenuBar/>
-          { !isHome ? <Avatars/> : null } {/* TODO: Home scene을 만들어 Library scene과 분리하기 */}
+          { !isHome ? <MenuBar/> : null }
+          { !isHome ? <Avatars/> : null }
           { scene === "Study" ? <StudyMain/> : null }
-          <QuickMoveButton emitToGame = {emitToGame}/>
+          { !isHome ? <QuickMoveButton emitToGame = {emitToGame}/> : null }
           <ConfirmAlert show = {showConfirmAlert} setShow = {setshowConfirmAlert}/>
         </div>
         <div className="game-container">
