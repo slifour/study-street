@@ -1,5 +1,5 @@
 
-import React, { useState, useContext, useCallback, useEffect } from 'react';
+import React, { useState, useContext, useCallback } from 'react';
 import styles from './checklist.module.css'
 import SingleChecklist from './SingleChecklist';
 import uniqueString from 'unique-string';
@@ -139,6 +139,7 @@ export default function ChecklistPersonal() {
                             <form className={styles.addChecklistContainer}>
                                 <input
                                     type="text"
+                                    autoFocus="true"
                                     className={styles.addChecklist}
                                     value={inputValue}
                                     onChange={changeInputValue}

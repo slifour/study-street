@@ -92,6 +92,8 @@ const SocketIOServer = () => {
   const setEventHandlers = (socket) => {
 
     /** socket.on('event', eventHandler.bind(null, socket)) */
+    socket.on("REQUEST_MOVE", onRequestMove.bind(null, socket))  
+
     socket.on("disconnect", onDisconnect.bind(null, socket))
     socket.on("REQUEST_MOVE", onRequestMove.bind(null, socket))  
     /* socket.on("createGroup", onCreateGroup(null, socket)) */
@@ -115,6 +117,13 @@ const SocketIOServer = () => {
     });
     updateDate(socket);    
 
+  }
+
+  const onRequestMove = (socket, position) => {
+    let id = socket.id
+    if (env.roomDict[id] !== undefined){
+      env.roomDict[id].update(socket, id, position.x, position.y);
+    }
   }
   
   const onRequestMove = (socket, position) => {
@@ -330,7 +339,7 @@ const SocketIOServer = () => {
 
   /** log */  
   let logUsers = () =>  {
-    console.log("libraryRoom.numUsers :", env.libraryRoom.getNumUsers());
+    // console.log("libraryRoom.numUsers :", env.libraryRoom.getNumUsers());
     setTimeout(logUsers.bind(this), logInterval);
   }   
 

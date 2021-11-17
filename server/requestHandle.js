@@ -1,6 +1,7 @@
 const chance = require("chance").Chance();
 const { RequestType, ResponseType, ResponseStatus } = require("./requestType");
 let { userList, groupList, invitationList, goalList, bookList } = require("./database");
+const { updateTodayStudyTime } = require("./databaseHelper");
 
 let env;
 
@@ -32,7 +33,8 @@ const onRequest = (socket, requestName, request) => {
     case RequestType.PERSONAL_CHECKLIST : onRequestPersonalChecklist(socket, request); break;
     case RequestType.TOGGLE_CHECKLIST : onRequestToggleChecklist(socket, request); break;
     case RequestType.ACCEPT_QUEST : onRequestAcceptQuest(socket, request); break;
-    case RequestType.MOVE: onRequestMove(socket, request); break; 
+    case RequestType.NEW_QUEST: onRequestNewQuest(socket, request); break;
+    // case RequestType.MOVE: onRequestMove(socket, request); break; 
     default: break;
   }
   socket.emit("response", response);
@@ -232,7 +234,7 @@ const onRequestCreateGroup = (socket, request) => {
 
   const sideEffectResponseType = 'RESPONSE_NEW_GROUP'
   
-  io.emit(sideEffectResponseType, {
+  env.io.emit(sideEffectResponseType, {
     payload : groupList[groupID]
   })
 
@@ -352,6 +354,8 @@ const onRequestChangeScene = (socket, request) => {
   }
   socket.join(currentScene);
 
+  let id = socket.id;
+
   switch (prevScene) {
     case "Home": ; break;
     case "Library": env.libraryRoom.remove(socket); break;
@@ -361,9 +365,9 @@ const onRequestChangeScene = (socket, request) => {
 
   switch (currentScene) {
     case "Home": ; break;
-    case "Library": env.roomDict[requestUser] = env.libraryRoom; env.libraryRoom.update(socket, requestUser, 300, 300);  break;
+    case "Library": env.roomDict[id] = env.libraryRoom; env.libraryRoom.setUserId(id, requestUser); env.libraryRoom.update(socket, requestUser, 300, 300);  break;
     case "Study": ; break;
-    case "Rest": env.roomDict[requestUser] = env.restRoom; env.restRoom.update(socket, requestUser, 300, 300); break;
+    case "Rest": env.roomDict[id] = env.restRoom; env.restRoom.setUserId(id, requestUser); env.restRoom.update(socket, requestUser, 300, 300); break;
   }
 
   return socket.emit(responseType, {
@@ -397,7 +401,11 @@ const onRequestUpdateTodayStudyTime = (socket, request) => {
     return responseFail(socket, requestKey, responseType, "Invalid payload");
   }
 
-  user.todayStudyTime = payload;
+  try {
+    updateTodayStudyTime(requestUser, payload);
+  } catch {
+    return responseFail(socket, requestKey, responseType, "Failed to update value");
+  }
 
   return socket.emit(responseType, {
     requestKey,
@@ -462,12 +470,9 @@ const onRequestPersonalChecklist = (socket, request) => {
 const onRequestToggleChecklist = (socket, request) => {
   const {requestUser, requestKey, payload} = request;
   const responseType = ResponseType.TOGGLE_CHECKLIST;
+  userList[payload.userID].checklist[payload.checklistID].isDone = payload.isDone;
 
-  if (payload.checklistID != null) {
-    console.log(true);
-    userList[payload.userID].checklist[payload.checklistID].isDone = payload.isDone;
-  }
-
+  console.log(userList[payload.userID].checklist)
   return socket.emit(responseType, {
     requestKey,
     responseType,
@@ -482,6 +487,7 @@ const onRequestAcceptQuest = (socket, request) => {
   const curGroupID = userList[payload.userID].curGroup;
 
   groupList[curGroupID].quests[payload.questID].acceptedUsers.push(payload.userID);
+  groupList[curGroupID].quests[payload.questID].notYetUsers.push(payload.userID);
 
   return socket.emit(responseType, {
     requestKey,
@@ -491,27 +497,45 @@ const onRequestAcceptQuest = (socket, request) => {
   })
 }
 
-const onRequestMove = (socket, request) => {
+const onRequestNewQuest = (socket, request) => {
   const {requestUser, requestKey, payload} = request;
-  const responseType = ResponseType.CHANGE_SCENE;
+  const responseType = ResponseType.ACCEPT_QUEST;
 
-  let position;
-  try {
-    ({position} = payload);
-  } catch {
-    return responseFail(socket, requestKey, responseType, "Invalid scene.");
-  }
-  if (env.roomDict[requestUser] !== undefined){
-    env.roomDict[requestUser].update(socket, requestUser, position.x, position.y);
-  }
+  const curGroupID = userList[payload.userID].curGroup;
+  groupList[curGroupID].quests[payload.quest.questID] = payload.quest;
 
   return socket.emit(responseType, {
     requestKey,
     responseType,
     status: ResponseStatus.OK,
     payload: {}
-  });    
-};
+  })
+}
+
+// const onRequestMove = (socket, request) => {
+//   const {requestUser, requestKey, payload} = request;
+//   const responseType = ResponseType.CHANGE_SCENE;
+
+//   let position;
+//   try {
+//     ({position} = payload);
+//   } catch {
+//     return responseFail(socket, requestKey, responseType, "Invalid scene.");
+//   }
+//   if (env.roomDict[requestUser] !== undefined){
+//     env.roomDict[requestUser].update(socket, requestUser, position.x, position.y);
+//   }
+
+//   return socket.emit(responseType, {
+//     requestKey,
+//     responseType,
+//     status: ResponseStatus.OK,
+//     payload: {}
+//   });    
+// };
+
+
+
 
 const initRequestHandle = envParam => {
   env = envParam;

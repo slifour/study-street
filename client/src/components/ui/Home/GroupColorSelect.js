@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./home.module.scss";
+import styles from "./home.module.css";
 
 export default function GroupColorSelect() {
   return (

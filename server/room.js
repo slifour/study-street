@@ -17,8 +17,9 @@ module.exports = class Rooms {
         this.room = room;
         this.updateInterval = 200;
         this.positionList = {};
+        this.idList = {};
         this.isEmittingUpdates = false;   
-        this.stateChanged = false;
+        this.stateChanged = false;        
     }
 
     init(io, socket){
@@ -31,12 +32,17 @@ module.exports = class Rooms {
     }
 
     getNumUsers(){
-        return (Object.keys(this.positionList).length);
+        return (Object.keys(this.idList).length);
     }
 
+    setUserId(id, userId){
+        this.idList[id] = userId;
+    }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
     update(socket, id, x, y){
-        this.positionList[id] = {x:x, y:y};
-        console.log(this.positionList[id]);
+        let userId = this.idList[id]
+        this.positionList[userId] ={x:x, y:y};
+        console.log(this.positionList[userId]);
         this.stateChanged = true;
         socket.join(this.room);
         if (this.getNumUsers() === 2 && !this.isEmittingUpdates) {
@@ -44,14 +50,16 @@ module.exports = class Rooms {
         }
     }
 
-    remove(socket, id){
-        if (!Object.keys(this.positionList).includes(id)){
-            return;
+    remove(socket){
+        let id = socket.id;
+        if (Object.keys(this.idList).includes(id)){
+            socket.leave(this.room);
+            let userId = this.idList[id];            
+            delete this.idList[id];
+            delete this.positionList[userId];
+            this.stateChanged = true;
+            this.broadcast("RESPONSE_REMOVE_FRIEND", userId);
         }
-        socket.leave(this.room);
-        delete this.positionList[id];
-        this.stateChanged = true;
-        this.broadcast("RESPONSE_REMOVE_FRIEND", id);
     }
 
     emitLoop(){

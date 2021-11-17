@@ -56,10 +56,21 @@ function App() {
     }
     console.log('emitToGame', data)
   }) 
+  const disableInput = (boolean => {
+    if (game.current !== null && game.current.game) {
+      game.current.game.input.keyboard.enabled = boolean;
+      game.current.game.input.mouse.enabled = boolean;
+    }
+  }) 
+  const disableKeyboard = (boolean => {
+    if (game.current !== null && game.current.game) {
+      game.current.game.input.keyboard.enabled = boolean;
+    }
+  }) 
 
   return (
     <LoginUserContext.Provider value={ {loginUser, setLoginUser} }>
-      <GameContext.Provider value={ {scene, emitToGame} }>
+      <GameContext.Provider value={ {scene, emitToGame, disableInput} }>
       <div className={fadeProp.fade}>
         <div className="content">
           { scene === "Home" || scene === "Library" ? <HomeMain/> : null }

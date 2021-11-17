@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import useRequest from "../../request/useRequest";
 import styles from "../ui.module.css";
-import studyStyles from "./study.module.scss";
+import studyStyles from "./study.module.css";
 
 const CLOCK_REPEAT_INTERVAL = 1000; // unit: ms
 const UPDATE_STUDY_TIME_INTERVAL = 3 * 1000 // unit: ms

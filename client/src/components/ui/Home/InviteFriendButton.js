@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react"
-import styles from "./home.module.scss";
+import styles from "./home.module.css";
 import useRequest from "../../request/useRequest";
 
 export default function InviteFriendButton({group, onInvite}) {
