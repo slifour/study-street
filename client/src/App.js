@@ -75,7 +75,7 @@ function App() {
         <div className="content">
           { scene === "Home" || scene === "Library" ? <HomeMain/> : null }
           <MenuBar/>
-          { scene !== "Home" && scene !== "Library" ? <Avatars/> : null } {/* TODO: Home scene을 만들어 Library scene과 분리하기 */}
+          { scene !== "Home" && scene !== "Library" ? <Avatars/>: null } {/* TODO: Home scene을 만들어 Library scene과 분리하기 */}
           { scene === "Study" ? <StudyMain/> : null }
           <QuickMoveButton emitToGame = {emitToGame}/>
           <ConfirmAlert show = {showConfirmAlert} setShow = {setshowConfirmAlert}/>

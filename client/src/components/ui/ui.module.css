@@ -71,6 +71,30 @@
     gap: 28px;
 }
 
+.postContainer{
+    position: absolute;  
+    margin: auto;
+    left: 2.5%;
+    top: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+    background: #FFFFFF;
+    box-shadow: 0px 4px 6px rgba(74, 74, 74, 0.25);
+    border-radius: 14px;
+}
+
+.postOverlay{
+    position: absolute;  
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+    background: #FFFFFF;
+    box-shadow: 0px 4px 6px rgba(74, 74, 74, 0.25);
+    border-radius: 14px;
+}
+
 .chatContainer {
     display: flex;
     justify-content: space-between;
