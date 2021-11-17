@@ -16,6 +16,7 @@
     "concurrently": "^6.3.0",
     "express": "^4.17.1",
     "nodemon": "^2.0.14",
+    "react-pageflip": "^2.0.3",
     "socket.io": "^4.3.1"
   }
 }
