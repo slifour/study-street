@@ -1,5 +1,5 @@
 import Phaser, { GameObjects } from "phaser";
-import Tooltip from "./Tooltip";
+import Tooltip from "./HtmlModal";
 
 export default class Alert extends GameObjects.Container {
   /**

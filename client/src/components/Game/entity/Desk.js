@@ -39,4 +39,12 @@ export default class Desk extends Phaser.GameObjects.Container {
       chairX += chairDistance
     }
   }
+
+  setInteractive(setInteractive){
+    if (!setInteractive) {
+      
+    }
+
+
+  }
 }
