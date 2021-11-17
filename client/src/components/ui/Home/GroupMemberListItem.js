@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from "react";
 import styles from "./home.module.css";
-import UserAvatarCircle from "./UserAvatarCircle";
+import UserAvatarCircle from "../UserAvatarCircle";
 import useRequest from "../../request/useRequest";
 import useLiveReload from "../../request/useLiveReload";
 

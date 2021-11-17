@@ -8,7 +8,7 @@ export default function MenuBar() {
   return (
     <>
       { scene !== "Study" ? <MenuBarDefault/> : null }
-      { scene === "Study" ? <MenuBarStudy/> : null }
+      {/* { scene === "Study" ? <MenuBarStudy/> : null } */}
     </>
   );
 }

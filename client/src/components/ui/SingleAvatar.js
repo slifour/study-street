@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import socket from '../../socket';
 import Modal from 'react-overlays/Modal';
 import ChatOverlay from './ChatOverlay';
+import UserAvatarCircle from './UserAvatarCircle';
 
 const StyledAvatar = styled.div`
     width: 70px;

@@ -23,6 +23,10 @@
     transition: all ease 1s;
 }
 
+.dark .icons {
+    color: #bdbdbd;
+}
+
 .iconsWhiteLarge {
     font-family: 'Material Icons';
     font-weight: normal;
@@ -275,6 +279,10 @@
     text-align: center;
     font-weight: 400;
     font-size: 18px;
+}
+
+.dark .checklistContent {
+    color: #dddddd;
 }
 
 .checklistContentDone {

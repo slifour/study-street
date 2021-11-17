@@ -62,10 +62,12 @@ export default function NewGoal(props) {
 
     const changeHour = (e) => {
         setHour(e.target.value);
+        console.log(typeof(minute));
     }
 
     const changeMinute = (e) => {
         setMinute(e.target.value);
+        console.log(hour);
     }
 
     const onCreate = () => {

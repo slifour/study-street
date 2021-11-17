@@ -1,21 +1,21 @@
 .studyMain {
-  color: white;
+  /* color: white; */
 }
 
 .checklist {
   position: fixed;
-  width: 800px;
-  height: 400px;
+  width: 600px;
+  height: 700px;
   z-index: 1040;
-  bottom: 20%;
-  right: 5%;
+  bottom: -1%;
+  right: 3%;
   border-radius: 11px;
   outline: none;
   background-color: #3f3f3f;
-  overflow: scroll;
 }
 
 .clock {
+  color: white;
   position: fixed;
   width: 800px;
   height: 136px;

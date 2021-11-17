@@ -1,7 +1,7 @@
 const chance = require("chance").Chance();
 const { RequestType, ResponseType, ResponseStatus } = require("./requestType");
 let { userList, groupList, invitationList, goalList, bookList } = require("./database");
-const { updateTodayStudyTime } = require("./databaseHelper");
+const { updateTodayStudyTime, updateAttendance } = require("./databaseHelper");
 
 let env;
 
@@ -127,16 +127,23 @@ const onRequestLogin = (socket, request) => {
     return responseFail(socket, requestKey, responseType, "Invalid request.");
   }
 
-  if (userList[userID]) {
-    return socket.emit(responseType, {
-      requestKey,
-      responseType,
-      status: ResponseStatus.OK,
-      payload: userList[userID]
-    });
-  } else {
+  if (!userList[userID]) {
     return responseFail(socket, requestKey, responseType, "Failed to login.");
   }
+
+  // login side effects
+  try {
+    updateAttendance(userID);
+  } catch {
+    console.warn("Failed to update attendance upon login");
+  }
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: userList[userID]
+  });
 }
 
 const onRequestMyProfile = (socket, request) => {
@@ -370,6 +377,12 @@ const onRequestChangeScene = (socket, request) => {
     case "Rest": env.roomDict[id] = env.restRoom; env.restRoom.setUserId(id, requestUser); env.restRoom.update(socket, requestUser, 300, 300); break;
   }
 
+  try {
+    updateAttendance(requestUser);
+  } catch {
+    return reponseFail(socket, requestKey, responseType, "Failed to update attendance");
+  }
+
   return socket.emit(responseType, {
     requestKey,
     responseType,
@@ -489,6 +502,13 @@ const onRequestAcceptQuest = (socket, request) => {
 
   groupList[curGroupID].quests[payload.questID].acceptedUsers.push(payload.userID);
   groupList[curGroupID].quests[payload.questID].notYetUsers.push(payload.userID);
+
+  // side effects of update accept quest
+  try {
+    updateAttendance(payload.userID);
+  } catch (e) {
+    console.warn("Failed to update attendance");
+  }
 
   return socket.emit(responseType, {
     requestKey,
