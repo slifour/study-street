@@ -27,7 +27,7 @@ export default class Books extends Phaser.GameObjects.Container {
     this.questList = questList
   }
 
-  updateBooks(questList, update = true){
+  updateBooks(questList){
     this.checkUpdate(questList);
     this.removeAll(true);
     let bookX = this.bookX;

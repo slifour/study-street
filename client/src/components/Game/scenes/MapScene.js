@@ -29,8 +29,9 @@ export default class MapScene extends Phaser.Scene {
     this.prevScene = (data === undefined) ? undefined : data.prevScene
     this.friendDict = {};
     console.log("Welcome to ", this.key);  
-    if(this.registry.get("loginUser")){
-      this.id = this.registry.get("loginUser").userID;
+    console.log("this.registry.get", this.game.registry.get("loginUser"))
+    if(this.game.registry.get("loginUser")){
+      this.id = this.game.registry.get("loginUser").userID;
     }    
   }
 
@@ -111,7 +112,7 @@ export default class MapScene extends Phaser.Scene {
     if(this.friendDict === undefined) {return;}    
     Object.keys(positionList).forEach(function(id) {  
       console.log(id, this.id);      
-      if (id === this.id) {return;}
+      if (id === this.id) {console.log('returned'); return;}
       console.log('Not returned');
       let position = positionList[id]
       if (Object.keys(this.friendDict).includes(id)){

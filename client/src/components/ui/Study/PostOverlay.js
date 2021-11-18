@@ -91,8 +91,7 @@ export default function PostOverlay(props) {
         <>
         {/* {show? */}
         <div className={styles.postAreaContainer}>
-        {/* // <div className="postContainer"> */}
-    
+        {/* // <div className="postContainer"> */}        
             <HTMLFlipBook ref={flipBook} width={280} height={300} size="fixed" postList = {postList}>
                 {/* <Page key={postList[0].msg} number="1">{postList[0].msg}</Page> */}
                 {postList.map((post, index) => (
@@ -101,7 +100,8 @@ export default function PostOverlay(props) {
             {/* <Page number="1">Hi</Page> */}
             </HTMLFlipBook>
             {isReplying? <PostReply setIsReplying = {setIsReplying}></PostReply> : null}    
-            <div className={styles.postButtonSmall} onClick={replyButtonClick}>Reply</div>     
+            <div className={styles.postButtonSmall} onClick={replyButtonClick}>Reply</div>
+                 
             <div>
                 <button type="button" onClick={() => prevButtonClick}>
                     Previous

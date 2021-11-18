@@ -8,14 +8,17 @@
   top: 80px;
   margin: 0px 0px 0px 0px;
   width: 440px;
-  display: flex;
+  /* display: flex; */
   justify-content: bottom;
+  align-items: center;
   gap: 20px;
   align-items: center;
   padding: 0px 30px;
 }
 
 .postButtonSmall{
+  position : absolute;
+  z-index: 1040;
   width: 120px;
   height: 40px;
   color: #999999;
@@ -31,7 +34,7 @@
 }
 
 .postContainer{
-  top: 200px;
+  top: 80px;
   position: absolute;  
   margin: auto;
   padding: 0px 5px 0px 20px;
