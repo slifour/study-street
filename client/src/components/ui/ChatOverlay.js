@@ -40,7 +40,6 @@ export default function ChatOverlay(props) {
         setchats(chats.concat(message));
     }
 
-<<<<<<< HEAD
     const loadChatLog = (clog) => {
         setchats(chats.concat(clog));
     }
@@ -65,26 +64,10 @@ export default function ChatOverlay(props) {
         socket.on('user left', (data) => {
         setchats(chats.concat(`${data.username} left`));
         chatlog.concat(`${data.username} left`);
-=======
-    useEffect(() => {
-        
-        socket.emit('add user', props.userId);
-
-        socket.on('chatconnect', () => {
-        setIsConnected(true);    
-        addChatMessage();
-        });
-        socket.on('user joined', (data) =>{
-        setchats(chats.concat(`${data.username} joined`));
-        })
-        socket.on('user left', (data) => {
-        setchats(chats.concat(`${data.username} left`));
->>>>>>> Hyeon
         });
         socket.on('chatdisconnect', () => {
         setIsConnected(false);
         });
-<<<<<<< HEAD
         socket.on('chatSendFail', () => {
         let message = 'Cannot send message';
         setchats(chats.concat(message));
@@ -98,28 +81,14 @@ export default function ChatOverlay(props) {
         socket.off('chatconnect');
         socket.off('chatdisconnect');
         socket.off('chat message');
-=======
-        socket.on('chat message', (data) => {
-        setchats(chats.concat(`${data.username} : ${data.message}`)); //수정 필요
-        });
-
-        return () => {
-            socket.off('chatconnect');
-            socket.off('chatdisconnect');
-            socket.off('chat message');
->>>>>>> Hyeon
         };
     });
 
     const sendMessage = () => {
         console.log(Msg);
         setchats(chats.concat(`${nickname} : ${Msg}`));
-<<<<<<< HEAD
         //setchatlog(chatlog.concat(`${nickname} : ${Msg}`));
         socket.emit('chat message', nickname, props.userId, Msg);
-=======
-        socket.emit('chat message', nickname, Msg);
->>>>>>> Hyeon
         setMessage('');
     }
 
