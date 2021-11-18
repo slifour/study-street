@@ -139,11 +139,9 @@ const onRequestLogin = (socket, request) => {
     console.warn("Failed to update attendance upon login");
   }
   if(update){
-    const timeout = setTimeout(() => {onRequestNewDoneQuest(socket);console.log("TimeoutTImeout")}, 6000)    
+    onRequestNewDoneQuest(socket);    
     update = false;
   }
-
-  onRequestNewDoneQuest(socket);
 
   return socket.emit(responseType, {
     requestKey,
@@ -251,6 +249,8 @@ const onRequestCreateGroup = (socket, request) => {
   env.io.emit(sideEffectResponseType, {
     payload : groupList[groupID]
   })
+
+  onRequestNewDoneQuest(socket);
 
   return socket.emit(responseType, {
     requestKey,
