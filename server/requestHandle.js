@@ -247,7 +247,8 @@ const onRequestCreateGroup = (socket, request) => {
     groupName,
     leader: requestUser,
     member: [requestUser],
-    colors: colors || defaultColors
+    colors: colors || defaultColors,
+    quests: {}
   };
 
   const sideEffectResponseType = 'RESPONSE_NEW_GROUP'
