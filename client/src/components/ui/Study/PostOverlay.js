@@ -1,17 +1,14 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import { LoginUserContext } from "../../App";
-import socket from '../../socket';
-import styles from "./ui.module.css";
 import styled from 'styled-components';
 import HTMLFlipBook from "react-pageflip";
 import PostPage from './PostPage'; 
 import PostReply from './PostReply'; 
+import PostCloseButton from './PostCloseButton';
 
 const StyledDiv = styled.div`
     position: fixed;
     z-index: 1040;
-    top: 10%;
-    left: 10%;
+    top: 150px;
 `;
 
 //const socketIo = require("socket.io");
@@ -61,7 +58,7 @@ const StyledDiv = styled.div`
 
 export default function PostOverlay(props) {
     // const {show, postList} = props;
-    const {onChange, Msg, sendMessage} = props;
+    const {setShow, onChange, Msg, sendMessage} = props;
 
     const postList = [{id: 'hyeon', msg : 'hello'}, {id: 'hyeon', msg : 'hello'}, {id: 'hyeon', msg : 'hello'}];
 
@@ -84,6 +81,10 @@ export default function PostOverlay(props) {
     const prevButtonClick = () => {
         flipBook.getPageFlip().flipPrev();
     };
+    
+    const onClickPostClose = () => {
+        setShow(false);
+    }
 
     return(        
         <>
@@ -91,7 +92,7 @@ export default function PostOverlay(props) {
         <div>
         {/* // <div className="postContainer"> */}
         <StyledDiv>
-            <HTMLFlipBook ref={flipBook} width={300} height={300} size="fixed" postList = {postList}>
+            <HTMLFlipBook ref={flipBook} width={280} height={300} size="fixed" postList = {postList}>
                 {/* <Page key={postList[0].msg} number="1">{postList[0].msg}</Page> */}
                 {postList.map((post, index) => (
                     <PostPage key={post.msg} post={post} onChange = {onChange} Msg ={Msg} sendMessage = {sendMessage}></PostPage>
@@ -110,6 +111,7 @@ export default function PostOverlay(props) {
                     Next 
                 </button>
             </div>
+            <PostCloseButton onClick={onClickPostClose}/>
         </StyledDiv>
         </div>
         {/* : null} */}

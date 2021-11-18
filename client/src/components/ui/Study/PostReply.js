@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import styles from "./ui.module.css";
+import styles from "./study.module.css";
 
 export default function PostReply(props){
 

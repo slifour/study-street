@@ -134,8 +134,7 @@ export default class MapScene extends Phaser.Scene {
 
   setEventHandlers(){
     // Description
-    // socket.on('event', eventHandler)
-  
+    // socket.on('event', eventHandler)  
     // New user message received
     // this.socket.on('stateUpdate', this.onStateUpdate.bind(this));
     if(this.socket !== undefined){

@@ -26,7 +26,7 @@ export default class Study extends Phaser.Scene {
 
   init(data) {    
     console.log("Welcome to ", 'Study');  
-    this.deskPosition = {x : 0 , y: 0};
+    this.deskPosition = {x : 30 , y: 0};
     this.desk = null;
     this.index = data.index;
     this.prevScene = data.prevScene; 
@@ -62,7 +62,7 @@ export default class Study extends Phaser.Scene {
     this.createDesk(0, 0, 'desk', 'chair');
     const chair = this.desk.getAt(this.index);
     chair.sit();
-    this.cameras.main.centerOn(this.desk.x + this.cameras.main.width/4 , this.desk.y - this.cameras.main.height/4 );
+    this.cameras.main.centerOn(this.desk.x + this.cameras.main.width/4, this.desk.y - this.cameras.main.height/4 );
     this.setEventHandlers();
 
     // createCharacterAnimsWizard(this.anims);

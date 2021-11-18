@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { LoginUserContext } from "../../App";
-import socket from '../../socket';
-import styles from "./ui.module.css";
+import { LoginUserContext } from "../../../App";
+import socket from '../../../socket';
+import styles from "./study.module.css";
 import styled from 'styled-components';
 import PostOverlay from './PostOverlay';
 import Modal from 'react-overlays/Modal';
@@ -9,10 +9,10 @@ import Modal from 'react-overlays/Modal';
 //const socketIo = require("socket.io");
 
 const StyledDiv = styled.div`
-    position: absolute;
+    position: fixed;
     z-index: 1040;
-    top: 10%;
-    left: 10%;
+    top: 75px;
+    left: 250px;
 `;
 
 const StyledModal = styled(Modal)`
@@ -46,7 +46,7 @@ export default function PostButton(props) {
     const [show, setShow] = useState(false);
     // const [showReply, setShowReply] = useState("false");
     
-    const [active, setActive] = useState("false");
+    const [active, setActive] = useState(false);
     const [buttonText, setButtonText] = useState("Stickies");
 
     const addChatMessage = () => {
@@ -95,10 +95,17 @@ export default function PostButton(props) {
         };
     });
 
+    const update = () => {
+        setNewPost(true);
+        if(newPost){
+            setActive(true);
+        };        
+    };
+
     useEffect(() => {
-        const activatePost = setInterval(() => { setActive(true); }, POST_UPDATE_INTERVAL);
+        const activatePost = setInterval(() => {update();}, POST_UPDATE_INTERVAL);
         return () => {clearInterval(activatePost);};
-    }, []);      
+    }, [active]);      
 
     const sendMessage = () => {
         console.log(Msg);
@@ -116,30 +123,30 @@ export default function PostButton(props) {
     }
 
     return(
-        <styledDiv>
+        <StyledDiv>
             <div>
             {active ?
             <div>
-            <div className= {`${styles.overlayButton} ${styles.hvrGrow}`} 
-                style={props.buttonStyle} 
-                // buttonStyle = {{left: "20%", bottom: "80%"}} 
-                onClick={() => {}}>
-                {buttonText}
-            </div>
-                {show?
-                <div><PostOverlay postList = {posts} onChange = {onChange} Msg ={Msg} sendMessage = {sendMessage}></PostOverlay></div>
-                :<div></div>}
-            </div> :        
-            <div>
-                <div className= {`${styles.overlayButton}`} 
+            <div className= {`${styles.postButton} ${styles.hvrGrow}`} 
                 style={props.buttonStyle} 
                 // buttonStyle = {{left: "20%", bottom: "80%"}} 
                 onClick={onButtoNClick}>
+                {buttonText}
+            </div>
+                {show?
+                <div><PostOverlay postList = {posts} setShow = {setShow} onChange = {onChange} Msg ={Msg} sendMessage = {sendMessage}></PostOverlay></div>
+                :<div></div>}
+            </div> :        
+            <div>
+                <div className= {`${styles.postButton}`} 
+                style={props.buttonStyle} 
+                // buttonStyle = {{left: "20%", bottom: "80%"}} 
+                >
                     {buttonText}
                 </div>
             </div>
             }      
             </div>      
-        </styledDiv>
+        </StyledDiv>
     )
 }

@@ -71,30 +71,6 @@
     gap: 28px;
 }
 
-.postContainer{
-    position: absolute;  
-    margin: auto;
-    left: 2.5%;
-    top: 20%;
-    display: flex;
-    justify-content: center;
-    align-items: center;   
-    background: #FFFFFF;
-    box-shadow: 0px 4px 6px rgba(74, 74, 74, 0.25);
-    border-radius: 14px;
-}
-
-.postOverlay{
-    position: absolute;  
-    margin: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;   
-    background: #FFFFFF;
-    box-shadow: 0px 4px 6px rgba(74, 74, 74, 0.25);
-    border-radius: 14px;
-}
-
 .chatContainer {
     display: flex;
     justify-content: space-between;
@@ -242,22 +218,6 @@
     cursor: pointer;
 }
 
-.postButton {
-    display: flex;
-    align-items: center;
-    padding: 0px 5px 0px 20px;
-    /* position: absolute; */
-    width: 177px;
-    height: 59px;
-    font-size: 15px;
-    line-height: 18px;
-    font-weight: 600;
-    color: black;
-    background: #FFFFFF;
-    box-shadow: 0px 4px 6px rgba(74, 74, 74, 0.25);
-    border-radius: 11px;
-    /* cursor: pointer; */
-}
 
 /* Tooltip and Alerts */
 .tooltip {

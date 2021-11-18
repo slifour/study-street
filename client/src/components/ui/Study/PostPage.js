@@ -1,7 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import styles from "./ui.module.css";
-import PostReply from './PostReply'; 
-
+import styles from "./study.module.css";
 
 const PostPage = React.forwardRef((props, ref) => {
     const {post, onChange, Msg, sendMessage} = props;

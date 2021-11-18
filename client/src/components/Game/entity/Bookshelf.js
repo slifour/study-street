@@ -1,5 +1,4 @@
 import Phaser from 'phaser';
-import Desk from "./Desk";
 import Books from "./Books";
 import Book from './Book';
 
@@ -12,21 +11,22 @@ export default class Bookshelf extends Phaser.GameObjects.Container {
         this.scene.physics.world.enable(this);
         this.x = x
         this.y = y      
-    }
-
-    init(bookshelfKey) {     
         this.createBookshelf(bookshelfKey);
         this.createBooks();
         Phaser.Display.Align.To.BottomLeft(this.books, this.bookshelf, -15, 5)
+    }
+
+    init(bookshelfKey) {     
+
     }
 
     createBookshelf(bookshelfKey){
         let margin = -150;
         this.bookshelf = this.scene.physics.add.image(0, margin, bookshelfKey).setScale(1, 1.2);
         // bookshelf.setSize(72);
-        this.scene.add.existing(bookshelf);
-        this.scene.physics.world.enable(bookshelf);
-        this.add(bookshelf)
+        this.scene.add.existing(this.bookshelf);
+        this.scene.physics.world.enable(this.bookshelf);
+        this.add(this.bookshelf)
         this.coordinate = this.bookshelf.getBottomLeft()
     }
 
@@ -37,32 +37,33 @@ export default class Bookshelf extends Phaser.GameObjects.Container {
         this.add(this.books)
     }
 
-    updateBooks(value){
-        console.log('GroupArea.updateBooks(',value, ')')
-        for (const [shelfId, sizeList] of Object.entries(value)) {
-            if (shelfId == 0) {
-                this.books.updateBooks(sizeList)
-                // let height = 32*Number(shelfId)
-                // let books = this.scene.add.container(this.x, this.y + height);                
-                // this.scene.add.existing(books);
-                // this.scene.physics.world.enable(books);
-                // books.setSize(300,300)
-                // let bookX = this.x
-                // console.log(this.y)
-                // for (const size of sizeList){
-                //     console.log(size);
-                //     this.scene.book = new Book(this.scene, bookX, this.y + height, size)
-                //     // this.add(book)
-                //     // books.add(book)
-                //     bookX += size
-                // }
-                // this.add(books)
-                // this.bookshelf.removeAt(0, true);
-                // books.setSize(this.bookshelf.width, this.bookshelf.height)
-                // books.setSize(this.bookshelf.width, this.bookshelf.height)
-                // this.bookshelf.add(books);             
-                // console.log(this.bookshelf.getAll())   
-            }           
-        }  
+    updateBooks(questList){
+        this.books.updateBooks(questList)
+        console.log('GroupArea.updateBooks(',questList, ')')
+        // for (const [shelfId, sizeList] of Object.entries(value)) {
+        //     if (shelfId == 0) {
+        //         this.books.updateBooks(sizeList)
+        //         // let height = 32*Number(shelfId)
+        //         // let books = this.scene.add.container(this.x, this.y + height);                
+        //         // this.scene.add.existing(books);
+        //         // this.scene.physics.world.enable(books);
+        //         // books.setSize(300,300)
+        //         // let bookX = this.x
+        //         // console.log(this.y)
+        //         // for (const size of sizeList){
+        //         //     console.log(size);
+        //         //     this.scene.book = new Book(this.scene, bookX, this.y + height, size)
+        //         //     // this.add(book)
+        //         //     // books.add(book)
+        //         //     bookX += size
+        //         // }
+        //         // this.add(books)
+        //         // this.bookshelf.removeAt(0, true);
+        //         // books.setSize(this.bookshelf.width, this.bookshelf.height)
+        //         // books.setSize(this.bookshelf.width, this.bookshelf.height)
+        //         // this.bookshelf.add(books);             
+        //         // console.log(this.bookshelf.getAll())   
+        //     }           
+        // }  
     } 
 }
