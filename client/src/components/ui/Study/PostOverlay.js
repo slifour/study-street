@@ -4,6 +4,7 @@ import HTMLFlipBook from "react-pageflip";
 import PostPage from './PostPage'; 
 import PostReply from './PostReply'; 
 import PostCloseButton from './PostCloseButton';
+import styles from "./study.module.css";
 
 const StyledDiv = styled.div`
     position: fixed;
@@ -89,9 +90,9 @@ export default function PostOverlay(props) {
     return(        
         <>
         {/* {show? */}
-        <div>
+        <div className={styles.postAreaContainer}>
         {/* // <div className="postContainer"> */}
-        <StyledDiv>
+    
             <HTMLFlipBook ref={flipBook} width={280} height={300} size="fixed" postList = {postList}>
                 {/* <Page key={postList[0].msg} number="1">{postList[0].msg}</Page> */}
                 {postList.map((post, index) => (
@@ -100,9 +101,7 @@ export default function PostOverlay(props) {
             {/* <Page number="1">Hi</Page> */}
             </HTMLFlipBook>
             {isReplying? <PostReply setIsReplying = {setIsReplying}></PostReply> : null}    
-            <button type="button" onClick={() => replyButtonClick()}>
-                Reply
-            </button>        
+            <div className={styles.postButtonSmall} onClick={replyButtonClick}>Reply</div>     
             <div>
                 <button type="button" onClick={() => prevButtonClick}>
                     Previous
@@ -112,7 +111,6 @@ export default function PostOverlay(props) {
                 </button>
             </div>
             <PostCloseButton onClick={onClickPostClose}/>
-        </StyledDiv>
         </div>
         {/* : null} */}
         </>

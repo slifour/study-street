@@ -2,7 +2,36 @@
   /* color: white; */
 }
 
+.postAreaContainer {
+  position: absolute;
+  left: -20px;
+  top: 80px;
+  margin: 0px 0px 0px 0px;
+  width: 440px;
+  display: flex;
+  justify-content: bottom;
+  gap: 20px;
+  align-items: center;
+  padding: 0px 30px;
+}
+
+.postButtonSmall{
+  width: 120px;
+  height: 40px;
+  color: #999999;
+  font-family: 'Lato', sans-serif;
+  text-align: center;
+  line-height: 40px;
+  font-weight: 600;
+  font-size: 16px;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 10px rgba(226, 226, 226, 0.15);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 .postContainer{
+  top: 200px;
   position: absolute;  
   margin: auto;
   padding: 0px 5px 0px 20px;
@@ -32,6 +61,24 @@
   font-style: normal;
   font-size: 32px;
   color: #444444;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  text-rendering: optimizeLegibility;
+  cursor: pointer;
+}
+
+.iconsRed {
+  margin-left: 150px;
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 32px;
+  color: #ff0000;
   display: inline-block;
   line-height: 1;
   text-transform: none;
@@ -81,6 +128,7 @@
   display: flex;
   align-items: center;
   padding: 0px 5px 0px 20px;
+  margin-bottom: 20px;
   position: absolute;
   width: 300px;
   height: 59px;

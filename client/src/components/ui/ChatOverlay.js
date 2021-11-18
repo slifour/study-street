@@ -27,11 +27,8 @@ export default function ChatOverlay(props) {
     const nickname = loginUser.userID;
     console.log("nickname:", loginUser, nickname)
     const [chats, setchats] = useState([]);
-<<<<<<< HEAD
     //setchat에 메시지가 오면 props에 알림을 하는 on/off 함수를 하나 만들면 알림을 줄 수 있을 듯
     const chatlog = [];
-=======
->>>>>>> Hyeon
     const [isConnected, setIsConnected] = useState(socket.connected);
     const [Msg, setMessage] = useState(null);
 

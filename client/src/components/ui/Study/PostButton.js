@@ -102,10 +102,16 @@ export default function PostButton(props) {
         };        
     };
 
+    // useEffect(() => {
+    //     if(active){
+    //         setButtonText("New Stickies");
+    //     }
+    // })
+
     useEffect(() => {
         const activatePost = setInterval(() => {update();}, POST_UPDATE_INTERVAL);
         return () => {clearInterval(activatePost);};
-    }, [active]);      
+    });      
 
     const sendMessage = () => {
         console.log(Msg);
@@ -118,8 +124,14 @@ export default function PostButton(props) {
         setMessage(e.target.value);
     }
 
-    const onButtoNClick = () => {
-        setShow(true)
+    const onButtonClick = () => {
+        if (show){
+            setShow(false);
+            setActive(false);
+        }
+        else {
+            setShow(true);             
+        }
     }
 
     return(
@@ -127,22 +139,24 @@ export default function PostButton(props) {
             <div>
             {active ?
             <div>
-            <div className= {`${styles.postButton} ${styles.hvrGrow}`} 
-                style={props.buttonStyle} 
-                // buttonStyle = {{left: "20%", bottom: "80%"}} 
-                onClick={onButtoNClick}>
-                {buttonText}
-            </div>
+                <div className= {`${styles.postButton} ${styles.hvrGrow}`} 
+                    style={props.buttonStyle} 
+                    // buttonStyle = {{left: "20%", bottom: "80%"}} 
+                    onClick={onButtonClick}>                    
+                    New Stickies
+                    {show?
+                    <div className={styles.iconsRed}>arrow_circle_up</div>:<div className={styles.iconsRed}>arrow_circle_down</div>}
+                </div>                
                 {show?
-                <div><PostOverlay postList = {posts} setShow = {setShow} onChange = {onChange} Msg ={Msg} sendMessage = {sendMessage}></PostOverlay></div>
-                :<div></div>}
+                <PostOverlay postList = {posts} setShow = {setShow} onChange = {onChange} Msg ={Msg} sendMessage = {sendMessage}></PostOverlay>
+                :null}
             </div> :        
             <div>
                 <div className= {`${styles.postButton}`} 
                 style={props.buttonStyle} 
                 // buttonStyle = {{left: "20%", bottom: "80%"}} 
                 >
-                    {buttonText}
+                    Stickies
                 </div>
             </div>
             }      

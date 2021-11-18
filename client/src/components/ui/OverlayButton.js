@@ -31,9 +31,29 @@ const modalStyles = {
     display: flex;
     justify-content: center;
     align-items: center;   
-    ` 
-}
+    `, 
 
+    "QuickMoveNew" : `    
+    position: fixed;
+    width: 300px;
+    height: 60px;
+    margin: auto;
+    bottom: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+
+    background: #FFFFFF;
+    box-shadow: 0px 4px 10px rgba(47, 47, 47, 0.25);
+    border-radius: 30.5px;
+
+    font-family: 'Lato', sans-serif;
+    font-style: italic;
+    font-size: 14px;
+    font-weight: 300;
+    `
+}
 
 /** 
  * OverlayButton UI 를 재사용하면 좋을 것 같아서
@@ -62,7 +82,7 @@ export default function OverlayButton(props) {
 
   return (
       <>
-      <div className={`${styles.overlayButton} ${styles.hvrGrow}`} style={props.buttonStyle} onClick={() => {setShow(true)}}>
+      <div className={`${id === "QuickMove"? styles.quickMove : styles.overlayButton} ${styles.hvrGrow}`} style={props.buttonStyle} onClick={() => {setShow(true)}}>
           {props.text}
       </div> 
       <StyledModal

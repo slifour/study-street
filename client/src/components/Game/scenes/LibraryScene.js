@@ -180,12 +180,12 @@ export default class Library extends MapScene {
         console.log(container)
         container.add(border);
         container.add(groupName);
-        container.setDepth(0);
+        container.setDepth(-5);
         this.nextdeskId += 1;
 
         /** Group border appears gradually based on tween (animation) */
         container.alpha = 0;
-        const duration = 2000;
+        const duration = 3000;
         let moveTween = this.tweens.add({
           targets : container,
           alpha: 1,

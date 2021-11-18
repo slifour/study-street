@@ -38,6 +38,28 @@
     font-weight: 300;
 }
 
+.quickMove {
+    position: fixed;
+    width: 300px;
+    height: 60px;
+    margin: auto;
+    bottom: 0%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+
+    background: #FFFFFF;
+    box-shadow: 0px 4px 10px rgba(47, 47, 47, 0.25);
+    border-radius: 30.5px;
+
+    text-align: center;
+    line-height: 60px;
+    font-family: 'Lato', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+}
+
 .iconButtonContainer {
     display: flex;
     align-items: center;
