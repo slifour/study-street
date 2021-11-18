@@ -28,7 +28,7 @@ export default function ChatOverlay(props) {
     console.log("nickname:", loginUser, nickname)
     const [chats, setchats] = useState([]);
     //setchat에 메시지가 오면 props에 알림을 하는 on/off 함수를 하나 만들면 알림을 줄 수 있을 듯
-    const chatlog = [];
+    const chatlog = {}; //[]의 {} 꼴로 채팅방별로 백업해야 함! 방에 아이디를 부여해서 아이디별로 백업?
     const [isConnected, setIsConnected] = useState(socket.connected);
     const [Msg, setMessage] = useState(null);
 
@@ -45,7 +45,7 @@ export default function ChatOverlay(props) {
         
         //이전 채팅 기록을 불러오는 함수
         socket.emit('call chat log', chatlog);
-        socket.emit('add user', props.userId);
+        socket.emit('add user', nickname);
 
         socket.on('chatconnect', () => {
             setIsConnected(true);    
@@ -70,7 +70,9 @@ export default function ChatOverlay(props) {
         setchats(chats.concat(message));
         });
         socket.on('chat message', (data) => {
-        setchats(chats.concat(`${data.sendname} : ${data.message}`));
+        if(data.sendname === props.userId){
+            setchats(chats.concat(`${data.sendname} : ${data.message}`));
+        }
         chatlog.concat(`${data.sendname} : ${data.message}`);
         });
 
