@@ -18,20 +18,22 @@ const StyledIcon = styled.div`
     background: ${props => props.color};
 `;
 
-//const socketIo = require("socket.io");
+export default function PostOverlay() {
+    return(
+        <div className = {}>
 
-export default function ChatOverlay(props) {
+        </div>
+    )
+}
+
+export default function PostItOverlay(props) {
+    const {show} = props;
     const shortenName = props.userId.substr(0, 2).toUpperCase();
 
     const {loginUser} = useContext(LoginUserContext);
     const nickname = loginUser.userID;
     console.log("nickname:", loginUser, nickname)
     const [chats, setchats] = useState([]);
-<<<<<<< HEAD
-    //setchat에 메시지가 오면 props에 알림을 하는 on/off 함수를 하나 만들면 알림을 줄 수 있을 듯
-    const chatlog = [];
-=======
->>>>>>> Hyeon
     const [isConnected, setIsConnected] = useState(socket.connected);
     const [Msg, setMessage] = useState(null);
 
@@ -40,32 +42,6 @@ export default function ChatOverlay(props) {
         setchats(chats.concat(message));
     }
 
-<<<<<<< HEAD
-    const loadChatLog = (clog) => {
-        setchats(chats.concat(clog));
-    }
-
-    useEffect(() => {
-        
-        //이전 채팅 기록을 불러오는 함수
-        socket.emit('call chat log', chatlog);
-        socket.emit('add user', props.userId);
-
-        socket.on('chatconnect', () => {
-            setIsConnected(true);    
-            addChatMessage();
-        });
-        socket.on('load chat log', (data) =>{
-            loadChatLog(data.chatlog);
-        })
-        socket.on('user joined', (data) =>{
-        setchats(chats.concat(`${data.username} joined`));
-        chatlog.concat(`${data.username} joined`);
-        })
-        socket.on('user left', (data) => {
-        setchats(chats.concat(`${data.username} left`));
-        chatlog.concat(`${data.username} left`);
-=======
     useEffect(() => {
         
         socket.emit('add user', props.userId);
@@ -79,26 +55,10 @@ export default function ChatOverlay(props) {
         })
         socket.on('user left', (data) => {
         setchats(chats.concat(`${data.username} left`));
->>>>>>> Hyeon
         });
         socket.on('chatdisconnect', () => {
         setIsConnected(false);
         });
-<<<<<<< HEAD
-        socket.on('chatSendFail', () => {
-        let message = 'Cannot send message';
-        setchats(chats.concat(message));
-        });
-        socket.on('chat message', (data) => {
-        setchats(chats.concat(`${data.sendname} : ${data.message}`));
-        chatlog.concat(`${data.sendname} : ${data.message}`);
-        });
-
-        return () => {
-        socket.off('chatconnect');
-        socket.off('chatdisconnect');
-        socket.off('chat message');
-=======
         socket.on('chat message', (data) => {
         setchats(chats.concat(`${data.username} : ${data.message}`)); //수정 필요
         });
@@ -107,19 +67,13 @@ export default function ChatOverlay(props) {
             socket.off('chatconnect');
             socket.off('chatdisconnect');
             socket.off('chat message');
->>>>>>> Hyeon
         };
     });
 
     const sendMessage = () => {
         console.log(Msg);
         setchats(chats.concat(`${nickname} : ${Msg}`));
-<<<<<<< HEAD
-        //setchatlog(chatlog.concat(`${nickname} : ${Msg}`));
-        socket.emit('chat message', nickname, props.userId, Msg);
-=======
         socket.emit('chat message', nickname, Msg);
->>>>>>> Hyeon
         setMessage('');
     }
 
@@ -128,6 +82,7 @@ export default function ChatOverlay(props) {
     }
 
     return(
+        // show ?
         <div className = {styles.chatContainer}>
             <div className = {styles.chatHeader}>
                 <StyledIcon color={props.color}>{shortenName}</StyledIcon>
@@ -162,5 +117,6 @@ export default function ChatOverlay(props) {
                 </div>
             </div>
         </div>
+        // : null
     )
 }

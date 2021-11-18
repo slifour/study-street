@@ -4,6 +4,7 @@ import ChecklistContainer from "../ChecklistContainer";
 import styles from "../ui.module.css";
 import ClockStudy from "./ClockStudy";
 import studyStyles from "./study.module.css";
+import PostButton from "./PostButton";
 import checklistStyles from "../checklist.module.css";
 
 export default function StudyMain() {
@@ -17,6 +18,7 @@ export default function StudyMain() {
   return (
     <div className={studyStyles.studyMain}>
       <ClockStudy/>
+      <PostButton/>
       <div className={`${studyStyles.checklist} ${checklistStyles.dark}`}>
         <ChecklistContainer/>
       </div>

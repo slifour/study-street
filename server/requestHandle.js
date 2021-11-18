@@ -1,9 +1,10 @@
 const chance = require("chance").Chance();
 const { RequestType, ResponseType, ResponseStatus } = require("./requestType");
 let { userList, groupList, invitationList, goalList, bookList } = require("./database");
-const { updateTodayStudyTime, updateAttendance } = require("./databaseHelper");
+const { updateTodayStudyTime, updateAttendance, createBooks } = require("./databaseHelper");
 
 let env;
+let update;
 
 const onRequest = (socket, requestName, request) => {
   console.log("Got request:", request);
@@ -139,9 +140,13 @@ const onRequestLogin = (socket, request) => {
 
   // login side effects
   try {
-    updateAttendance(userID);
+    update = updateAttendance(userID);
   } catch {
     console.warn("Failed to update attendance upon login");
+  }
+  if(update){
+    onRequestNewDoneQuest(socket);    
+    update = false;
   }
 
   return socket.emit(responseType, {
@@ -250,6 +255,8 @@ const onRequestCreateGroup = (socket, request) => {
   env.io.emit(sideEffectResponseType, {
     payload : groupList[groupID]
   })
+
+  onRequestNewDoneQuest(socket);
 
   return socket.emit(responseType, {
     requestKey,
@@ -378,15 +385,19 @@ const onRequestChangeScene = (socket, request) => {
 
   switch (currentScene) {
     case "Home": ; break;
-    case "Library": env.roomDict[id] = env.libraryRoom; env.libraryRoom.setUserId(id, requestUser); env.libraryRoom.update(socket, requestUser, 300, 300);  break;
+    case "Library": onRequestNewDoneQuest(socket); env.roomDict[id] = env.libraryRoom; env.libraryRoom.setUserId(id, requestUser); env.libraryRoom.update(socket, requestUser, 300, 300);  break;
     case "Study": ; break;
     case "Rest": env.roomDict[id] = env.restRoom; env.restRoom.setUserId(id, requestUser); env.restRoom.update(socket, requestUser, 300, 300); break;
   }
 
   try {
-    updateAttendance(requestUser);
+    update = updateAttendance(requestUser);
   } catch {
     return reponseFail(socket, requestKey, responseType, "Failed to update attendance");
+  }
+  if(update){
+    onRequestNewDoneQuest(socket);
+    update = false;
   }
 
   return socket.emit(responseType, {
@@ -421,9 +432,13 @@ const onRequestUpdateTodayStudyTime = (socket, request) => {
   }
 
   try {
-    updateTodayStudyTime(requestUser, payload);
+    update = updateTodayStudyTime(requestUser, payload);
   } catch {
     return responseFail(socket, requestKey, responseType, "Failed to update value");
+  }
+  if(update){
+    onRequestNewDoneQuest(socket);
+    update = false;
   }
 
   return socket.emit(responseType, {
@@ -590,6 +605,21 @@ const onRequestNewQuest = (socket, request) => {
     responseType,
     status: ResponseStatus.OK,
     payload: wrap
+  })
+}
+
+const onRequestNewDoneQuest = (socket) => {
+
+  const requestKey = null;
+  const responseType = "RESPONSE_NEW_DONE_QUEST";
+  const books = createBooks();
+
+  //setter
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: books
   })
 }
 

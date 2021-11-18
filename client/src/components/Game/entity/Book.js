@@ -1,12 +1,13 @@
 import Phaser, { NONE } from 'phaser';
 
 export default class Book extends Phaser.GameObjects.Sprite {
-  constructor(scene, x, y, size, alert, spriteKey = 'book-side', color="#ff0000", unitSize = 8, id = 0) {
+  constructor(scene, x, y, quest, alert, spriteKey = 'book-side', color="#ff0000", unitSize = 8, id = 0) {
     super(scene, x, y, spriteKey);
     this.scene = scene;
     this.scene.add.existing(this);
     this.scene.physics.world.enable(this);
-    this.size = size;
+    this.quest = quest;
+    this.size = quest.doneUsers.length;
     this.color = color;
     this.unitSize = unitSize;
     this.relativeX = 0;

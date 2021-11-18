@@ -22,7 +22,7 @@ const getApiAndEmit = socket => {
 };
 
 const SocketIOServer = require("./socketIOServer.js");
-const socketIOServer = SocketIOServer()
+const socketIOServer = SocketIOServer();
 socketIOServer.init(server);
 
 server.listen(port, () => console.log(`Listening on port ${port}`));

@@ -159,21 +159,13 @@ let goalList = {
 }
 
 let bookList = {
-  "a": {
-    0 : [1,3,1,1,1],
-    1 : [5,3,2,3],
-  },
-  "b": {
-  },  
-}
+  'a':[],
+  'b':[]
+};
 
-let positionList = {
-  "Study": {    
-  },
-  "Library": {
-  },
-  "Rest": {
-  },
-}
+// let bookList = {
+//   "a": ['A 1','A 3','A 1', 'G 1', 'G 1'],
+//   "b": ['A 1','A 3','A 1', 'G 1', 'G 1'],
+// }
 
 module.exports = {userList, groupList, invitationList, goalList, bookList};
