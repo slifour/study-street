@@ -4,18 +4,33 @@ import socket from '../../socket';
 import styles from "./ui.module.css";
 import styled from 'styled-components';
 import PostOverlay from './PostOverlay';
+import Modal from 'react-overlays/Modal';
 
 //const socketIo = require("socket.io");
 
 const StyledDiv = styled.div`
     position: absolute;
     z-index: 1040;
-    top: 5%;
+    top: 10%;
     left: 10%;
 `;
 
+const StyledModal = styled(Modal)`
+    position: absolute;  
+    margin: auto;
+    left: 2.5%;
+    top: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+    background: #FFFFFF;
+    box-shadow: 0px 4px 6px rgba(74, 74, 74, 0.25);
+    border-radius: 14px;
+`
+
 export default function PostButton(props) {
     // const shortenName = props.userId.substr(0, 2).toUpperCase();
+    const POST_UPDATE_INTERVAL = 5000;
 
     const {loginUser} = useContext(LoginUserContext);
     const nickname = loginUser.userID;
@@ -27,8 +42,10 @@ export default function PostButton(props) {
     const [Msg, setMessage] = useState(null);
 
     const [postUpdateInterval, setpostUpdateInterval] = useState(5*60*1000);
-    const [newPost, setNewPost] = useState("false");
-    const [show, setShow] = useState("true");
+    const [newPost, setNewPost] = useState(false);
+    const [show, setShow] = useState(false);
+    // const [showReply, setShowReply] = useState("false");
+    
     const [active, setActive] = useState("false");
     const [buttonText, setButtonText] = useState("Stickies");
 
@@ -61,7 +78,15 @@ export default function PostButton(props) {
         });
 
         posts = [{'id': 'hyeon', 'msg' : 'hello'}, {'id': 'hyeon', 'msg' : 'hello'}, {'id': 'hyeon', 'msg' : 'hello'}]
-        // setTimeOut(() => setActive(true), postUpdateInterval);
+
+        // useEffect(() => {
+        //     console.log("check whether we will update user study time");
+        //     if (willUpdateStudyTime) {
+        //       requestUpdate();
+        //       setWillUpdateStudyTime(false);
+        //     }
+        // }, [willUpdateStudyTime, requestUpdate]);   
+  
 
         return () => {
             socket.off('chatconnect');
@@ -70,6 +95,11 @@ export default function PostButton(props) {
         };
     });
 
+    useEffect(() => {
+        const activatePost = setInterval(() => { setActive(true); }, POST_UPDATE_INTERVAL);
+        return () => {clearInterval(activatePost);};
+    }, []);      
+
     const sendMessage = () => {
         console.log(Msg);
         setchats(chats.concat(`${nickname} : ${Msg}`));
@@ -77,31 +107,39 @@ export default function PostButton(props) {
         setMessage('');
     }
 
-    const onChange = (e) =>{
+    const onChange = (e) => {
         setMessage(e.target.value);
+    }
+
+    const onButtoNClick = () => {
+        setShow(true)
     }
 
     return(
         <styledDiv>
-        {active ?
+            <div>
+            {active ?
             <div>
             <div className= {`${styles.overlayButton} ${styles.hvrGrow}`} 
                 style={props.buttonStyle} 
-                buttonStyle = {{left: "20%", bottom: "80%"}} 
-                onClick={() => {setShow(true)}}>
+                // buttonStyle = {{left: "20%", bottom: "80%"}} 
+                onClick={() => {}}>
                 {buttonText}
             </div>
-            <PostOverlay postList = {posts} show = {show} setshow = {setShow} ></PostOverlay>
+                {show?
+                <div><PostOverlay postList = {posts} onChange = {onChange} Msg ={Msg} sendMessage = {sendMessage}></PostOverlay></div>
+                :<div></div>}
             </div> :        
             <div>
                 <div className= {`${styles.overlayButton}`} 
                 style={props.buttonStyle} 
-                buttonStyle = {{left: "20%", bottom: "80%"}} 
-                onClick={() => {setShow(true)}}>
+                // buttonStyle = {{left: "20%", bottom: "80%"}} 
+                onClick={onButtoNClick}>
                     {buttonText}
                 </div>
             </div>
-        }            
+            }      
+            </div>      
         </styledDiv>
     )
 }
