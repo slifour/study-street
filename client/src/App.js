@@ -16,6 +16,7 @@ import LoginOverlay from "./components/ui/LoginOverlay";
     "userID": "eunki",
     "userName": "은기",
     "status": "Developing user data system",
+    "socketID" : "socketID"
   }
   */
 export const LoginUserContext = React.createContext(null);
@@ -50,7 +51,8 @@ function App() {
 
   useEffect(() => {
     if (game.current !== null && game.current.game) {
-      game.current.game.registry.set("loginUser", loginUser);
+      console.log(loginUser)
+      game.current.game.registry.set("loginUser", loginUser);      
     }
   }, [game.current, loginUser]);
 
@@ -69,11 +71,11 @@ function App() {
     }      
   }, [])
 
-  const emitToGame = (data => {
+  const emitToGame = ((msg, data) => {
     if (game.current !== null && game.current.game) {
-      game.current.emit(data)
+      game.current.game.events.emit(msg, data) 
     }
-    console.log('emitToGame', data)
+    console.log('emitToGame', msg, data)
   }) 
 
   const onWalkToLibrary = () => {

@@ -62,7 +62,8 @@ let userList = {
           "content" : "Reading Response",
           "isDone" : true
       }
-    }
+    },
+    "socketID": null
   },
   "haeseul": {
     "userID": "haeseul",
@@ -70,7 +71,8 @@ let userList = {
     "profileImage": dummyAvatars[1],
     "todayStudyTime": 7200 * 1000,
     "status": "Making chatting system",
-    "curGroup" : "a"
+    "curGroup" : "a",
+    "socketID": null
   },
   "hyeon": {
     "userID": "hyeon",
@@ -78,7 +80,8 @@ let userList = {
     "profileImage": dummyAvatars[2],
     "todayStudyTime": 7200 * 1000,
     "status": "Putting map objects",
-    "curGroup" : "b"
+    "curGroup" : "b",
+    "socketID": null
   },
   "jeonghoon": {
     "userID": "jeonghoon",
@@ -86,7 +89,8 @@ let userList = {
     "profileImage": dummyAvatars[3],
     "todayStudyTime": 7200 * 1000,
     "status": "Designing figma prototype",
-    "curGroup" : "b"
+    "curGroup" : "b",
+    "socketID": null
   },
 };
 

@@ -22,18 +22,29 @@ export default class MapScene extends Phaser.Scene {
   constructor(key) {
     super(key);  
     this.key = key;    
+    this.socket = socket;     
+    this.friendDict = {};
   }
 
-  init(data) {   
-    this.socket = socket; 
-    this.prevScene = (data === undefined) ? undefined : data.prevScene
-    this.friendDict = {};
+  init(data) {       
+    // if(this.game.registry.get("loginUser") == undefined ){
+    //   this.scene.pause()
+    // }    
+    // this.userID = this.game.registry.get("loginUser").userID;
+    this.prevScene = (data === undefined) ? undefined : data.prevScene    
     console.log("Welcome to ", this.key);  
-    console.log("this.registry.get", this.game.registry.get("loginUser"))
-    if(this.game.registry.get("loginUser")){
-      this.id = this.game.registry.get("loginUser").userID;
-    }    
+
+    const loginUser = this.game.registry.get("loginUser");
+    this.socketID = loginUser.socketID;
+    this.userID = loginUser.userID;
+    // console.log("this.registry.get", this.game.registry.get("loginUser"))
+
   }
+
+  // onResponseConnect(payload) {
+  //   this.socketID = payload.socketID;  
+  //   console.log("Log. mapscene.onResponseConnect() mapscene.socketID =", this.socketID)
+  // }
 
   preload() {
     this.load.spritesheet('user-girl', 'assets/spriteSheets/user_1.png', {
@@ -52,7 +63,8 @@ export default class MapScene extends Phaser.Scene {
     this.load.html('alert', 'assets/NewAlert.html');
   }
 
-  create() {    
+  create() {   
+    
     /** Create Animations */
     createCharacterAnimsWizard(this.anims);
     createCharacterAnimsGirl(this.anims);
@@ -66,12 +78,14 @@ export default class MapScene extends Phaser.Scene {
 
   update() {
     this.user.update(this.cursors);
-    Object.values(this.friendDict).forEach(friend => {friend.update();});
+    // if (Object.entries(this.friendDict).length !== 0){
+    //   Object.values(this.friendDict).forEach(friend => {friend.update();});
+    // }
   };
 
   createUser() {
-    this.user = new User(this, 800, 400, 'user-girl', 'girl').setScale(3/100 * 1.2);
-    this.user.init();
+    this.user = new User(this, 800, 400, 'user-girl', 'girl').setScale(3/100 * 1.2); 
+    this.user.init();   
     this.user.setDepth(1);
     this.physics.add.collider(this.user, this.belowPlayer1);
     this.physics.add.collider(this.user, this.world1);
@@ -107,42 +121,64 @@ export default class MapScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, this.belowPlayer1.displayWidth, this.belowPlayer1.displayHeight);
   }
 
-  onLoopPosition(positionList){
-    console.log('update :', this.friendDict);
+  onLoopPosition(socketIDToPosition){
+    console.log("onLoopPosition", this.friendDict);
+
     if(this.friendDict === undefined) {return;}    
-    Object.keys(positionList).forEach(function(id) {  
-      console.log(id, this.id);      
-      if (id === this.id) {console.log('returned'); return;}
-      console.log('Not returned');
-      let position = positionList[id]
-      if (Object.keys(this.friendDict).includes(id)){
-          this.friendDict[id].updateMovement(position.x, position.y);
-      } else {        
-          let friend = new Friend(this, position.x, position.y, 'user-wizard', 'wizard', id).setScale(1);
-          friend.init();
-          // this.friends.add(friend);
-          this.friendDict[id] = friend;
+    Object.entries(socketIDToPosition).forEach(([socketID, position])=>{  
+      console.log("this", this);
+      console.log(socketID, this.socketID);      
+      console.log('Log. mapscene.friendDict =', this.friendDict);
+      console.log('Log. mapscene.onLoopPosition socketIDToPosition =', socketIDToPosition);
+
+      if (socketID === this.socketID) {console.log('returned'); return;}
+
+      if (Object.keys(this.friendDict).includes(socketID)){
+        this.friendDict[socketID].updateMovement(position.x, position.y);
+      } 
+      else {                
+        let friend = new Friend(this, position.x, position.y, 'user-wizard', 'wizard', socketID).setScale(1);
+        friend.init();
+        this.friendDict[socketID] = friend;
       }    
-    }.bind(this))
+    });
   }
 
-  onResponseRemoveFriend(id){
-    if (Object.keys(this.friendDict).includes(id)){
-      this.friendDict[id].destroy();
-      delete this.friendDict[id];
+  onResponseCreateFriend(payload){
+    let socketID = payload.loginUser.socketID;
+    const friend = new Friend(this, payload.x, payload.y, 'user-wizard', 'wizard', payload.loginUser).setScale(1);
+    friend.init();
+    this.friendDict[socketID] = friend;
+  }
+
+  onResponseRemoveFriend(socketID){
+    if (Object.keys(this.friendDict).includes(socketID)){
+      this.friendDict[socketID].destroy();
+      delete this.friendDict[socketID];
     }
   }
 
+
+  
   setEventHandlers(){
     // Description
     // socket.on('event', eventHandler)  
-    // New user message received
-    // this.socket.on('stateUpdate', this.onStateUpdate.bind(this));
-    if(this.socket !== undefined){
+    this.game.events.on("EVENT_ID", this.onEventID, this);
+    if(this.socket !== undefined){      
+      // this.socket.on("RESPONSE_CONNECT", this.onResponseConnect.bind(this));
       this.socket.on("LOOP_POSITION", this.onLoopPosition.bind(this));
+      this.socket.on("RESPONSE_CREATE_FRIEND", this.onResponseCreateFriend.bind(this));
       this.socket.on("RESPONSE_REMOVE_FRIEND", this.onResponseRemoveFriend.bind(this));
     }
   }
+
+  onEventID(user){
+    // console.log('Log. mapscene.onEventID() user  =', user);    
+    this.socketID = user.socketID;
+    this.userID = user.userID;  
+    console.log('Log. mapscene.onEventID() socketID | userID  =', this.socketID, this.userID);
+  }
+
 
   changeScene(newScene, index){
     this.game.events.emit("changeScene", newScene);

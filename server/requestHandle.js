@@ -138,6 +138,8 @@ const onRequestLogin = (socket, request) => {
     env.useridList[userID] = id;
   }
 
+  userList[userID].socketID = socket.id;
+
   // login side effects
   try {
     update = updateAttendance(userID);
@@ -376,6 +378,8 @@ const onRequestChangeScene = (socket, request) => {
   socket.join(currentScene);
 
   let id = socket.id;
+  let initialPosition = {x:300, y:300}
+  let user = userList[requestUser];
 
   switch (prevScene) {
     case "Home": ; break;
@@ -386,9 +390,20 @@ const onRequestChangeScene = (socket, request) => {
 
   switch (currentScene) {
     case "Home": ; break;
-    case "Library": onRequestNewDoneQuest(socket); env.roomDict[id] = env.libraryRoom; env.libraryRoom.setUserId(id, requestUser); env.libraryRoom.update(socket, requestUser, 300, 300);  break;
+    case "Library": {
+      onRequestNewDoneQuest(socket); 
+      env.socketIDToRoom[id] = env.libraryRoom; 
+      env.libraryRoom.setUserId(id, requestUser); 
+      env.libraryRoom.add(socket, initialPosition.x, initialPosition.y, user)  
+      break;    
+    } 
     case "Study": ; break;
-    case "Rest": env.roomDict[id] = env.restRoom; env.restRoom.setUserId(id, requestUser); env.restRoom.update(socket, requestUser, 300, 300); break;
+    case "Rest": {
+      env.socketIDToRoom[id] = env.restRoom; 
+      env.restRoom.setUserId(id, requestUser); 
+      env.restRoom.add(socket, initialPosition.x, initialPosition.y, user)  
+      break;
+    }
   }
 
   try {
@@ -634,8 +649,8 @@ const onRequestNewDoneQuest = (socket) => {
 //   } catch {
 //     return responseFail(socket, requestKey, responseType, "Invalid scene.");
 //   }
-//   if (env.roomDict[requestUser] !== undefined){
-//     env.roomDict[requestUser].update(socket, requestUser, position.x, position.y);
+//   if (env.socketIDToRoom[requestUser] !== undefined){
+//     env.socketIDToRoom[requestUser].update(socket, requestUser, position.x, position.y);
 //   }
 
 //   return socket.emit(responseType, {

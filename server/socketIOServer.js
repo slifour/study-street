@@ -59,7 +59,7 @@ const SocketIOServer = () => {
   let env = {
     libraryRoom: new Rooms('Library'),
     restRoom: new Rooms('Rest'),
-    roomDict: {},
+    socketIDToRoom: {},
     useridList: {}
   };
 
@@ -79,7 +79,7 @@ const SocketIOServer = () => {
 
     io.on("connection", (socket) => {
       console.log("New client connected");
-      socket.emit("socket.id", socket.id);      
+      onRequestConnect(socket);     
       console.log(socket.id);
       env.libraryRoom.init(io, socket);
       env.restRoom.init(io, socket);
@@ -88,6 +88,19 @@ const SocketIOServer = () => {
     });
   }
 
+  const onRequestConnect = (socket) => {
+    requestKey = null;
+    const responseType = ResponseType.CONNECT;
+
+    const payload = {socketID : socket.id}
+  
+    return socket.emit(responseType, {
+      requestKey, 
+      responseType,
+      status: ResponseStatus.OK,
+      payload: payload
+    });
+  };
 
   /** Event Handlers */
   const setEventHandlers = (socket) => {
@@ -116,13 +129,12 @@ const SocketIOServer = () => {
       socket.on(requestType, onRequest.bind(null, socket, requestType));      
     });
     updateDate(socket);    
-
   }
 
   const onRequestMove = (socket, position) => {
-    let id = socket.id
-    if (env.roomDict[id] !== undefined){
-      env.roomDict[id].update(socket, id, position.x, position.y);
+    let socketID = socket.id
+    if (env.socketIDToRoom[socketID] !== undefined){
+      env.socketIDToRoom[socketID].update(socket, position.x, position.y);
     }
   }
 
@@ -270,8 +282,8 @@ const SocketIOServer = () => {
   }
   
   // const onRequestMove = (socket, id, position) => {
-  //   if (roomDict[id] !== undefined){
-  //     roomDict[id].update(socket, position.x, position.y);
+  //   if (socketIDToRoom[id] !== undefined){
+  //     socketIDToRoom[id].update(socket, position.x, position.y);
   //   }
   // }
 
@@ -359,7 +371,7 @@ const SocketIOServer = () => {
 
   /** log */  
   let logUsers = () =>  {
-    // console.log("libraryRoom.numUsers :", env.libraryRoom.getNumUsers());
+    console.log("libraryRoom.numUsers :", env.libraryRoom.getNumUsers());
     setTimeout(logUsers.bind(this), logInterval);
   }   
 

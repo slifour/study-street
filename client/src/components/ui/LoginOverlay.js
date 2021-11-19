@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import socket from "../../socket";
 import styles from './login.module.css';
-import { LoginUserContext } from "../../App";
+import { LoginUserContext, GameContext } from "../../App";
 import uniqueString from 'unique-string';
 
 export default function LoginOverlay(props) {
     const [userID, setUserID] = useState('');
     const { loginUser, setLoginUser } = useContext(LoginUserContext);
+    const { emitToGame } = useContext(GameContext);
     let usedRequestKeyRef = useRef(null);
 
     const onResponse = ({ requestKey, status, payload }) => {
@@ -16,6 +17,7 @@ export default function LoginOverlay(props) {
           switch (status) {
             case "STATUS_OK": 
                 setLoginUser(payload);
+                emitToGame("EVENT_ID", payload);
                 props.callClose();
                 break;
             case "STATUS_FAIL": 

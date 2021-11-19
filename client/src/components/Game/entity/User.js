@@ -41,10 +41,8 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
   /** initialize : tell server to create this user */
   initialize(payload) {    
     console.log('initialize :', payload)
-    request.request("REQUEST_CHANGE_SCENE", "RESPONSE_CHANGE_SCENE", payload)
-
+    request.request("REQUEST_CHANGE_SCENE", "RESPONSE_CHANGE_SCENE", payload);
     // request(requestType, responseType, makePayload, onRequest, onResponseOK, onResponseFail, socket)
-
   };
 
   /** sendPosition : tell server to move this user */
