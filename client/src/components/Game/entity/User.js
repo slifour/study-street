@@ -2,21 +2,22 @@ import Phaser from 'phaser';
 import socket from '../../../socket';
 import Status from './Status';
 import Name from './Name';
-import request from '../request'
+import Request from '../request'
 /**
  * Reference
  * https://stackoverflow.com/questions/66616153/pathfinding-animation-in-phaser * 
  */
 
 export default class User extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y, spriteKey, animSuffix) {
+  constructor(scene, x, y, spriteKey, animSuffix, loginUser) {
     super(scene, x, y, spriteKey);
     this.scene = scene;
     this.registry = this.scene.game.registry;
     this.scene.add.existing(this);
     this.scene.physics.world.enable(this);
     this.stop = true
-    this.socket = socket
+    this.socket = socket    
+    this.loginUser = loginUser
     this.animName = {
       'idle': 'user-idle-' + animSuffix,
       'left': 'user-left-' + animSuffix,
@@ -36,12 +37,14 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
     // this.prepareName();
     this.on('pointerover', this.onPointerOver);
     this.on('pointerout', this.onPointerOut);
+    
   }
 
   /** initialize : tell server to create this user */
   initialize(payload) {    
     console.log('initialize :', payload)
-    request.request("REQUEST_CHANGE_SCENE", "RESPONSE_CHANGE_SCENE", payload);
+    let request = new Request(this.socket, this.loginUser)
+    request.request("REQUEST_CHANGE_SCENE", payload);
     // request(requestType, responseType, makePayload, onRequest, onResponseOK, onResponseFail, socket)
   };
 

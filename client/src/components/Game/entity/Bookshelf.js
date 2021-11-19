@@ -26,6 +26,7 @@ export default class Bookshelf extends Phaser.GameObjects.Container {
         // bookshelf.setSize(72);
         this.scene.add.existing(this.bookshelf);
         this.scene.physics.world.enable(this.bookshelf);
+        this.bookshelf.setImmovable()
         this.add(this.bookshelf)
         this.coordinate = this.bookshelf.getBottomLeft()
     }

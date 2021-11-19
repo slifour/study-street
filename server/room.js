@@ -10,6 +10,8 @@
  * User 가 scene 에 새로 들어오면 리스트의 항목을 새로 만들고 다른 scene으로 떠나면 삭제합니다.
  * @ 지금은 login id 대신 socket id 를 key로 사용하고 있습니다. * 
  */
+ let { userList } = require("./database");
+
 module.exports = class Rooms {
     constructor(room){
         this.io;
@@ -47,9 +49,14 @@ module.exports = class Rooms {
     }
 
     add(socket, x, y, loginUser){
-        let socketID = socket.id;
-        this.socketIDToPosition[socketID] = {x:x, y:y};        
+        let socketID = socket.id; 
+        Object.entries(this.socketIDToPosition).forEach(([socketID, position]) => {
+            let user = userList[this.idList[socketID]]
+            socket.emit("RESPONSE_CREATE_FRIEND", {loginUser : user, x : position.x, y : position.y})
+        })    
         this.broadcast("RESPONSE_CREATE_FRIEND", {loginUser : loginUser, x : x, y : y});
+
+        this.socketIDToPosition[socketID] = {x:x, y:y};   
         socket.join(this.room);
         if (this.getNumUsers() === 2 && !this.isEmittingUpdates) {
             this.emitLoop();

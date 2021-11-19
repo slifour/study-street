@@ -380,6 +380,7 @@ const onRequestChangeScene = (socket, request) => {
   let id = socket.id;
   let initialPosition = {x:300, y:300}
   let user = userList[requestUser];
+  console.log('onRequestChangeScene user:', user);
 
   switch (prevScene) {
     case "Home": ; break;

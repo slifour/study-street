@@ -3,6 +3,7 @@ import User from '../entity/User';
 import Friend from '../entity/Friend';
 import socket from '../../../socket';
 import { createCharacterAnimsGirl, createCharacterAnimsWizard } from '../anims/CharacterAnims';
+import Request from '../request'
 import Study from './StudyScene';
 import GroupArea from '../entity/GroupArea';
 import Desk from '../entity/Desk';
@@ -34,9 +35,10 @@ export default class MapScene extends Phaser.Scene {
     this.prevScene = (data === undefined) ? undefined : data.prevScene    
     console.log("Welcome to ", this.key);  
 
-    const loginUser = this.game.registry.get("loginUser");
-    this.socketID = loginUser.socketID;
-    this.userID = loginUser.userID;
+    this.loginUser = this.game.registry.get("loginUser");
+    this.socketID = this.loginUser.socketID;
+    this.userID = this.loginUser.userID;
+    this.request = new Request(this.socket, this.loginUser);
     // console.log("this.registry.get", this.game.registry.get("loginUser"))
 
   }
@@ -84,7 +86,7 @@ export default class MapScene extends Phaser.Scene {
   };
 
   createUser() {
-    this.user = new User(this, 800, 400, 'user-girl', 'girl').setScale(3/100 * 1.2); 
+    this.user = new User(this, 800, 400, 'user-girl', 'girl', this.loginUser).setScale(3/100 * 1.2); 
     this.user.init();   
     this.user.setDepth(1);
     this.physics.add.collider(this.user, this.belowPlayer1);
@@ -136,17 +138,19 @@ export default class MapScene extends Phaser.Scene {
       if (Object.keys(this.friendDict).includes(socketID)){
         this.friendDict[socketID].updateMovement(position.x, position.y);
       } 
-      else {                
-        let friend = new Friend(this, position.x, position.y, 'user-wizard', 'wizard', socketID).setScale(1);
-        friend.init();
-        this.friendDict[socketID] = friend;
-      }    
+      else{        
+        this.request.request("requestCreateFreind", {socketID : socketID});
+      }
+
     });
   }
 
   onResponseCreateFriend(payload){
     let socketID = payload.loginUser.socketID;
+    this.onResponseRemoveFriend(socketID);
     const friend = new Friend(this, payload.x, payload.y, 'user-wizard', 'wizard', payload.loginUser).setScale(1);
+    this.physics.add.collider(friend, this.belowPlayer1);
+    this.physics.add.collider(friend, this.world1);
     friend.init();
     this.friendDict[socketID] = friend;
   }
@@ -157,8 +161,6 @@ export default class MapScene extends Phaser.Scene {
       delete this.friendDict[socketID];
     }
   }
-
-
   
   setEventHandlers(){
     // Description
