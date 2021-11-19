@@ -47,7 +47,7 @@ export default function LoginOverlay(props) {
     }
 
     const onLoginKeyUp = e => {
-        if (e.keyCode === 13) {
+        if (e.keyCode === 13 && loginUser===null) {
             e.preventDefault();
             onLoginClick();
         }
