@@ -42,8 +42,8 @@ export default class Library extends MapScene {
         this.setEventHandlers();
         this.socket.emit("initializeLibrary");
         let portalPosition = {x : this.world1.displayWidth/2, y : this.world1.displayHeight};
-        portalPosition.x = 1000;
-        portalPosition.y = 250;
+        portalPosition.x = 950;
+        portalPosition.y = 1930;
         super.createPortal(portalPosition);
         this.assignGroupArea("a", "Team Slifour", ["ff0000"]);
     }

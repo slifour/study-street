@@ -101,7 +101,7 @@ export default class MapScene extends Phaser.Scene {
    */
   createPortal(position){       
       this.portal = this.add.circle(position.x, position.y, 200, 0xffffff, 0.5).setScale(1, 0.2);
-      this.portalCollider = this.add.circle(position.x, position.y, 150).setScale(1, 0.2);
+      this.portalCollider = this.add.circle(position.x, position.y, 150).setScale(1, 0.2).setAlpha(0.1);
       this.physics.world.enable(this.portalCollider);
       this.portalCollider.body.setImmovable(true);
       this.physics.add.collider(this.user, this.portalCollider, (() => {
