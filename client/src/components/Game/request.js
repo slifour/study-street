@@ -4,14 +4,14 @@
 import uniqueString from 'unique-string';
 import socket from '../../socket';
 
-class Request {
+export default class Request {
   constructor(socket, loginUser){
     this.usedRequestKeyRef = {current : uniqueString()};
     this.socket = socket 
     this.loginUser = loginUser
   }
 
-  request = (requestType, responseType, payload = {}) => {
+  request = (requestType, payload = {}) => {
     this.socket.emit(requestType, {
       requestUser: this.loginUser.userID,
       requestKey: this.usedRequestKeyRef.current,
@@ -38,6 +38,3 @@ class Request {
   }  
 }
 
-const request = new Request(socket, {userID : "hyeon"})
-
-export default request;

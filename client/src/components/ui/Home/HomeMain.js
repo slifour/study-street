@@ -1,4 +1,5 @@
-import React, { useContext, useState, useEffect } from "react"
+import React, { useContext, useState, useEffect, useCallback } from "react";
+import useRequest from '../../request/useRequest';
 import HomeUserAvatar from "./HomeUserAvatar";
 import GroupIconList from "./GroupIconList";
 import CreateGroupButton from "./CreateGroupButton";
@@ -41,6 +42,22 @@ export default function HomeMain({onWalkToLibrary}) {
       game.current.game.input.mouse.enabled = true;
     }
   }, []);
+
+  const makePayloadUpdateCurrentGroup = useCallback(() => ({
+    curGroup: currentGroup.groupID
+  }), [currentGroup]);
+
+  const [requestUpdateCurrentGroup] = useRequest({
+    requestType: "REQUEST_UPDATE_CURRENT_GROUP",
+    responseType: "RESPONSE_UPDATE_CURRENT_GROUP",
+    makePayload: makePayloadUpdateCurrentGroup
+  });
+
+  useEffect(() => {
+    if (currentGroup) {
+      requestUpdateCurrentGroup();
+    }
+  }, [currentGroup])
 
   const onSetGroup = group => {
     setCurrentGroup(group);

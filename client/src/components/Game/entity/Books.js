@@ -10,6 +10,7 @@ export default class Books extends Phaser.GameObjects.Container {
     this.scene.physics.world.enable(this);
     this.bookX = bookX 
     this.prevMaxIndex = 3;   
+    this.questList = [];
     // let margin = -50;
 
     // this.bookshelf = this.scene.physics.add.image(0, margin, bookshelfKey);
@@ -22,12 +23,19 @@ export default class Books extends Phaser.GameObjects.Container {
     // // this.bookPositions = this.getBookPositions(n, containerX+x, containerY+y-margin)    
   }
 
-  updateBooks(sizeList, update = true){
-    this.removeAll(true)
+  checkUpdate(questList){
+    this.questList = questList
+  }
+
+  updateBooks(questList){
+    this.checkUpdate(questList);
+    this.removeAll(true);
     let bookX = this.bookX;
-    sizeList.forEach(function(size, i){
+    console.log(this.questList)
+    this.questList.forEach((quest, i) => {
+      let size = quest.doneUsers.length;
       console.log(size);
-      let book = new Book(this.scene, bookX, 0, size)
+      let book = new Book(this.scene, bookX, 0, quest)
       this.add(book)
       if (i > this.prevMaxIndex){
         let alert = new Alert(this.scene, this, '!');
@@ -39,7 +47,7 @@ export default class Books extends Phaser.GameObjects.Container {
       }
       bookX += book.displayWidth;
       console.log(size, book.displayWidth)
-    }.bind(this)) 
+    }, this) 
   }
 
   // getBookPositions(n, x, y){

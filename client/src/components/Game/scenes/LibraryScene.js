@@ -1,8 +1,10 @@
 import GroupArea from '../entity/GroupArea';
 import Desk from '../entity/Desk';
+import Bookshelf from '../entity/Bookshelf';
 import HtmlModal from '../entity/HtmlModal';
 import Book from '../entity/Book';
 import MapScene from './MapScene';
+import PostPage from '../../ui/Study/PostPage';
 
 export default class Library extends MapScene {
     constructor() {
@@ -12,7 +14,8 @@ export default class Library extends MapScene {
     init(data) {
         super.init(data);              
         this.groupAreas = {};      
-        this.desks = {}
+        this.areas = [];
+        this.groupToIndex = {};
         this.borderWidth = 3  
         this.nextdeskId = 0;
     };
@@ -42,7 +45,7 @@ export default class Library extends MapScene {
         portalPosition.x = 950;
         portalPosition.y = 1930;
         super.createPortal(portalPosition);
-        this.assignGroupArea("Team Slifour", ["ff0000"]);
+        this.assignGroupArea("a", "Team Slifour", ["ff0000"]);
     }
 
     update() {
@@ -58,7 +61,7 @@ export default class Library extends MapScene {
         // socket.on('event', eventHandler)
         this.socket.on('newArtifact', this.onNewArtifact.bind(this));
         // this.socket.on('newGroup', this.onNewGroup.bind(this))
-        this.socket.on("goalUpdate", this.onGoalUpdate.bind(this));
+        this.socket.on("RESPONSE_NEW_DONE_QUEST", this.onNewDoneQuest.bind(this));
         this.game.events.on('libraryToRest', () => {
             this.changeScene('Rest')
         })
@@ -96,16 +99,20 @@ export default class Library extends MapScene {
         this.belowPlayer1.setScale(1.2);
         this.world1.setScale(1.2);      
 
+        this.belowPlayer1.setDepth(-5);
+        this.world1.setDepth(-5);      
+
         // Group Area Example (Manual)
         // this.createGroupArea('a');
 
         // Create desks
         this.deskPositions = [{x:500, y:450}, {x:1000, y:450}, {x:1500, y: 450}]
+        this.bookshelfPositions = [{x:500, y:350}, {x:1000, y:350}, {x:1500, y: 350}]
         let deskIndex = 0
-        this.deskPositions.forEach(position =>{
+        this.deskPositions.forEach((position, i) =>{
+            let bookshelf = this.createBookshelf(position.x, position.y, 'bookshelf');
             let desk = this.createDesk(position.x, position.y, 'desk', 'chair');
-            this.desks[deskIndex] = desk;
-            deskIndex += 1;  
+            this.areas[i] = {desk : desk, bookshelf : bookshelf, groupID : null};
         })
 
         // don't go out of the map
@@ -127,51 +134,65 @@ export default class Library extends MapScene {
         return new Desk(this, x, y, deskKey, chairKey);    
     }  
 
+    createBookshelf(x, y, bookshelfKey) {
+        return new Bookshelf(this, x, y, bookshelfKey);    
+    }  
+
     setDeskCollider() {
-        Object.keys(this.desks).forEach(key =>{
-            let desk = this.desks[key];
+        Object.keys(this.areas).forEach((value, i) =>{
+            let desk = this.areas[i].desk;
             desk.getAll().forEach(sprite => {
                 this.physics.add.collider(this.user, sprite);
             })
+            let bookshelf = this.areas[i].bookshelf;
+            this.physics.add.collider(this.user, bookshelf.bookshelf);
         })
     }
+
+
 
     /** assignGroupArea
      * @parameter deskId: id of desk to assign, groupId : to be implemented
      * 
      */
-    assignGroupArea(groupNameText, colors){      
+    assignGroupArea(groupID, groupNameText, colors){      
         const colorMain = colors[0];
         /** get Id of next desk prepared to be assigned */
         let deskId = this.nextdeskId;  
-        let desk = this.desks[deskId];
+        let desk = this.areas[deskId].desk;        
 
         /** Create Container, children = [border, groupName] */
         let container = this.add.container(desk.x, desk.y); 
         container.setSize(350, 350);        
         let border = this.add.rectangle(0, 0, container.width, container.height);
+        console.log(groupNameText)
         let groupName = this.add.text(-container.width/2, container.height/2, groupNameText, { 
             fontSize: '16px', 
             fontFamily: 'Lato',
             color: colorMain,
             align:'center', });
+
+        this.areas[deskId].groupID = groupID;
+        this.groupToIndex[groupID] = deskId;
+
         groupName.setOrigin(0,1);
         border.setStrokeStyle(this.borderWidth, colorMain)
+        console.log(container)
         container.add(border);
         container.add(groupName);
-        container.setDepth(-100);
+        container.setDepth(-5);
         this.nextdeskId += 1;
 
         /** Group border appears gradually based on tween (animation) */
-        // container.alpha = 0;
-        // const duration = 1000;
-        // let moveTween = this.tweens.add({
-        //   targets : container,
-        //   alpha: 1,
-        //   ease: 'Sine.easeInOut',
-        //   duration: duration,
-        //   repeat : 0,
-        // })
+        container.alpha = 0;
+        const duration = 3000;
+        let moveTween = this.tweens.add({
+          targets : container,
+          alpha: 1,
+          ease: 'Sine.easeInOut',
+          duration: duration,
+          repeat : 0,
+        })
         console.log("assignGroupArea")
     }
 
@@ -183,23 +204,29 @@ export default class Library extends MapScene {
     }
     
     /** 
-     * onGoalupdate
-     * @param bookList
+     * onNewDoneQuest
+     * @param /bookList
     */
-    onGoalUpdate(bookList){
-        console.log('onGoalUpdate')
-        for (const [groupId, value] of Object.entries(bookList)) {
-            if (Object.keys(this.groupAreas).includes(groupId)){
-                let groupArea = this.groupAreas[groupId]
-                groupArea.updateBooks(value) 
-                console.log(groupId, value);
-            }           
-        }        
+    onNewDoneQuest(response){
+        const books = response.payload;
+        console.log('onNewDoneQuest');
+        if(this.areas === undefined){
+            return;
+        }
+        this.areas.forEach((area, index)=>{
+            let groupID = area.groupID;
+            console.log(area, index, groupID);
+            if (Object.keys(books).includes(groupID)){
+                let questList = books[groupID] 
+                this.areas[index].bookshelf.updateBooks(questList);
+                console.log('bookshelf.updateBooks called');
+            }
+        })
     }
-  
+
     onResponseNewGroup(request){
         const {payload} = request;
-        this.assignGroupArea(payload.groupName, payload.colors)
+        this.assignGroupArea(payload.groupID, payload.groupName, payload.colors)
     }  
 
     onNewArtifact(data){

@@ -25,7 +25,7 @@ const SocketIOServer = () => {
    * 
    * return {
    *    <variable to excess from outssocket.ide>,
-   *    <function to excess from outssocket.ide>
+   *    <function to excess frc om outssocket.ide>
    * }
    */
 
@@ -40,6 +40,8 @@ const SocketIOServer = () => {
    * }>}
    */
   const users = {}; // users data structure
+  //const useridList = {}; // dictionary with key: user ID, value: user socket ID
+
 
   let stateChanged = false // flag whether state is changed = for transmission efficientcy
   let isEmittingUpdates = false // flag whether server is emitting updates = to prevent redundant emission and coliision
@@ -50,13 +52,15 @@ const SocketIOServer = () => {
   let io
   let { userList, groupList, invitationList, goalList, bookList } = require("./database");
   let interval;
+  let addedUser = false
 
   // MUST: env = 1; <- 이런 식으로 env에 다른 값을 직접 대입하시면 안 돼요! 
   // env.libraryRoom = ... <- 이런 식으로 써 주세요~
   let env = {
     libraryRoom: new Rooms('Library'),
     restRoom: new Rooms('Rest'),
-    roomDict: {}
+    socketIDToRoom: {},
+    useridList: {}
   };
 
   /** Methods */
@@ -75,7 +79,7 @@ const SocketIOServer = () => {
 
     io.on("connection", (socket) => {
       console.log("New client connected");
-      socket.emit("socket.id", socket.id);      
+      onRequestConnect(socket);     
       console.log(socket.id);
       env.libraryRoom.init(io, socket);
       env.restRoom.init(io, socket);
@@ -84,15 +88,36 @@ const SocketIOServer = () => {
     });
   }
 
+  const onRequestConnect = (socket) => {
+    requestKey = null;
+    const responseType = ResponseType.CONNECT;
+
+    const payload = {socketID : socket.id}
   
+    return socket.emit(responseType, {
+      requestKey, 
+      responseType,
+      status: ResponseStatus.OK,
+      payload: payload
+    });
+  };
 
   /** Event Handlers */
   const setEventHandlers = (socket) => {
 
     /** socket.on('event', eventHandler.bind(null, socket)) */
-    socket.on("REQUEST_MOVE", onRequestMove.bind(null, socket))  
-
     socket.on("disconnect", onDisconnect.bind(null, socket))
+    socket.on("REQUEST_MOVE", onRequestMove.bind(null, socket))  
+    /* socket.on("createGroup", onCreateGroup(null, socket)) */
+    socket.on("joinGroup", onJoinGroup.bind(null, socket))
+    socket.on("leaveGroup", onLeaveGroup.bind(null, socket))
+    //socket.on("sendGroupMessage", onSendGroupMessage.bind(null, socket))
+    socket.on("call chat log", onCallChatLog.bind(null, socket))
+    socket.on("add user", onJoinChat.bind(null, socket))
+    socket.on("chatdisconnect", onLeaveChat.bind(null, socket))
+    socket.on("chat message", onSendPrivateMessage.bind(null, socket))
+    // socket.on("REQUEST_MOVE", onRequestMove.bind(null, socket))  
+    
     socket.on("sceneUpdate", onSceneUpdate.bind(null, socket))  
     // socket.on("initialize", onInitialize.bind(null, socket))  
     socket.on("userLoginRequest", onUserLoginRequest.bind(null, socket))
@@ -104,16 +129,15 @@ const SocketIOServer = () => {
       socket.on(requestType, onRequest.bind(null, socket, requestType));      
     });
     updateDate(socket);    
-
   }
 
   const onRequestMove = (socket, position) => {
-    let id = socket.id
-    if (env.roomDict[id] !== undefined){
-      env.roomDict[id].update(socket, id, position.x, position.y);
+    let socketID = socket.id
+    if (env.socketIDToRoom[socketID] !== undefined){
+      env.socketIDToRoom[socketID].update(socket, position.x, position.y);
     }
   }
-  
+
   let isChangedGroupList = true;
   const emitLoop = (stateChanged) => {
     isEmittingUpdates = true;        
@@ -134,6 +158,94 @@ const SocketIOServer = () => {
     
   }
 
+  /* 아직 오류 있음 */
+  const onJoinGroup = (socket, groupID, userID) => {
+    socket.join(groupList[groupID]);
+    memList = groupList[groupID].member;
+    memList.append(userID);
+      /*, () => {
+      console.log(userID + ' join a ' + room[groupID]);
+      io.to(room[groupID]).emit("joinGroup", groupID, userID);
+    });*/
+  }
+
+    /* 아직 오류 있음 */
+  const onLeaveGroup = (socket, groupID, userID) => {
+    socket.leave(groupList[groupID]);
+    memList = groupList[groupID].member;
+    memList.remove(userID);
+      /*, () => {
+      console.log(userID + ' leave a ' + room[groupID]);
+      io.to(room[groupID]).emit("leaveGroup", groupID, userID);
+    });*/
+  }
+
+  /* 아직 오류 있음 */
+  const onJoinChat = (socket, userID) => {
+    if (addedUser) return;
+    // we store the username in the socket session for this client
+    //socket.username = username;
+    console.log("connected : "+userID);
+    addedUser = true;
+    socket.emit('chatconnect');
+    // echo globally (all clients) that a person has connected
+    socket.broadcast.emit('user joined', {
+      username: userID
+    });
+  }
+
+  const onLeaveChat = (socket, userID) => {
+      if (addedUser) {
+        console.log("disconnected : "+userID);
+        // echo globally that this client has left
+        socket.broadcast.emit('user left', {
+          username: userID
+        });
+      }
+  }
+
+  /* 아직 오류 있음 */
+  /*const onSendGroupMessage = (socket, groupID, userID, msg) => {
+    a = groupID;
+    console.log('${userID} : ${msg}');
+    socket.to(groupList[a].member).emit('group chat message', {
+      username: userID,
+      message: msg
+    });
+  }*/
+
+  /* 아직 오류 있음 */
+  const onCallChatLog = (socket, chatLog) => {
+    console.log('loading chat message...');
+    socket.to().emit('load chat log', {chatlog: chatLog});
+  }
+
+  /* 아직 오류 있음 */
+  const onSendPrivateMessage = (socket, senduserID, receiveuserID, msg) => {
+    /*if (!userList[receiveuserID]) {
+      socket.emit("chatSendFail");
+    } else {
+      receiveID = useridList[receiveuserID];
+      console.log(`${senduserID} : ${msg}`);
+      socket.to(receiveID).emit('chat message', { //userID? to(receiveuserID)
+        sendname: senduserID,
+        receivename: receiveID,
+        message: msg
+      });
+    }*/
+    console.log("useridlist: ", env.useridList);
+    for(let user in env.useridList){
+      if(user === receiveuserID){
+        console.log(`${senduserID} : ${msg}`);
+        socket.to(env.useridList[user]).emit('chat message', { //userID? to(receiveuserID)
+          sendname: senduserID,
+          //receivename: receive,
+          message: msg
+        });
+      }
+    }
+  }
+
   const onNewArtifact = (socket) => {
     console.log('server : newArtifact')
     data = {
@@ -148,6 +260,10 @@ const SocketIOServer = () => {
     if (!userList[userID]) {
       socket.emit("userLoginFail");
     } else {
+      /*if (!useridList[userID]) {
+        let id = socket.id
+        useridList[userID] = id;
+      }*/
       socket.emit("userLoginOK", userList[userID]);
     }
   }
@@ -166,8 +282,8 @@ const SocketIOServer = () => {
   }
   
   // const onRequestMove = (socket, id, position) => {
-  //   if (roomDict[id] !== undefined){
-  //     roomDict[id].update(socket, position.x, position.y);
+  //   if (socketIDToRoom[id] !== undefined){
+  //     socketIDToRoom[id].update(socket, position.x, position.y);
   //   }
   // }
 
@@ -255,7 +371,7 @@ const SocketIOServer = () => {
 
   /** log */  
   let logUsers = () =>  {
-    // console.log("libraryRoom.numUsers :", env.libraryRoom.getNumUsers());
+    console.log("libraryRoom.numUsers :", env.libraryRoom.getNumUsers());
     setTimeout(logUsers.bind(this), logInterval);
   }   
 
@@ -294,5 +410,5 @@ const SocketIOServer = () => {
     init 
   }
 }
-
+ 
 module.exports = SocketIOServer

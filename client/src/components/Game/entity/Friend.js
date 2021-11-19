@@ -5,9 +5,11 @@ import { getParsedDuration } from '../utils/Time';
 import Status from './Status';
 
 export default class Friend extends GameObjects.Container{
-  constructor(scene, x, y,  spriteKey, animSuffix, id) {
+  constructor(scene, x, y,  spriteKey, animSuffix, loginUser) {
     super(scene, x, y);
     this.scene = scene;
+    this.userName = loginUser.userName;
+    console.log("Log. Friend() userName=", this.userName)
     this.scene.add.existing(this);
     this.animName = {
       'idle': 'user-idle-' + animSuffix,
@@ -18,9 +20,10 @@ export default class Friend extends GameObjects.Container{
     };
     this.velocity = 200;
 
+    this.avatar = new FriendSprite(scene, 0, 0, spriteKey, animSuffix);
+
     this.namePadding = -10;
-    this.avatar = new FriendSprite(scene, 0, 0, spriteKey, animSuffix, id)
-    this.name = this.scene.add.text(0, -(this.avatar.height/2 + this.namePadding), id, { 
+    this.name = this.scene.add.text(0, -(this.avatar.height/2 + this.namePadding), this.userName, { 
       fontSize: '10px', 
       fontFamily: 'Lato',
       color: '#dddddd',
@@ -31,7 +34,8 @@ export default class Friend extends GameObjects.Container{
     this.add(this.name);
     this.width = this.avatar.displayWidth;
     this.height = this.avatar.displayHeight;
-    console.log('Friend :', this.width, this.height)
+    
+    // console.log('Friend :', this.width, this.height)
   }
 
   init(){

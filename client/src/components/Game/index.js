@@ -6,6 +6,7 @@ import React from 'react';
 import Library from './scenes/LibraryScene' ;
 import Rest from './scenes/RestScene';
 import Study from './scenes/StudyScene';
+import Login from './scenes/LoginScene';
 
 export default class Game extends React.Component {
   componentDidMount() {
@@ -25,7 +26,7 @@ export default class Game extends React.Component {
         // height: 910,
       },
       backgroundColor: '#000000',
-      scene: [Library, Study, Rest],
+      scene: [Login, Library, Study, Rest],
       dom: {
           createContainer: true
       },
