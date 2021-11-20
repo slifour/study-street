@@ -22,7 +22,7 @@ export default class Library extends MapScene {
 
     preload() {
         super.preload()
-        this.load.image('desk', 'assets/images/desk_4.png');
+        this.load.image('desk', 'assets/images/desk.png');
         this.load.image('chair', 'assets/images/chair.png');
         this.load.image('sitShadow', 'assets/images/sitShadow.png');
         this.load.image('sitText', 'assets/images/sitText.png');
