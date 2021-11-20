@@ -34,7 +34,9 @@ export default class Study extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('desk', 'assets/images/desk_4.png');
+    this.load.image('desk', 'assets/images/desk.png');
+    this.load.image('chair_up', 'assets/images/chair_up.png');
+    this.load.image('chair_down', 'assets/images/chair_down.png');
     this.load.image('chair', 'assets/images/chair.png');
     this.load.image('sitShadow', 'assets/images/sitShadow.png');
     this.load.image('sitText', 'assets/images/sitText.png');
@@ -59,10 +61,10 @@ export default class Study extends Phaser.Scene {
 
   create() {    
     this.createUser();
-    this.createDesk(0, 0, 'desk', 'chair');
+    this.createDesk(0, 0, 'desk', {down: 'chair_down', up :'chair_up'});
     const chair = this.desk.getAt(this.index);
     chair.sit();
-    this.cameras.main.centerOn(this.desk.x + this.cameras.main.width/4, this.desk.y - this.cameras.main.height/4 );
+    this.cameras.main.centerOn(this.desk.x + this.cameras.main.width/3, this.desk.y - this.cameras.main.height/6);
     this.setEventHandlers();
 
     // createCharacterAnimsWizard(this.anims);
