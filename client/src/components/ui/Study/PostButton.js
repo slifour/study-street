@@ -34,7 +34,7 @@ export default function PostButton(props) {
 
     const {loginUser} = useContext(LoginUserContext);
     const nickname = loginUser.userID;
-    console.log("nickname:", loginUser, nickname)
+    // console.log("nickname:", loginUser, nickname)
     const [chats, setchats] = useState([]);
     // const [posts, setPosts] = useState([]);
     let [posts, setPosts] = useState([]);
@@ -42,11 +42,11 @@ export default function PostButton(props) {
     const [Msg, setMessage] = useState(null);
 
     const [postUpdateInterval, setpostUpdateInterval] = useState(5*60*1000);
-    const [newPost, setNewPost] = useState(false);
-    const [show, setShow] = useState(false);
+    const [newPost, setNewPost] = useState(false); // is there new post arrived?
+    const [show, setShow] = useState(false); // show the posts?
     // const [showReply, setShowReply] = useState("false");
     
-    const [active, setActive] = useState(false);
+    const [active, setActive] = useState(false); // is the post button active? ("New Posts!" with red button)
     const [buttonText, setButtonText] = useState("Stickies");
 
     const addChatMessage = () => {
@@ -55,39 +55,42 @@ export default function PostButton(props) {
     }
 
     useEffect(() => {
-        
-        socket.emit('add user', props.userId);
+
+        socket.emit('add user', nickname);
 
         socket.on('chatconnect', () => {
-        setIsConnected(true);    
-        addChatMessage();
+            setIsConnected(true);    
+            addChatMessage();
         });
         socket.on('user joined', (data) =>{
         setchats(chats.concat(`${data.username} joined`));
+
         })
         socket.on('user left', (data) => {
         setchats(chats.concat(`${data.username} left`));
+
         });
         socket.on('chatdisconnect', () => {
         setIsConnected(false);
         });
-        socket.on('chat message', (data) => {
-            posts.push({userName : data.username, message : data.message});
-            setNewPost(true);
-        //  setPosts(chats.(`${data.username} : ${data.message}`)); //수정 필요
+        socket.on('chatSendFail', () => {
+        let message = 'Cannot send message';
+        setchats(chats.concat(message));
         });
 
-        posts = [{'id': 'hyeon', 'msg' : 'hello'}, {'id': 'hyeon', 'msg' : 'hello'}, {'id': 'hyeon', 'msg' : 'hello'}]
+        socket.on('chat message', (data) => {
+            console.log("socket.on('chat message') data.sendname, loginUser.userID =", data.sendname, loginUser.userID )
+            if(data.sendname === loginUser.userID){
+                setchats(chats.concat(`${data.sendname} : ${data.message}`));
+                // posts.push({userName : data.username, message : data.message});
+                setNewPost(true);    
+            }
+        });
 
-        // useEffect(() => {
-        //     console.log("check whether we will update user study time");
-        //     if (willUpdateStudyTime) {
-        //       requestUpdate();
-        //       setWillUpdateStudyTime(false);
-        //     }
-        // }, [willUpdateStudyTime, requestUpdate]);   
-  
-
+        // setchats([{'id': 'hyeon', 'msg' : 'hello'}, {'id': 'hyeon', 'msg' : 'hello'}, {'id': 'hyeon', 'msg' : 'hello'}])
+        
+        // posts = [{'id': 'hyeon', 'msg' : 'hello'}, {'id': 'hyeon', 'msg' : 'hello'}, {'id': 'hyeon', 'msg' : 'hello'}]
+ 
         return () => {
             socket.off('chatconnect');
             socket.off('chatdisconnect');
@@ -95,23 +98,18 @@ export default function PostButton(props) {
         };
     });
 
+    useEffect(() => {
+        // update()
+        const activatePost = setInterval(() => {update();}, POST_UPDATE_INTERVAL);
+        return () => {clearInterval(activatePost);};
+    });      
+
     const update = () => {
         setNewPost(true);
         if(newPost){
             setActive(true);
         };        
     };
-
-    // useEffect(() => {
-    //     if(active){
-    //         setButtonText("New Stickies");
-    //     }
-    // })
-
-    useEffect(() => {
-        const activatePost = setInterval(() => {update();}, POST_UPDATE_INTERVAL);
-        return () => {clearInterval(activatePost);};
-    });      
 
     const sendMessage = () => {
         console.log(Msg);
@@ -148,7 +146,7 @@ export default function PostButton(props) {
                     <div className={styles.iconsRed}>arrow_circle_up</div>:<div className={styles.iconsRed}>arrow_circle_down</div>}
                 </div>                
                 {show?
-                <PostOverlay postList = {posts} setShow = {setShow} onChange = {onChange} Msg ={Msg} sendMessage = {sendMessage}></PostOverlay>
+                <PostOverlay postList = {chats} setShow = {setShow} onChange = {onChange} Msg ={Msg} sendMessage = {sendMessage}></PostOverlay>
                 :null}
             </div> :        
             <div>
