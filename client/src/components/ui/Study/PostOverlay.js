@@ -59,9 +59,9 @@ const StyledDiv = styled.div`
 
 export default function PostOverlay(props) {
     // const {show, postList} = props;
-    const {setShow, onChange, Msg, sendMessage} = props;
+    const {postList, setShow, onChange, Msg, sendMessage} = props;
 
-    const postList = [{id: 'hyeon', msg : 'hello'}, {id: 'hyeon', msg : 'hello'}, {id: 'hyeon', msg : 'hello'}];
+    // const postList = [{id: 'hyeon', msg : 'hello'}, {id: 'hyeon', msg : 'hello'}, {id: 'hyeon', msg : 'hello'}];
 
     const [pageList, setpageList] = useState([])
     const [isReplying, setIsReplying] = useState(false);
@@ -109,8 +109,7 @@ export default function PostOverlay(props) {
                 <button type="button" onClick={() => nextButtonClick}>
                     Next 
                 </button>
-            </div>
-            <PostCloseButton onClick={onClickPostClose}/>
+            </div>            
         </div>
         {/* : null} */}
         </>

@@ -146,6 +146,8 @@ export default class MapScene extends Phaser.Scene {
 
   onResponseCreateFriend(payload){
     let socketID = payload.loginUser.socketID;
+    if (socketID === this.socketID) {console.log('returned'); return;}
+    this.onResponseRemoveFriend(socketID);
     const friend = new Friend(this, payload.x, payload.y, 'user-wizard', 'wizard', payload.loginUser).setScale(1);
     friend.init();
     this.friendDict[socketID] = friend;
