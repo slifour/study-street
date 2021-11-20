@@ -36,8 +36,8 @@ export default function PostButton(props) {
     const nickname = loginUser.userID;
     const [chats, setchats] = useState([]);
     const [Msg, setMessage] = useState(null);
+    const [isConnected, setIsConnected] = useState(socket.connected);
 
-    const [postUpdateInterval, setpostUpdateInterval] = useState(5*60*1000);
     const [newPost, setNewPost] = useState(false); // is there new post arrived?
     const [show, setShow] = useState(false); // show the posts?    
     const [active, setActive] = useState(false); // is the post button active? ("New Posts!" with red button)

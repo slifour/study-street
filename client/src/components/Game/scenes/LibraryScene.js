@@ -24,7 +24,9 @@ export default class Library extends MapScene {
         super.preload()
         this.load.image('desk', 'assets/images/desk.png');
         this.load.image('chair', 'assets/images/chair.png');
-        this.load.image('sitShadow', 'assets/images/sitShadow.png');
+        this.load.image('chair_up', 'assets/images/chair_up.png');
+        this.load.image('chair_down', 'assets/images/chair_down.png');
+        this.load.image('sitShadow', 'assets/images/sitSghadow.png');
         this.load.image('sitText', 'assets/images/sitText.png');
         this.load.image('bookshelf', 'assets/images/book-shelf.png');
         this.load.image('book-side', 'assets/images/book-red.png');
@@ -106,12 +108,12 @@ export default class Library extends MapScene {
         // this.createGroupArea('a');
 
         // Create desks
-        this.deskPositions = [{x:500, y:450}, {x:1000, y:450}, {x:1500, y: 450}]
+        this.deskPositions = [{x:500, y:450}, {x:1000, y:450}, {x:1500, y: 450}, {x:500, y:1000}, {x:1000, y:2000}, {x:1500, y: 1000}, {x:1500, y: 2000}]
         this.bookshelfPositions = [{x:500, y:350}, {x:1000, y:350}, {x:1500, y: 350}]
         let deskIndex = 0
         this.deskPositions.forEach((position, i) =>{
             let bookshelf = this.createBookshelf(position.x, position.y, 'bookshelf');
-            let desk = this.createDesk(position.x, position.y, 'desk', 'chair');
+            let desk = this.createDesk(position.x, position.y, 'desk', {down: 'chair_down', up :'chair_up'});
             this.areas[i] = {desk : desk, bookshelf : bookshelf, groupID : null};
         })
 

@@ -14,7 +14,7 @@ export default function PostReply(props){
 
     return (
         <>
-        <div className = {styles.postPage}> 
+        <div className = {styles.postPageg}> 
             <form>
                 <input
                 type="text"

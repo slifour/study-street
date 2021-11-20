@@ -9,18 +9,18 @@ export default class Desk extends Phaser.GameObjects.Container {
     this.scene.physics.world.enable(this);
 
     let margin = 10
-    let desk = this.scene.physics.add.image(0, 0, deskKey);
+    let desk = this.scene.physics.add.image(0, 0, deskKey).setScale(0.8);
     desk.setImmovable();
 
     this.setSize(desk.displayWidth, desk.displayHeight)
 
     this.chairY = - (desk.displayHeight/2 + margin)    
-    this.createChairs(n, this.chairY, chairKey, 'up', interactive)
+    this.createChairs(n, this.chairY, chairKey.up, 'up', interactive)
 
     this.add(desk)
     
     this.chairY = - this.chairY 
-    this.createChairs(n, this.chairY, chairKey, 'down', interactive)
+    this.createChairs(n, this.chairY, chairKey.down, 'down', interactive)
 
     this.id = id
     
