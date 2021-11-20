@@ -34,20 +34,13 @@ export default function PostButton(props) {
 
     const {loginUser} = useContext(LoginUserContext);
     const nickname = loginUser.userID;
-    // console.log("nickname:", loginUser, nickname)
     const [chats, setchats] = useState([]);
-    // const [posts, setPosts] = useState([]);
-    let [posts, setPosts] = useState([]);
-    const [isConnected, setIsConnected] = useState(socket.connected);
     const [Msg, setMessage] = useState(null);
 
     const [postUpdateInterval, setpostUpdateInterval] = useState(5*60*1000);
     const [newPost, setNewPost] = useState(false); // is there new post arrived?
-    const [show, setShow] = useState(false); // show the posts?
-    // const [showReply, setShowReply] = useState("false");
-    
+    const [show, setShow] = useState(false); // show the posts?    
     const [active, setActive] = useState(false); // is the post button active? ("New Posts!" with red button)
-    const [buttonText, setButtonText] = useState("Stickies");
 
     const addChatMessage = () => {
         let message = 'Connected to chat';
@@ -88,9 +81,7 @@ export default function PostButton(props) {
         });
 
         // setchats([{'id': 'hyeon', 'msg' : 'hello'}, {'id': 'hyeon', 'msg' : 'hello'}, {'id': 'hyeon', 'msg' : 'hello'}])
-        
-        // posts = [{'id': 'hyeon', 'msg' : 'hello'}, {'id': 'hyeon', 'msg' : 'hello'}, {'id': 'hyeon', 'msg' : 'hello'}]
- 
+
         return () => {
             socket.off('chatconnect');
             socket.off('chatdisconnect');
@@ -134,31 +125,29 @@ export default function PostButton(props) {
 
     return(
         <StyledDiv>
-            <div>
             {active ?
             <div>
                 <div className= {`${styles.postButton} ${styles.hvrGrow}`} 
                     style={props.buttonStyle} 
-                    // buttonStyle = {{left: "20%", bottom: "80%"}} 
                     onClick={onButtonClick}>                    
                     New Stickies
                     {show?
-                    <div className={styles.iconsRed}>arrow_circle_up</div>:<div className={styles.iconsRed}>arrow_circle_down</div>}
+                    <div className={styles.iconsRed}>arrow_circle_up</div>
+                    :<div className={styles.iconsRed}>arrow_circle_down</div>}
                 </div>                
-                {show?
+                {show ?
                 <PostOverlay postList = {chats} setShow = {setShow} onChange = {onChange} Msg ={Msg} sendMessage = {sendMessage}></PostOverlay>
-                :null}
-            </div> :        
+                : 
+                null}
+            </div>         
+            : 
             <div>
                 <div className= {`${styles.postButton}`} 
-                style={props.buttonStyle} 
-                // buttonStyle = {{left: "20%", bottom: "80%"}} 
-                >
+                    style={props.buttonStyle} >
                     Stickies
                 </div>
             </div>
-            }      
-            </div>      
+            }         
         </StyledDiv>
     )
 }

@@ -33,7 +33,7 @@
   cursor: pointer;
 }
 
-.postContainer{
+.postPager{
   top: 80px;
   position: absolute;  
   margin: auto;
