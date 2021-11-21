@@ -74,6 +74,15 @@ let userList = {
     "curGroup" : "a",
     "socketID": null
   },
+  "Guest": {
+    "userID": "guest",
+    "userName": "게스트",
+    "profileImage": dummyAvatars[1],
+    "todayStudyTime": 7200 * 1000,
+    "status": "Making chatting system",
+    "curGroup" : "a",
+    "socketID": null
+  },
   "hyeon": {
     "userID": "hyeon",
     "userName": "현",
@@ -99,7 +108,7 @@ let groupList = {
     groupID: "a",
     groupName: "We love study",
     leader: "eunki",
-    member: ["eunki", "haeseul"],
+    member: ["eunki", "haeseul", "guest"],
     colors: ['#F79489', '#F9F1F0'],
     quests: {
       "eq2dm5" : {
@@ -107,8 +116,8 @@ let groupList = {
           type : "Attendance",
           content : "11/18",
           contentDate : new Date(2021, 10, 18, 0, 0),
-          acceptedUsers : ["eunki", "haeseul"], // TODO: acceptedUsers, doneUsers, notYetUsers 중 하나는 없어도 됨.
-          doneUsers : ["haeseul"],
+          acceptedUsers : ["eunki", "haeseul", "guest"], // TODO: acceptedUsers, doneUsers, notYetUsers 중 하나는 없어도 됨.
+          doneUsers : ["haeseul", "guest"],
           participatingUsers : [],
           notYetUsers : ["eunki"]
       },

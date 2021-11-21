@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
+import styles from './ui.module.css'
 
 const StyledAvatar = styled.img`
     filter: drop-shadow(0px 4px 4px rgba(88, 88, 88, 0.25));
@@ -8,7 +9,7 @@ const StyledAvatar = styled.img`
 `;
 
 export default function UserAvatarCircle(props) {
-    // props: user, size, onClick
+    // props: user, size, onHover, onClick
     const size = props.size || 70; // default size in px
     // const fontSize = size / 2.5;
     // const lineHeight = size;
@@ -18,14 +19,31 @@ export default function UserAvatarCircle(props) {
     //status is expressed by 'studying', 'online', 'offline'
     const [status, setStatus] = useState('online');
 
+    const onMouseEnterItem = props.onMouseEnterItem;
+
+    const [showItem, setShowItem] = useState(false);
+
+    const onMouseEnter = () => {
+        setShowItem(true)
+    }
+    
+    const onMouseLeave = () => {
+        setShowItem(false)
+    }
+
     return (
-        <div onClick={props.onClick}>
-            { 
-                <StyledAvatar style={{
-                    width: `${size}px`,
-                    height: `${size}px`
-                }} src={props.user.profileImage} />
-            }
+        <div onClick={props.onClick} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} style = {{position : `relative`}}>
+            <StyledAvatar style={{
+                width: `${size}px`,
+                height: `${size}px`,            
+            }} src={props.user.profileImage} />
+            {
+                showItem?
+                <div className = {styles.userAvatarItem} style = {{top : `-14px`}}>
+                    {onMouseEnterItem}
+                </div> :
+                null
+            }    
         </div>
     )
 }
