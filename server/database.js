@@ -74,7 +74,7 @@ let userList = {
     "curGroup" : "a",
     "socketID": null
   },
-  "Guest": {
+  "guest": {
     "userID": "guest",
     "userName": "게스트",
     "profileImage": dummyAvatars[1],
