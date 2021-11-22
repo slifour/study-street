@@ -18,13 +18,16 @@ export default class Library extends MapScene {
         this.groupToIndex = {};
         this.borderWidth = 3  
         this.nextdeskId = 0;
+        this.friendDictStudying = {};
     };
 
     preload() {
         super.preload()
-        this.load.image('desk', 'assets/images/desk_4.png');
+        this.load.image('desk', 'assets/images/desk.png');
         this.load.image('chair', 'assets/images/chair.png');
-        this.load.image('sitShadow', 'assets/images/sitShadow.png');
+        this.load.image('chair_up', 'assets/images/chair_up.png');
+        this.load.image('chair_down', 'assets/images/chair_down.png');
+        this.load.image('sitShadow', 'assets/images/sitSghadow.png');
         this.load.image('sitText', 'assets/images/sitText.png');
         this.load.image('bookshelf', 'assets/images/book-shelf.png');
         this.load.image('book-side', 'assets/images/book-red.png');
@@ -104,15 +107,14 @@ export default class Library extends MapScene {
 
         // Group Area Example (Manual)
         // this.createGroupArea('a');
-
         // Create desks
-        this.deskPositions = [{x:500, y:450}, {x:1000, y:450}, {x:1500, y: 450}]
+        this.deskPositions = [{x:500, y:450}, {x:1000, y:450}, {x:1500, y: 450}, {x:500, y:1200}, {x:1500, y:1200}, {x:500, y: 1700}, {x:1500, y: 1700}]
         this.bookshelfPositions = [{x:500, y:350}, {x:1000, y:350}, {x:1500, y: 350}]
         let deskIndex = 0
-        this.deskPositions.forEach((position, i) =>{
+        this.deskPositions.forEach((position, index) =>{
             let bookshelf = this.createBookshelf(position.x, position.y, 'bookshelf');
-            let desk = this.createDesk(position.x, position.y, 'desk', 'chair');
-            this.areas[i] = {desk : desk, bookshelf : bookshelf, groupID : null};
+            let desk = this.createDesk(position.x, position.y, 'desk', {down: 'chair_down', up :'chair_up'}, index);
+            this.areas[index] = {desk : desk, bookshelf : bookshelf, groupID : null};
         })
 
         // don't go out of the map
@@ -130,8 +132,8 @@ export default class Library extends MapScene {
      * @parameter x, y, deskKey : spritekey for desk, chairkey : spritekey for chair
      * @return Desk : extends sprite, defined in entity/Desk.js
      */
-    createDesk(x, y, deskKey, chairKey) {
-        return new Desk(this, x, y, deskKey, chairKey);    
+    createDesk(x, y, deskKey, chairKey, index) {
+        return new Desk(this, x, y, deskKey, chairKey, index);    
     }  
 
     createBookshelf(x, y, bookshelfKey) {
@@ -148,8 +150,6 @@ export default class Library extends MapScene {
             this.physics.add.collider(this.user, bookshelf.bookshelf);
         })
     }
-
-
 
     /** assignGroupArea
      * @parameter deskId: id of desk to assign, groupId : to be implemented
@@ -172,7 +172,7 @@ export default class Library extends MapScene {
             color: colorMain,
             align:'center', });
 
-        this.areas[deskId].groupID = groupID;
+        desk.assignGroup({groupID : groupID, groupName : groupNameText})
         this.groupToIndex[groupID] = deskId;
 
         groupName.setOrigin(0,1);
@@ -228,6 +228,13 @@ export default class Library extends MapScene {
         const {payload} = request;
         this.assignGroupArea(payload.groupID, payload.groupName, payload.colors)
     }  
+
+    onResponseRemoveFriend(socketID){
+        if (Object.keys(this.friendDict).includes(socketID)){
+          this.friendDict[socketID].destroy();
+          delete this.friendDict[socketID];
+        }
+    }
 
     onNewArtifact(data){
         // console.log('recieve : newArtifact')

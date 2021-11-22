@@ -1,4 +1,5 @@
 import Phaser, { GameObjects } from "phaser";
+import { getParsedDuration } from '../utils/Time';
 
 export default class Status extends GameObjects.Container {
   /**
@@ -33,6 +34,7 @@ export default class Status extends GameObjects.Container {
 
     this.setDepth(50);
   }
+
   update() { 
     if (!this.active) return;
 
@@ -44,7 +46,7 @@ export default class Status extends GameObjects.Container {
       console.log("update status view");
       this.textView.text = this.text;
       this.textView.x = this.host.x - 0.5 * this.textView.width;
-      this.textView.y = this.host.y - 0.5 * this.textView.height - this.marginY;
+      this.textView.y = this.host.y - 0.75 * this.textView.height - this.marginY;
   
       this.graphics.clear();
       this.graphics.fillStyle(0x232323, 0.6);
@@ -61,6 +63,19 @@ export default class Status extends GameObjects.Container {
         y: this.host.y,
         text: this.text
       };
+
+      // this.tiemerEvent = this.scene.time.addEvent({
+      //   delay : 1000,
+      //   callback : this.updateTime(),
+      //   loop: true,
+      // });
+
     }
   }
+
+  updateTime() {
+    let elapsedTime = this.tiemerEvent.getRepeatCount()*1000;
+    this.textView.text = getParsedDuration(elapsedTime);
+  }
+
 }

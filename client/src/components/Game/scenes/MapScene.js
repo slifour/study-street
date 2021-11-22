@@ -76,21 +76,27 @@ export default class MapScene extends Phaser.Scene {
 
     /** Create User Avatar */
     this.createUser();
+    this.initialize({prevScene : this.prevScene, currentScene : this.key});
   }
 
   update() {
     this.user.update(this.cursors);
-    // if (Object.entries(this.friendDict).length !== 0){
-    //   Object.values(this.friendDict).forEach(friend => {friend.update();});
-    // }
+  };
+
+  /** initialize : tell server to create this user */
+  initialize(payload) {    
+    console.log('initialize :', payload)
+    let request = new Request(this.socket, this.loginUser)
+    request.request("REQUEST_CHANGE_SCENE", payload);
+    // request(requestType, responseType, makePayload, onRequest, onResponseOK, onResponseFail, socket)
   };
 
   createUser() {
     this.user = new User(this, 800, 400, 'user-girl', 'girl', this.loginUser).setScale(3/100 * 1.2); 
-    this.user.init();   
+    this.user.init();
     this.user.setDepth(1);
-    this.physics.add.collider(this.user, this.belowPlayer1);
-    this.physics.add.collider(this.user, this.world1);
+    this.physics.add.collider(this.user.body, this.belowPlayer1);
+    this.physics.add.collider(this.user.body, this.world1);
 
     this.updateCamera();
   }
@@ -145,14 +151,27 @@ export default class MapScene extends Phaser.Scene {
     });
   }
 
-  onResponseCreateFriend(payload){
+  createFriend(payload){
     let socketID = payload.loginUser.socketID;
+    if (socketID === this.socketID) {
+      return false;
+    }
     this.onResponseRemoveFriend(socketID);
-    const friend = new Friend(this, payload.x, payload.y, 'user-wizard', 'wizard', payload.loginUser).setScale(1);
+    console.log("createFriend")
+    this.onResponseFriendStopStudy(socketID);
+    const friend = new Friend(this, {x : payload.x, y: payload.y} , 'user-wizard', 'wizard', payload.loginUser).setScale(1);
+    friend.init();
+    return friend;
+  }
+
+  onResponseCreateFriend(payload){
+    const friend = this.createFriend(payload);
+    if(!friend){
+      return;
+    }    
     this.physics.add.collider(friend, this.belowPlayer1);
     this.physics.add.collider(friend, this.world1);
-    friend.init();
-    this.friendDict[socketID] = friend;
+    this.friendDict[payload.loginUser.socketID] = friend;  
   }
 
   onResponseRemoveFriend(socketID){
@@ -161,16 +180,44 @@ export default class MapScene extends Phaser.Scene {
       delete this.friendDict[socketID];
     }
   }
+
+  onResponseFriendStartStudy(payload){
+    const friend = this.createFriend(payload);
+    console.log("onResponseFriendStartStudy(payload)", payload);
+    if(friend){
+      console.log("if(friend)", payload.deskIndex, payload.chairIndex);
+      this.friendDictStudying[payload.loginUser.socketID] = friend;
+      if ((payload.deskIndex !== undefined) && (payload.chairIndex !== undefined)){
+        console.log("friend.sit()", this.areas[payload.deskIndex].desk, payload.chairIndex);
+        friend.sit(this.areas[payload.deskIndex].desk, payload.chairIndex)
+      }
+      else{
+        return
+      }
+    }
+  }
+  
+  onResponseFriendStopStudy(socketID){
+    console.log("onResponseFriendStopStudy(socketID)", socketID, this.friendDictStudying);
+    if (Object.keys(this.friendDictStudying).includes(socketID)){
+      console.log("onResponseFriendStopStudy incluses");
+      this.friendDictStudying[socketID].stand();
+      this.friendDictStudying[socketID].destroy();
+      delete this.friendDictStudying[socketID];
+    }
+  }  
   
   setEventHandlers(){
     // Description
     // socket.on('event', eventHandler)  
-    this.game.events.on("EVENT_ID", this.onEventID, this);
+    // this.game.events.on("EVENT_ID", this.onEventID, this);
     if(this.socket !== undefined){      
       // this.socket.on("RESPONSE_CONNECT", this.onResponseConnect.bind(this));
       this.socket.on("LOOP_POSITION", this.onLoopPosition.bind(this));
       this.socket.on("RESPONSE_CREATE_FRIEND", this.onResponseCreateFriend.bind(this));
       this.socket.on("RESPONSE_REMOVE_FRIEND", this.onResponseRemoveFriend.bind(this));
+      this.socket.on("RESPONSE_FRIEND_START_STUDY", this.onResponseFriendStartStudy.bind(this));
+      this.socket.on("RESPONSE_FRIEND_STOP_STUDY", this.onResponseFriendStopStudy.bind(this));
     }
   }
 
@@ -182,13 +229,14 @@ export default class MapScene extends Phaser.Scene {
   }
 
 
-  changeScene(newScene, index){
+  changeScene(newScene, data){
+    console.log('this.scene.start:', data);
     this.game.events.emit("changeScene", newScene);
     this.cameras.main.fadeOut(1000, 0, 0, 0)
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
         // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
         // this.doUpdate = false
-        let data = {index : index, prevScene: this.key};
+        data.prevScene = this.key;
         console.log('this.scene.start:', data);
         this.socket.removeAllListeners();
         this.scene.start(newScene, data);
