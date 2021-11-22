@@ -94,7 +94,7 @@ export default function NewGoal(props) {
                 </div>
             }
             <div className={styles.modalContent}>
-                <div className={styles.modalForm}>
+                <form className={styles.modalForm}>
                     <input
                         type="number"
                         min="0"
@@ -102,9 +102,9 @@ export default function NewGoal(props) {
                         value={hour}
                         onChange={changeHour}
                     ></input>
-                </div>
+                </form>
                 <div className={styles.modalContentText}>hour</div>
-                <div className={styles.modalForm}>
+                <form className={styles.modalForm}>
                     <input
                         type="number"
                         min="0"
@@ -112,7 +112,7 @@ export default function NewGoal(props) {
                         value={minute}
                         onChange={changeMinute}
                     ></input>
-                </div>
+                </form>
                 <div className={styles.modalContentText}>minute</div>
             </div>
             

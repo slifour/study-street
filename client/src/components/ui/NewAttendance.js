@@ -119,13 +119,13 @@ export default function NewAttendance(props) {
             }
             <div className={styles.modalContent}>
                 <div className={styles.modalContentText}>Date</div>
-                <div>
+                <form>
                     <input
                         type="date"
                         className={styles.picker}
                         onChange={changeDate}
                     ></input>
-                </div>
+                </form>
             </div>
             <div className={styles.modalFooter}>
                 <div className={styles.cancelButton} onClick={props.callClose}>Cancel</div>
