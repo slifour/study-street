@@ -48,12 +48,12 @@ export default function LoginOverlay(props) {
         setUserID(e.target.value);
     }
 
-    const onLoginKeyUp = e => {
-        if (e.keyCode === 13 && loginUser===null) {
-            e.preventDefault();
-            onLoginClick();
-        }
-      };
+    // const onLoginKeyUp = e => {
+    //     if (e.keyCode === 13 && loginUser===null) {
+    //         e.preventDefault();
+    //         onLoginClick();
+    //     }
+    //   };
 
 
     return(
@@ -65,15 +65,15 @@ export default function LoginOverlay(props) {
             <div className={styles.divider}></div>
             <div className={styles.loginContent}>
                 <div className={styles.loginContentText}>ID</div>
-                <form className={styles.loginForm}>
+                <div className={styles.loginForm}>
                     <input
                         type = "text"
                         className={styles.loginInput}
                         value={userID}
                         onChange={changeUserID}
-                        onKeyUp={onLoginKeyUp}
+                        // onKeyUp={onLoginKeyUp}
                     ></input>
-                </form>
+                </div>
             </div>
             <div className={styles.loginFooter}>
                 {(userID==='') && <div className={styles.loginButtonDisabled}>Login</div>}
