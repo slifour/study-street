@@ -19,9 +19,12 @@ module.exports = class Rooms {
         this.room = room;
         this.updateInterval = 200;
         this.socketIDToPosition = {};
+        this.userIDToChairs = {};
         this.idList = {};
         this.isEmittingUpdates = false;   
-        this.stateChanged = false;        
+        this.isEmittingUpdatesStudying = false; 
+        this.stateChanged = false;
+        this.stateChangedStudying = false;        
     }
 
     init(io, socket){
@@ -34,7 +37,7 @@ module.exports = class Rooms {
     }
 
     getNumUsers(){
-        return (Object.keys(this.idList).length);
+        return (Object.keys(this.socketIDToPosition).length);
     }
 
     setUserId(socketID, userId){
@@ -53,6 +56,10 @@ module.exports = class Rooms {
         Object.entries(this.socketIDToPosition).forEach(([socketID, position]) => {
             let user = userList[this.idList[socketID]]
             socket.emit("RESPONSE_CREATE_FRIEND", {loginUser : user, x : position.x, y : position.y})
+        })    
+        Object.entries(this.userIDToChairs).forEach(([userID, chair]) => {
+            let user = userList[userID]
+            socket.emit("RESPONSE_FRIEND_START_STUDY", {loginUser : user, deskIndex : chair.deskIndex, chairIndex : chair.chairIndex})
         })    
         this.broadcast("RESPONSE_CREATE_FRIEND", {loginUser : loginUser, x : x, y : y});
 
@@ -85,6 +92,20 @@ module.exports = class Rooms {
         } 
         else {
             this.isEmittingUpdates = false;
+        }
+    }
+
+    sit(socket, deskIndex, chairIndex, loginUser){
+        this.userIDToChairs[loginUser.userID] = {deskIndex : deskIndex, chairIndex : chairIndex};
+        console.log('sit broadcst',  deskIndex, chairIndex, loginUser)
+        this.broadcast("RESPONSE_FRIEND_START_STUDY", {loginUser : loginUser, deskIndex : deskIndex, chairIndex : chairIndex})
+    }
+
+    stand(socket, userID){
+        let socketID = socket.id;
+        if (Object.keys(this.userIDToChairs).includes(userID)){
+            delete this.userIDToChairs[userID];
+            this.broadcast("RESPONSE_FRIEND_STOP_FRIEND", socketID);
         }
     }
 }

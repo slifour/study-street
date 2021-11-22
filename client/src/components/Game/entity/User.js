@@ -30,7 +30,7 @@ export default class User extends Phaser.Physics.Arcade.Sprite {
   init(){
     // this.setCollideWorldBounds(true);
     // this.initialize({currentScene : this.scene.key});
-    this.initialize({prevScene : this.scene.prevScene, currentScene : this.scene.key});
+    // this.initialize({prevScene : this.scene.prevScene, currentScene : this.scene.key});
     /* Status display */
     this.setInteractive();
     this.prepareStatusView();

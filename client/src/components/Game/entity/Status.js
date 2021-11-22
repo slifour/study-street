@@ -1,4 +1,5 @@
 import Phaser, { GameObjects } from "phaser";
+import { getParsedDuration } from '../utils/Time';
 
 export default class Status extends GameObjects.Container {
   /**
@@ -6,10 +7,11 @@ export default class Status extends GameObjects.Container {
    * @param {Phaser.GameObjects.Components.Transform} hostObject
    * @param {string} text
    */
-  constructor(scene, hostObject, text) {
+  constructor(scene, hostObject, text, userName = "name") {
     super(scene);
     this.scene = scene;
     this.host = hostObject;
+    this.userName = userName;
     this.text = text;
 
     this.paddingX = 20;
@@ -22,7 +24,7 @@ export default class Status extends GameObjects.Container {
       text: this.text
     };
     
-    this.textView = this.scene.add.text(this.host.x, this.host.y, text, { 
+    this.textView = this.scene.add.text(this.host.x, this.host.y, this.userName + text, { 
       fontSize: '16px', 
       fontFamily: 'Lato',
       color: '#dddddd', });
@@ -33,6 +35,7 @@ export default class Status extends GameObjects.Container {
 
     this.setDepth(50);
   }
+
   update() { 
     if (!this.active) return;
 
@@ -61,6 +64,19 @@ export default class Status extends GameObjects.Container {
         y: this.host.y,
         text: this.text
       };
+
+      // this.tiemerEvent = this.scene.time.addEvent({
+      //   delay : 1000,
+      //   callback : this.updateTime(),
+      //   loop: true,
+      // });
+
     }
   }
+
+  updateTime() {
+    let elapsedTime = this.tiemerEvent.getRepeatCount()*1000;
+    this.textView.text = this.userName + getParsedDuration(elapsedTime);
+  }
+
 }

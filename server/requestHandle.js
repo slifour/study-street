@@ -36,6 +36,7 @@ const onRequest = (socket, requestName, request) => {
     case RequestType.TOGGLE_CHECKLIST : onRequestToggleChecklist(socket, request); break;
     case RequestType.ACCEPT_QUEST : onRequestAcceptQuest(socket, request); break;
     case RequestType.NEW_QUEST: onRequestNewQuest(socket, request); break;
+    case RequestType.CREATE_FRIEND: onRequestCreateFriend(socket, request); break;
     // case RequestType.MOVE: onRequestMove(socket, request); break; 
     default: break;
   }
@@ -57,6 +58,22 @@ const onRequest = (socket, requestName, request) => {
   });
 };
 
+const onRequestCreateFriend = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.MY_GROUP_LIST;
+  const socketIDFriend = payload.socketID
+
+  if (!requestUser) {
+    return responseFail(socket, requestKey, responseType, "Login is required.");
+  };
+
+  return socket.emit(responseType, {
+    requestKey, 
+    responseType,
+    status: ResponseStatus.OK,
+    payload: {loginUser : userList[env.useridList[socketIDFriend]], x : 300, y : 300}
+  });
+};
 
 const onRequestMyGroupList = (socket, request) => {
   const {requestUser, requestKey} = request;
@@ -365,9 +382,9 @@ const onRequestChangeScene = (socket, request) => {
   const {requestUser, requestKey, payload} = request;
   const responseType = ResponseType.CHANGE_SCENE;
 
-  let prevScene, currentScene;
+  let prevScene, currentScene, deskIndex, chairIndex;
   try {
-    ({prevScene, currentScene} = payload);
+    ({prevScene, currentScene, deskIndex, chairIndex} = payload);
   } catch {
     return responseFail(socket, requestKey, responseType, "Invalid scene.");
   }
@@ -380,14 +397,7 @@ const onRequestChangeScene = (socket, request) => {
   let id = socket.id;
   let initialPosition = {x:300, y:300}
   let user = userList[requestUser];
-  console.log('onRequestChangeScene user:', user);
-
-  switch (prevScene) {
-    case "Home": ; break;
-    case "Library": env.libraryRoom.remove(socket); break;
-    case "Study": ; break;
-    case "Rest": env.restRoom.remove(socket); break;
-  }
+  console.log('onRequestChangeScene user:', prevScene, currentScene);
 
   switch (currentScene) {
     case "Home": ; break;
@@ -398,7 +408,9 @@ const onRequestChangeScene = (socket, request) => {
       env.libraryRoom.add(socket, initialPosition.x, initialPosition.y, user)  
       break;    
     } 
-    case "Study": ; break;
+    case "Study": {
+      env.libraryRoom.sit(socket, deskIndex, chairIndex, user); 
+      break;}
     case "Rest": {
       env.socketIDToRoom[id] = env.restRoom; 
       env.restRoom.setUserId(id, requestUser); 
@@ -407,10 +419,17 @@ const onRequestChangeScene = (socket, request) => {
     }
   }
 
+  switch (prevScene) {
+    case "Home": ; break;
+    case "Library": env.libraryRoom.remove(socket); break;
+    case "Study": env.libraryRoom.stand(socket, user.userID); break;
+    case "Rest": env.restRoom.remove(socket); break;
+  }
+
   try {
     update = updateAttendance(requestUser);
   } catch {
-    return reponseFail(socket, requestKey, responseType, "Failed to update attendance");
+    return responseFail(socket, requestKey, responseType, "Failed to update attendance");
   }
   if(update){
     onRequestNewDoneQuest(socket);
