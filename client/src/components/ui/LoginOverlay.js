@@ -65,7 +65,7 @@ export default function LoginOverlay(props) {
             <div className={styles.divider}></div>
             <div className={styles.loginContent}>
                 <div className={styles.loginContentText}>ID</div>
-                <form className={styles.loginForm}>
+                <div className={styles.loginForm}>
                     <input
                         type = "text"
                         className={styles.loginInput}
@@ -73,7 +73,7 @@ export default function LoginOverlay(props) {
                         onChange={changeUserID}
                         onKeyUp={onLoginKeyUp}
                     ></input>
-                </form>
+                </div>
             </div>
             <div className={styles.loginFooter}>
                 {(userID==='') && <div className={styles.loginButtonDisabled}>Login</div>}
