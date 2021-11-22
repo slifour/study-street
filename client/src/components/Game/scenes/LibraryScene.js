@@ -18,6 +18,7 @@ export default class Library extends MapScene {
         this.groupToIndex = {};
         this.borderWidth = 3  
         this.nextdeskId = 0;
+        this.friendDictStudying = {};
     };
 
     preload() {
@@ -110,10 +111,10 @@ export default class Library extends MapScene {
         this.deskPositions = [{x:500, y:450}, {x:1000, y:450}, {x:1500, y: 450}, {x:500, y:1200}, {x:1500, y:1200}, {x:500, y: 1700}, {x:1500, y: 1700}]
         this.bookshelfPositions = [{x:500, y:350}, {x:1000, y:350}, {x:1500, y: 350}]
         let deskIndex = 0
-        this.deskPositions.forEach((position, i) =>{
+        this.deskPositions.forEach((position, index) =>{
             let bookshelf = this.createBookshelf(position.x, position.y, 'bookshelf');
-            let desk = this.createDesk(position.x, position.y, 'desk', {down: 'chair_down', up :'chair_up'});
-            this.areas[i] = {desk : desk, bookshelf : bookshelf, groupID : null};
+            let desk = this.createDesk(position.x, position.y, 'desk', {down: 'chair_down', up :'chair_up'}, index);
+            this.areas[index] = {desk : desk, bookshelf : bookshelf, groupID : null};
         })
 
         // don't go out of the map
@@ -131,8 +132,8 @@ export default class Library extends MapScene {
      * @parameter x, y, deskKey : spritekey for desk, chairkey : spritekey for chair
      * @return Desk : extends sprite, defined in entity/Desk.js
      */
-    createDesk(x, y, deskKey, chairKey) {
-        return new Desk(this, x, y, deskKey, chairKey);    
+    createDesk(x, y, deskKey, chairKey, index) {
+        return new Desk(this, x, y, deskKey, chairKey, index);    
     }  
 
     createBookshelf(x, y, bookshelfKey) {
@@ -149,8 +150,6 @@ export default class Library extends MapScene {
             this.physics.add.collider(this.user, bookshelf.bookshelf);
         })
     }
-
-
 
     /** assignGroupArea
      * @parameter deskId: id of desk to assign, groupId : to be implemented
@@ -173,7 +172,7 @@ export default class Library extends MapScene {
             color: colorMain,
             align:'center', });
 
-        this.areas[deskId].groupID = groupID;
+        desk.assignGroup({groupID : groupID, groupName : groupNameText})
         this.groupToIndex[groupID] = deskId;
 
         groupName.setOrigin(0,1);
@@ -229,6 +228,13 @@ export default class Library extends MapScene {
         const {payload} = request;
         this.assignGroupArea(payload.groupID, payload.groupName, payload.colors)
     }  
+
+    onResponseRemoveFriend(socketID){
+        if (Object.keys(this.friendDict).includes(socketID)){
+          this.friendDict[socketID].destroy();
+          delete this.friendDict[socketID];
+        }
+    }
 
     onNewArtifact(data){
         // console.log('recieve : newArtifact')

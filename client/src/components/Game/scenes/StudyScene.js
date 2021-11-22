@@ -7,6 +7,7 @@ import GroupArea from '../entity/GroupArea';
 import Desk from '../entity/Desk';
 import Tooltip from '../entity/HtmlModal';
 import Book from '../entity/Book';
+import Request from '../request'
 /** 
  * class StudyScene
  * @ extends : Phaser.Scene 
@@ -26,11 +27,13 @@ export default class Study extends Phaser.Scene {
 
   init(data) {    
     console.log("Welcome to ", 'Study');  
+    this.loginUser = this.game.registry.get("loginUser");
     this.deskPosition = {x : 30 , y: 0};
     this.desk = null;
-    this.index = data.index;
+    this.deskIndex =  data.deskIndex;
+    this.chairIndex = data.chairIndex;
     this.prevScene = data.prevScene; 
-    console.log(this.index)
+    console.log(this.chairIndex)
   }
 
   preload() {
@@ -62,7 +65,9 @@ export default class Study extends Phaser.Scene {
   create() {    
     this.createUser();
     this.createDesk(0, 0, 'desk', {down: 'chair_down', up :'chair_up'});
-    const chair = this.desk.getAt(this.index);
+    this.initialize({prevScene : this.prevScene, currentScene : this.key, deskIndex : this.deskIndex, chairIndex : this.chairIndex});
+    console.log("StudyScene", this.deskIndex, this.chairIndex, this.desk)
+    const chair = this.desk.indexToChair[this.chairIndex];
     chair.sit();
     this.cameras.main.centerOn(this.desk.x + this.cameras.main.width/3, this.desk.y - this.cameras.main.height/6);
     this.setEventHandlers();
@@ -71,8 +76,15 @@ export default class Study extends Phaser.Scene {
     // createCharacterAnimsGirl(this.anims);
     // this.cursors = this.input.keyboard.createCursorKeys();
     // this.createFriend();
-
   }
+
+  /** initialize : tell server to create this user */
+  initialize(payload) {    
+    console.log('initialize :', payload)
+    let request = new Request(this.socket, this.loginUser)
+    request.request("REQUEST_CHANGE_SCENE", payload);
+    // request(requestType, responseType, makePayload, onRequest, onResponseOK, onResponseFail, socket)
+  };
 
   createUser() {
     this.user = new User(this, 0, 0, 'user-girl', 'girl').setScale(3/100 * 1.2);
@@ -83,7 +95,7 @@ export default class Study extends Phaser.Scene {
    * @sideEffect create Desk : extends sprite, defined in entity/Desk.js
    */
   createDesk(x, y, deskKey, chairKey) {
-    this.desk = new Desk(this, x, y, deskKey, chairKey, false);    
+    this.desk = new Desk(this, x, y, deskKey, chairKey, 0, false);    
   };    
 
   // onStateUpdate(users){
