@@ -81,9 +81,6 @@ export default class MapScene extends Phaser.Scene {
 
   update() {
     this.user.update(this.cursors);
-    // if (Object.entries(this.friendDict).length !== 0){
-    //   Object.values(this.friendDict).forEach(friend => {friend.update();});
-    // }
   };
 
   /** initialize : tell server to create this user */
@@ -98,8 +95,8 @@ export default class MapScene extends Phaser.Scene {
     this.user = new User(this, 800, 400, 'user-girl', 'girl', this.loginUser).setScale(3/100 * 1.2); 
     this.user.init();
     this.user.setDepth(1);
-    this.physics.add.collider(this.user, this.belowPlayer1);
-    this.physics.add.collider(this.user, this.world1);
+    this.physics.add.collider(this.user.body, this.belowPlayer1);
+    this.physics.add.collider(this.user.body, this.world1);
 
     this.updateCamera();
   }

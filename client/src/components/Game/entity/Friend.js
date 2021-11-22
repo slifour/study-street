@@ -3,69 +3,12 @@ import uniqueString from 'unique-string';
 import socket from '../../../socket';
 import { getParsedDuration } from '../utils/Time';
 import Status from './Status';
+import UserContainer from './UserContainer';
 
-export default class Friend extends GameObjects.Container{
-  constructor(scene, position,  spriteKey, animSuffix, loginUser) {
-    super(scene, position.x, position.y);
-    this.scene = scene;
-    this.userID = loginUser.userID
-    this.userName = loginUser.userName;
-    console.log("Log. Friend() userName=", this.userName)
-    this.scene.add.existing(this);
-    this.animName = {
-      'idle': 'user-idle-' + animSuffix,
-      'left': 'user-left-' + animSuffix,
-      'up': 'user-up-' + animSuffix,
-      'right': 'user-right-' + animSuffix,
-      'down': 'user-down-' + animSuffix,
-    };
+export default class Friend extends UserContainer{
+  constructor(scene, position, spriteKey, animSuffix, loginUser) {
+    super(scene, position, spriteKey, animSuffix, loginUser);
     this.velocity = 200;
-
-    this.sprite = new FriendSprite(scene, 0, 0, spriteKey, animSuffix);
-
-    this.namePadding = -10;
-    this.name = this.scene.add.text(0, -(this.sprite.height/2 + this.namePadding), this.userName, { 
-      fontSize: '12px', 
-      fontFamily: 'Lato',
-      color: '#dddddd',
-      align:'center', });
-    this.name.setOrigin(0.5);
-
-    this.add(this.sprite);
-    this.add(this.name);
-    this.width = this.sprite.displayWidth;
-    this.height = this.sprite.displayHeight;
-    
-    // console.log('Friend :', this.width, this.height)
-  }
-
-  init(){
-    this.prepareStatusView();
-    /* Status display */
-    this.setInteractive();
-    this.setInteractions();    
-
-    this.requestKey = null;
-    this.onResponseOK = null;
-    this.onResponseFail = null;
-  }
-
-  setInteractions(setInteractionsbool = true){
-    if(setInteractionsbool){
-      this.on('pointerover', this.onPointerOver); 
-      this.on('pointerout', this.onPointerOut);
-    }
-    else{
-      this.removeAllListeners();
-    }
-  }
-
-  /* Status display methods */
-  prepareStatusView() {
-    const initialtext = "Loading status..";
-    this.statusView = new Status(this.scene, this, initialtext);
-    this.scene.add.existing(this.statusView);
-    this.statusView.setActive(false).setVisible(false);
   }
 
   showStatus() {
@@ -112,17 +55,7 @@ export default class Friend extends GameObjects.Container{
     });
     this.statusView.setActive(true).setVisible(true);
   }
-
-  onPointerOver() {
-    this.showStatus()
-  }
-
-  onPointerOut() {
-    const responseType = "RESPONSE_MY_PROFILE";
-    this.statusView.setActive(false).setVisible(false);
-    socket.off(responseType, this.onResponse);
-  }
-
+ 
   updateMovement(x, y) {
     console.log("Friend.updateMovement()", x, y)
 
@@ -195,32 +128,5 @@ export default class Friend extends GameObjects.Container{
     this.chair = null;
     this.statusView.destroy();
   }
-
-  update(){
-    this.statusView.update();
-  }
 } 
 
-class FriendSprite extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y, spriteKey, animSuffix, id) {
-    super(scene, x, y, spriteKey);
-    this.velocity = 200;
-    this.scene = scene;
-    this.scene.add.existing(this);
-    this.scene.physics.world.enable(this);
-    this.id = id;
-    // this.setCollideWorldBounds(true);
-
-    this.animName = {
-      'idle': 'user-idle-' + animSuffix,
-      'left': 'user-left-' + animSuffix,
-      'up': 'user-up-' + animSuffix,
-      'right': 'user-right-' + animSuffix,
-      'down': 'user-down-' + animSuffix,
-    };
-  }
-
-  updateAnimation(state){
-    this.play(state, true);    
-  }
-}
