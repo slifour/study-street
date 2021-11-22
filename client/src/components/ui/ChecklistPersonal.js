@@ -141,7 +141,7 @@ export default function ChecklistPersonal(props) {
                     }
                     {isInput &&
                         <div className ={styles.inputContainer}>
-                            <div className={styles.addChecklistContainer}>
+                            <form className={styles.addChecklistContainer}>
                                 <input
                                     type="text"
                                     autoFocus="true"
@@ -149,7 +149,7 @@ export default function ChecklistPersonal(props) {
                                     value={inputValue}
                                     onChange={changeInputValue}
                                 ></input>
-                            </div>
+                            </form>
                             <div className = {styles.addButton} onClick={handleInput}>
                                 Add
                             </div>
