@@ -7,11 +7,10 @@ export default class Status extends GameObjects.Container {
    * @param {Phaser.GameObjects.Components.Transform} hostObject
    * @param {string} text
    */
-  constructor(scene, hostObject, text, userName = "name") {
+  constructor(scene, hostObject, text) {
     super(scene);
     this.scene = scene;
     this.host = hostObject;
-    this.userName = userName;
     this.text = text;
 
     this.paddingX = 20;
@@ -24,7 +23,7 @@ export default class Status extends GameObjects.Container {
       text: this.text
     };
     
-    this.textView = this.scene.add.text(this.host.x, this.host.y, this.userName + text, { 
+    this.textView = this.scene.add.text(this.host.x, this.host.y, text, { 
       fontSize: '16px', 
       fontFamily: 'Lato',
       color: '#dddddd', });
@@ -47,7 +46,7 @@ export default class Status extends GameObjects.Container {
       console.log("update status view");
       this.textView.text = this.text;
       this.textView.x = this.host.x - 0.5 * this.textView.width;
-      this.textView.y = this.host.y - 0.5 * this.textView.height - this.marginY;
+      this.textView.y = this.host.y - 0.75 * this.textView.height - this.marginY;
   
       this.graphics.clear();
       this.graphics.fillStyle(0x232323, 0.6);
@@ -76,7 +75,7 @@ export default class Status extends GameObjects.Container {
 
   updateTime() {
     let elapsedTime = this.tiemerEvent.getRepeatCount()*1000;
-    this.textView.text = this.userName + getParsedDuration(elapsedTime);
+    this.textView.text = getParsedDuration(elapsedTime);
   }
 
 }

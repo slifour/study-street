@@ -95,7 +95,7 @@ function App() {
         <div className="content">
           { isHome ? <HomeMain onWalkToLibrary={onWalkToLibrary}/> : null }
           { !isHome ? <MenuBar/> : null }
-          { !isHome ? <Avatars/> : null }
+          { !isHome && (scene !== "Study") ? <Avatars/> : null }
           { scene === "Study" ? <StudyMain/> : null }
           { !isHome ? <QuickMoveButton emitToGame = {emitToGame}/> : null }
           <ConfirmAlert show = {showConfirmAlert} setShow = {setshowConfirmAlert}/>

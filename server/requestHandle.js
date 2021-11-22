@@ -540,7 +540,6 @@ const onRequestUpdateCurrentGroup = (socket, request) => {
 }
 
 
-
 const onRequestPersonalChecklist = (socket, request) => {
   const {requestUser, requestKey, payload} = request;
   const responseType = ResponseType.PERSONAL_CHECKLIST;
@@ -554,8 +553,10 @@ const onRequestPersonalChecklist = (socket, request) => {
   //handle getter
   let wrap = [];
   wrap[0] = userList[payload.userID].checklist;
-  wrap[1] = groupList[userList[payload.userID].curGroup].quests;
-  wrap[2] = groupList[userList[payload.userID].curGroup].groupName;
+  if (userList[payload.userID].curGroup !== null){
+    wrap[1] = groupList[userList[payload.userID].curGroup].quests;
+    wrap[2] = groupList[userList[payload.userID].curGroup].groupName;
+  }
 
   return socket.emit(responseType, {
     requestKey,

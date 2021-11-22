@@ -25,10 +25,12 @@ export default class Friend extends GameObjects.Container{
 
     this.namePadding = -10;
     this.name = this.scene.add.text(0, -(this.sprite.height/2 + this.namePadding), this.userName, { 
-      fontSize: '12px', 
+      fontSize: '14px', 
       fontFamily: 'Lato',
-      color: '#dddddd',
-      align:'center', });
+      color: '#ffffff',
+      backgroundColor : '#000000', 
+      align:'center', 
+      });
     this.name.setOrigin(0.5);
 
     this.add(this.sprite);
@@ -80,7 +82,7 @@ export default class Friend extends GameObjects.Container{
 
     this.onResponseOK = ({payload}) => {
       console.log("OK: ", payload);
-      this.statusView.text = `${this.userName}: ${getParsedDuration(payload.todayStudyTime)}`;
+      this.statusView.text = `${getParsedDuration(payload.todayStudyTime)}`;
       this.statusView.update();
     };
     
