@@ -58,6 +58,8 @@ There are three main libaries.
                 - `Image files`
             - spriteSheets
                 - `Image files for animation`
+            - map
+                - `Image files for map` ← Tilemaps are used
         - `*-icon-*.png` ← Site icons
         - `index.html` ← Base HTML file
 - server
@@ -67,3 +69,47 @@ There are three main libaries.
     - `requestType.js` ← Most constants for request and response are defined here.
     - `room.js` ← A class for users and their positions in each scene.
     - `database.js` ← A database. Currently, we do not use a persistent database. The database is stored in RAM through this file.
+  
+## How to login
+
+Type in your ID and click "Login". 
+
+> Please DO NOT use enter key throughout our app. It would reload the whole session.
+
+![Study-Street : Type in your campuswire name including whitespace and click green Login button. (*DO NOT press enter Key)](readme-resources/Login.png)
+
+<figcaption align="center">Study-Street : Type in your campuswire name including whitespace and click green Login button. (*DO NOT press enter Key)</figcaption>
+
+### Prepared ID list
+We do not have sign up functionality yet. Hence, we prepared accounts for each instructor and students of 2021 Fall CS473 Social Computing class.
+ 
+Login ID is your **full name registered in campuswire**  [CS473 2021 Fall].
+
+Please use exactly same name **including whitespace** between first and last name. We recommend to use Crtl+C Ctrl+V.
+
+You can check your name by clicking on the profile image on left below of the page.
+
+![In Campuswire web, click profile image on left below to see your full name (Hyeon Pyo)](./readme-resources/Campuswire%20profile.png)
+<figcaption align="center">In Campuswire web, click profile image on left below to see your full name (Hyeon Pyo)</figcaption>
+
+<br>
+
+![In Campuswire app, tap settings on the rightmost to see your full name (Hyeon Pyo)](./readme-resources/Campuswire%20setting.png)
+
+<figcaption align="center">In Campuswire app, tap settings on the rightmost to see your full name (Hyeon Pyo)</figcaption>
+
+#### Guest ID
+
+> `guest`
+
+"guest" (without quote mark and whitespace) is the guest id for spare.
+
+Use guest id only for brief explorations or tests. Please ask for new login id to experience whole features. Guest id is shared and app would terminate when another uses it. 
+
+## CONTACT
+
+Please let us know if you any problem with our app, including logins.
+
+megatwins@kaist.ac.kr (Hyeon Pyo)
+
+campuswire [CS473 2021 Fall] post or dm @Hyeon Pyo
