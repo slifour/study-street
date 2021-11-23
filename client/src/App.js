@@ -10,6 +10,7 @@ import StudyMain from "./components/ui/Study/StudyMain";
 import styled from "styled-components";
 import Modal from 'react-overlays/Modal';
 import LoginOverlay from "./components/ui/LoginOverlay";
+import StatusInput from "./components/ui/StatusInput"; 
 
 /* Example of LoginUserContext value
   {
@@ -43,6 +44,7 @@ function App() {
   const [showConfirmAlert, setshowConfirmAlert] = useState(false);  
   const game = useRef(null);
   const [open, setOpen] = useState(true);
+  const [showStatusInput, setShowStatusInput] = useState(false);
 
   const [fadeProp, setFadeProp] = useState({
     fade: 'fade-in'
@@ -71,6 +73,16 @@ function App() {
     }      
   }, [])
 
+  useEffect(() => {
+    let timeout = null;
+    if (game.current !== null && game.current.game){
+      game.current.game.events.on("EVENT_INPUT_STATUS", () => {
+        setShowStatusInput(true);
+      })
+    }
+  }, [])
+
+
   const emitToGame = ((msg, data) => {
     if (game.current !== null && game.current.game) {
       game.current.game.events.emit(msg, data) 
@@ -98,6 +110,10 @@ function App() {
           { !isHome && (scene !== "Study") ? <Avatars/> : null }
           { scene === "Study" ? <StudyMain/> : null }
           { !isHome ? <QuickMoveButton emitToGame = {emitToGame}/> : null }
+          { showStatusInput ? <StyledModal
+                    show = {showStatusInput}
+                    onHide = {() => setShowStatusInput(false)}
+                    ><StatusInput/></StyledModal> : null}
           <ConfirmAlert show = {showConfirmAlert} setShow = {setshowConfirmAlert}/>
         </div>
         <div className="game-container">

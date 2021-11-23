@@ -68,11 +68,12 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
       return;  
     }    
     this.sit();
-    console.log("onpointerdown", this.desk.index, this.index)
+    console.log("onpointerdown", this.allowed, this.desk.index, this.index)
     this.scene.changeScene('Study', {deskIndex : this.desk.index, chairIndex : this.index})
   }
 
   onPointerOver(){
+    console.log("onPointerOver", this.allowed)
     let text = "";
     if(this.allowed){
       this.setScale(1.2);
@@ -108,8 +109,8 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
     this.setScale(1);
   }
 
-  setAllowed(Allowed, groupName = ""){
-    this.allowed = Allowed
+  setAllowed(allowed, groupName = ""){
+    this.allowed = allowed
     this.groupName = groupName
   }
 }

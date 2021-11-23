@@ -400,11 +400,11 @@ const onRequestChangeScene = (socket, request) => {
 
   switch (currentScene) {
     case "Home": ; break;
-    case "Library": {
-      onRequestNewDoneQuest(socket); 
+    case "Library": {      
       env.socketIDToRoom[id] = env.libraryRoom; 
       env.libraryRoom.setUserId(id, requestUser); 
       env.libraryRoom.add(socket, initialPosition.x, initialPosition.y, user)  
+      onRequestNewDoneQuest(socket); 
       break;    
     } 
     case "Study": {
@@ -649,6 +649,7 @@ const onRequestNewDoneQuest = (socket) => {
   const requestKey = null;
   const responseType = "RESPONSE_NEW_DONE_QUEST";
   const books = createBooks();
+  console.log("onRequestNewDoneQuest", books)
 
   //setter
   return socket.emit(responseType, {
