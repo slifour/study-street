@@ -108,7 +108,7 @@ export default class Library extends MapScene {
         // Group Area Example (Manual)
         // this.createGroupArea('a');
         // Create desks
-        this.deskPositions = [{x:500, y:450}, {x:1000, y:450}, {x:1500, y: 450}, {x:500, y:1200}, {x:1500, y:1200}, {x:500, y: 1700}, {x:1500, y: 1700}]
+        this.deskPositions = [{x:500, y:450}, {x:1000, y:450}, {x:1500, y: 450}, {x:450, y:1200}, {x:1500, y:1200}, {x:450, y: 1700}, {x:1500, y: 1700}]
         this.bookshelfPositions = [{x:500, y:350}, {x:1000, y:350}, {x:1500, y: 350}]
         let deskIndex = 0
         this.deskPositions.forEach((position, index) =>{
@@ -144,6 +144,7 @@ export default class Library extends MapScene {
         Object.keys(this.areas).forEach((value, i) =>{
             let desk = this.areas[i].desk;
             desk.getAll().forEach(sprite => {
+                this.physics.add.collider(this.user.body, sprite)
                 this.physics.add.collider(this.user, sprite);
             })
             let bookshelf = this.areas[i].bookshelf;

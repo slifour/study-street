@@ -94,7 +94,7 @@ export default class MapScene extends Phaser.Scene {
   createUser() {
     this.user = new User(this, 800, 400, 'user-girl', 'girl', this.loginUser).setScale(3/100 * 1.2); 
     this.user.init();
-    this.user.setDepth(1);
+    // this.user.setDepth(1);
     this.physics.add.collider(this.user.body, this.belowPlayer1);
     this.physics.add.collider(this.user.body, this.world1);
 
@@ -111,9 +111,9 @@ export default class MapScene extends Phaser.Scene {
       this.physics.world.enable(this.portalCollider);
       this.portalCollider.body.setImmovable(true);
       this.physics.add.collider(this.user, this.portalCollider, (() => {
-          this.user.disableBody(false);
+          this.user.sprite.disableBody(false);
           let newScene = this.key === 'Library'? 'Rest' : 'Library';
-          this.changeScene(newScene, null);
+          this.changeScene(newScene, {prevScene : this.key, nextScene : 'rest'});
       }));
   }
 
@@ -236,7 +236,7 @@ export default class MapScene extends Phaser.Scene {
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
         // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
         // this.doUpdate = false
-        data.prevScene = this.key;
+        // data.prevScene = this.key;
         console.log('this.scene.start:', data);
         this.socket.removeAllListeners();
         this.scene.start(newScene, data);

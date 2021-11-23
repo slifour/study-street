@@ -87,7 +87,7 @@ export default class Study extends Phaser.Scene {
   };
 
   createUser() {
-    this.user = new User(this, 0, 0, 'user-girl', 'girl').setScale(3/100 * 1.2);
+    this.user = new User(this, 0, 0, 'user-girl', 'girl', this.loginUser).setScale(3/100 * 1.2);
   }
 
   /** createDesk
