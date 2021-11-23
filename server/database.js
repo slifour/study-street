@@ -257,7 +257,7 @@ let userList = {
     "profileImage": dummyAvatars[6],
     "todayStudyTime": null,
     "status": null,
-    "curGroup": null,
+    "curGroup": "kixlab",
     "socketID": null,
     "checklist": null
   },
@@ -297,7 +297,7 @@ let userList = {
     "profileImage": dummyAvatars[4],
     "todayStudyTime": null,
     "status": null,
-    "curGroup": null,
+    "curGroup": "kixlab",
     "socketID": null,
     "checklist": null
   },
@@ -317,7 +317,7 @@ let userList = {
     "profileImage": dummyAvatars[4],
     "todayStudyTime": null,
     "status": null,
-    "curGroup": null,
+    "curGroup": "kixlab",
     "socketID": null,
     "checklist": null
   },
@@ -367,7 +367,7 @@ let userList = {
     "profileImage": dummyAvatars[2],
     "todayStudyTime": null,
     "status": null,
-    "curGroup": null,
+    "curGroup": "kixlab",
     "socketID": null,
     "checklist": null
   },
@@ -547,7 +547,7 @@ let userList = {
     "profileImage": dummyAvatars[7],
     "todayStudyTime": null,
     "status": null,
-    "curGroup": null,
+    "curGroup": "kixlab",
     "socketID": null,
     "checklist": null
   },

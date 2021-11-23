@@ -1,4 +1,5 @@
 import GroupArea from '../entity/GroupArea';
+import Phaser from 'phaser';
 import Desk from '../entity/Desk';
 import Bookshelf from '../entity/Bookshelf';
 import HtmlModal from '../entity/HtmlModal';
@@ -156,6 +157,7 @@ export default class Library extends MapScene {
      */
     assignGroupArea(groupID, groupNameText, colors){      
         const colorMain = colors[0];
+        const colorInt = parseInt(colorMain.substr(1), 16);
         /** get Id of next desk prepared to be assigned */
         let deskId = this.nextdeskId;  
         let desk = this.areas[deskId].desk;        
@@ -163,7 +165,8 @@ export default class Library extends MapScene {
         /** Create Container, children = [border, groupName] */
         let container = this.add.container(desk.x, desk.y); 
         container.setSize(350, 350);        
-        let border = this.add.rectangle(0, 0, container.width, container.height);
+        console.log("colorMain", colorMain, colorInt)
+        let border = this.add.rectangle(0, 0, container.width, container.height, colorInt, 0.08).setStrokeStyle(this.borderWidth, colorInt);
         console.log(groupNameText)
         let groupName = this.add.text(-container.width/2, container.height/2, groupNameText, { 
             fontSize: '16px', 
@@ -178,7 +181,6 @@ export default class Library extends MapScene {
         this.groupToIndex[groupID] = deskId;
 
         groupName.setOrigin(0,1);
-        border.setStrokeStyle(this.borderWidth, colorMain)
         console.log(container)
         container.add(border);
         container.add(groupName);
