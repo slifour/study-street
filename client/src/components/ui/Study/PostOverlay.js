@@ -6,62 +6,9 @@ import PostReply from './PostReply';
 import PostCloseButton from './PostCloseButton';
 import styles from "./study.module.css";
 
-const StyledDiv = styled.div`
-    position: fixed;
-    z-index: 1040;
-    top: 150px;
-`;
-
-//const socketIo = require("socket.io");
-// function Reply() {
-//     return (
-//         <div className = {styles.postContainer} ref={ref}> /* ref required */
-//                 <form className = {styles.chatInputContainer}>
-//                     <input
-//                         type="text"
-//                         className = {styles.chatInput}
-//                         onChange={onChange} value={Msg} class="inputMessage" 
-//                         placeholder="Type here..." 
-//                         onKeyPress={(e)=>{
-//                             if(e.key === 'Enter')
-//                                 sendMessage();
-//                         }}></input>
-//                 </form> 
-//             <button type="button" onClick={() => {}}>
-//                 Send
-//             </button>
-//         </div>
-//     );
-// }
-
-// const Page = React.forwardRef((props, ref) => {
-//     const {post, onChange, Msg, sendMessage} = props;
-//     const [showReply, setShowReply] = useState(false);
-
-//     const replyButtonClick = () => {
-//         setShowReply(true)
-//     }
-
-//     return (
-//         <>
-//         <div className = {styles.postContainer} ref={ref}> /* ref required */
-//             <p>From {post.id} :</p>
-//             <p>{post.msg}</p>
-//             <button type="button" onClick={() => replyButtonClick()}>
-//                 Reply
-//             </button>
-//         </div>
-//         {showReply? <PostReply onChange = {onChange} Msg ={Msg} sendMessage = {sendMessage} ></PostReply> : null }
-//         </>
-//     );
-// });
-
-
 export default function PostOverlay(props) {
     // const {show, postList} = props;
-    const {postList, setShow, onChange, Msg, sendMessage} = props;
-
-    // const postList = [{id: 'hyeon', msg : 'hello'}, {id: 'hyeon', msg : 'hello'}, {id: 'hyeon', msg : 'hello'}];
+    const {posts, setShow, onChange, Msg, sendMessage} = props;
 
     const [pageList, setpageList] = useState([])
     const [isReplying, setIsReplying] = useState(false);
@@ -69,11 +16,7 @@ export default function PostOverlay(props) {
     const flipBook = useRef(null);
     useEffect(() => {
 
-    }, [isReplying]);
-
-    const replyButtonClick = () => {
-        setIsReplying(true)
-    }
+    }, []);
 
     const nextButtonClick = () => {
         flipBook.getPageFlip().flipNext();
@@ -83,35 +26,59 @@ export default function PostOverlay(props) {
         flipBook.getPageFlip().flipPrev();
     };
     
-    const onClickPostClose = () => {
-        setShow(false);
+    const mapPages = () => {
+        let returnComponents = [];
+        for (let key in posts) {
+            let post = posts[key];
+
+            returnComponents.push(<PostPage
+                key = {key}
+                post = {post}
+            ></PostPage>)
+        }
+        return returnComponents.map(el => el)
     }
+    // const onClickPostClose = () => {
+    //     setShow(false);
+    // }
 
     return(        
-        <>
-        {/* {show? */}
-        <div className={styles.postAreaContainer}>
-        {/* // <div className="postContainer"> */}        
-            <HTMLFlipBook ref={flipBook} width={280} height={300} size="fixed" postList = {postList}>
-                {/* <Page key={postList[0].msg} number="1">{postList[0].msg}</Page> */}
-                {postList.map((post, index) => (
-                    <PostPage key={post.msg} post={post} onChange = {onChange} Msg ={Msg} sendMessage = {sendMessage}></PostPage>
-                ))}
-            {/* <Page number="1">Hi</Page> */}
-            </HTMLFlipBook>
-            {isReplying? <PostReply setIsReplying = {setIsReplying}></PostReply> : null}    
-            <div className={styles.postButtonSmall} onClick={replyButtonClick}>Reply</div>
-                 
-            <div>
-                <button type="button" onClick={() => prevButtonClick}>
-                    Previous
-                </button>
-                <button type="button" onClick={() => nextButtonClick}>
-                    Next 
-                </button>
-            </div>            
+        <div className = {styles.innerContainer}>
+            <div className = {styles.buttonFlip} onClick= {() => prevButtonClick}>
+                <div className = {styles.icons}>chevron_left</div>
+            </div>
+            <div className = {styles.page}>
+                <HTMLFlipBook ref={flipBook} width={280} height={300} size="fixed">
+                    {mapPages()}
+                </HTMLFlipBook>
+            </div>
+            <div className = {styles.buttonFlip} onClick = {() => nextButtonClick}>
+                <div className = {styles.icons}>chevron_right</div>
+            </div>
         </div>
-        {/* : null} */}
-        </>
+        // <>
+        // <div className={styles.postAreaContainer}>
+        // {/* // <div className="postContainer"> */}        
+        //     <HTMLFlipBook ref={flipBook} width={280} height={300} size="fixed" postList = {postList}>
+        //         {/* <Page key={postList[0].msg} number="1">{postList[0].msg}</Page> */}
+        //         {postList.map((post, index) => (
+        //             <PostPage key={post.msg} post={post} onChange = {onChange} Msg ={Msg} sendMessage = {sendMessage}></PostPage>
+        //         ))}
+        //     {/* <Page number="1">Hi</Page> */}
+        //     </HTMLFlipBook>
+        //     {isReplying? <PostReply setIsReplying = {setIsReplying}></PostReply> : null}    
+        //     <div className={styles.postButtonSmall} onClick={replyButtonClick}>Reply</div>
+                 
+        //     <div>
+        //         <button type="button" onClick={() => prevButtonClick}>
+        //             Previous
+        //         </button>
+        //         <button type="button" onClick={() => nextButtonClick}>
+        //             Next 
+        //         </button>
+        //     </div>            
+        // </div>
+        // {/* : null} */}
+        // </>
     )
 }

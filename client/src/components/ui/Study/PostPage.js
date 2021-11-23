@@ -2,13 +2,12 @@ import React, { useContext, useState, useEffect, useRef } from 'react';
 import styles from "./study.module.css";
 
 const PostPage = React.forwardRef((props, ref) => {
-    const {post, onChange, Msg, sendMessage} = props;
-    const [showReply, setShowReply] = useState(false);
+    const {post} = props;
 
     return (
         <>
         <div className = {styles.postPags} ref={ref}>
-            <p>From {post.id} :</p>
+            <p>From {post.from} :</p>
             <p>{post.msg}</p>
         </div>
         </>
