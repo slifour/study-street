@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { LoginUserContext } from "../../../App";
 import socket from '../../../socket';
 import styles from "./study.module.css";
@@ -11,8 +11,8 @@ import Modal from 'react-overlays/Modal';
 const StyledDiv = styled.div`
     position: fixed;
     z-index: 1040;
-    top: 75px;
-    left: 250px;
+    top: -10px;
+    left: 100px;
 `;
 
 export default function PostButton(props) {
@@ -20,14 +20,16 @@ export default function PostButton(props) {
     const POST_UPDATE_INTERVAL = 5000;
 
     const {loginUser} = useContext(LoginUserContext);
-    const [chats, setchats] = useState([]);
 
     const [chatObj, setChatObj] = useState({});
-    const [Msg, setMessage] = useState(null);
+    const [curObj, setCurObj] = useState({});
 
     const [newPost, setNewPost] = useState(false);
     const [show, setShow] = useState(false);   
     const [active, setActive] = useState(false);
+    const [reply, setReply] = useState(false);
+    const [text, setText] = useState('');
+    const [idx, setIdx] = useState(0);
 
     const [willUpdate, setWillUpdate] = useState(false);
 
@@ -51,7 +53,7 @@ export default function PostButton(props) {
         return () => {
             socket.off('chat message');
         };
-    }, [chatObj, loginUser.userID]);
+    });
 
     useEffect(() => {
         if (willUpdate) {
@@ -73,53 +75,97 @@ export default function PostButton(props) {
             };
     }, []);      
 
-    const sendMessage = () => {
-        console.log(Msg);
-        setchats(chats.concat(`${loginUser.userID} : ${Msg}`));
-        socket.emit('chat message', loginUser.userID, Msg);
-        setMessage('');
-    }
-
     const onChange = (e) => {
-        setMessage(e.target.value);
+        setText(e.target.value);
     }
 
+    const onClose = () => {
+        setShow(false);
+        setActive(false);
+        setReply(false);
+        setText('');
+        if (Object.keys(chatObj).length===0){
+            setNewPost(false);
+        }
+    }
     const onButtonClick = () => {
         if (show){
-            setShow(false);
-            setActive(false);
-            setChatObj({});
+            onClose();
         }
         else {
-            setShow(true);             
+            setCurObj({...chatObj});
+            setShow(true);
+            setChatObj({});             
         }
+    }
+
+    const getText = () => {
+        if (show && active){
+            return "Close Stickies"
+        } else {
+            return "New Stickies"
+        }
+    }
+
+    const handleReply = () => {
+        socket.emit('chat message', loginUser.userID,
+            curObj[Object.keys(curObj)[idx]].from, text);
+        setReply(false);
+        setText('');
     }
 
     return(
         <StyledDiv>
             <div className ={styles.outerContainer}>
                 { active ?
-                    <div className= {`${styles.postButton} ${styles.hvrGrow}`} 
-                        style={props.buttonStyle} 
+                    <div className= {styles.postButton} 
                         onClick={()=>onButtonClick()}>                    
-                        New Stickies
-                        {show?
-                        <div className={styles.iconsRed}>arrow_circle_up</div>
-                        :<div className={styles.iconsRed}>arrow_circle_down</div>}
+                        {getText()}
+                        {show ?
+                        <div className={styles.iconsSmallerRight}>close</div>
+                        :
+                        <div className={styles.iconsRed}>priority_high</div>}
                     </div>
                     :
-                    <div className= {`${styles.postButton}`} 
-                        style={props.buttonStyle} >
+                    <div className= {`${styles.postButton}`}>
                         Stickies
                     </div>
                 }
                 {show ?
-                    <div>
+                <div>
+                    <div className = {styles.postContainer}>
                         <PostOverlay 
-                            posts = {chatObj}
-                            setShow = {setShow}
+                            posts = {curObj}
+                            setIdx = {setIdx}
                         ></PostOverlay>
                     </div>
+                    { reply ?
+                        <div className={styles.replyFooter}>
+                            <input
+                                type="text"
+                                className={styles.replyInput}
+                                value={text}
+                                onChange={onChange}
+                            ></input>
+                            <div 
+                                className={styles.replyButtonS} 
+                                onClick={()=>handleReply()}
+                            >
+                                <div className={styles.iconsSmaller}>reply</div>
+                            </div>
+                        </div>
+                    :
+                        <div className={styles.replyFooter}>
+                            <div 
+                                className = {styles.replyButtonL} 
+                                onClick={()=>setReply(true)}
+                            >
+                                <div className ={styles.iconsSmaller}>reply</div>
+                                <div className ={styles.replyText}>Reply</div>
+                            </div>
+                        </div>
+                    }
+                </div>
                 : 
                 null}
             </div>

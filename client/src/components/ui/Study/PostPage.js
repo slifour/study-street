@@ -2,15 +2,16 @@ import React, { useContext, useState, useEffect, useRef } from 'react';
 import styles from "./study.module.css";
 
 const PostPage = React.forwardRef((props, ref) => {
-    const {post} = props;
+    const {post, num, idx} = props;
 
     return (
-        <>
-        <div className = {styles.postPags} ref={ref}>
-            <p>From {post.from} :</p>
-            <p>{post.msg}</p>
+        <div ref={ref}>
+            <div className={styles.pageContent}>
+                <div className={styles.pageText}>From {post.from} :</div>
+                <div className={styles.pageText}>{post.msg}</div>
+            </div>
+            <div className={styles.pageIndex}>{idx}/{num}</div>
         </div>
-        </>
     );
 });
 
