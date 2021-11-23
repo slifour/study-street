@@ -1,0 +1,4 @@
+.my-json-view {
+  max-height: 30em;
+  overflow-y: scroll;
+}
