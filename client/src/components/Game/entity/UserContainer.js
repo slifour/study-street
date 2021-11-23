@@ -78,6 +78,9 @@ export default class UserContainer extends GameObjects.Container{
     this.add(this.sprite);
     this.width = this.sprite.displayWidth;
     this.height = this.sprite.displayHeight;
+    this.setSize(this.sprite.displayWidth, this.sprite.displayHeight);
+    this.setDisplaySize(this.sprite.displayWidth, this.sprite.displayHeight);
+    this.body.setSize(this.sprite.displayWidth, this.sprite.displayHeight);
   }
 
   createName() {

@@ -54,7 +54,7 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
       frame = 11
     }
     this.scene.user.setPosition(this.x+marginX, this.y + marginY);
-    this.scene.user.setFrame(frame);
+    this.scene.user.sprite.setFrame(frame);
     let chairAt = this.desk.getIndex(this)
     this.desk.addAt(this.scene.user, chairAt + indexer)
     console.log("sit", this.desk, this.scene.user);
