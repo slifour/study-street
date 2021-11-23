@@ -166,7 +166,7 @@ export default class Library extends MapScene {
         let container = this.add.container(desk.x, desk.y); 
         container.setSize(350, 350);        
         console.log("colorMain", colorMain, colorInt)
-        let border = this.add.rectangle(0, 0, container.width, container.height, colorInt, 0.15).setStrokeStyle(this.borderWidth, colorInt);
+        let border = this.add.rectangle(0, 0, container.width, container.height, colorInt, 0.1).setStrokeStyle(this.borderWidth, colorInt);
         console.log(groupNameText)
         let groupName = this.add.text(-container.width/2, container.height/2, groupNameText, { 
             fontSize: '16px', 
