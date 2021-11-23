@@ -1,3 +1,4 @@
+
 /**
  * Rooms
  * 한 Scene 안에서 현재 위치하고 있는 user들과 그 위치를 다루기 위한 class 입니다.
@@ -48,7 +49,6 @@ module.exports = class Rooms {
         let socketID = socket.id;
         this.socketIDToPosition[socketID] = {x:x, y:y};
         this.stateChanged = true;   
-        console.log("Log: room.update() this.socketIDPositio[socketID] after update=", this.socketIDToPosition[socketID]);
     }
 
     add(socket, x, y, loginUser){
@@ -90,7 +90,6 @@ module.exports = class Rooms {
         if (this.stateChanged) {
             this.stateChanged = false;
             this.broadcast("LOOP_POSITION", this.socketIDToPosition);
-            console.log("LOOP_POSITION", this.room)
         }        
         if (this.getNumUsers() > 1) {
             setTimeout(this.emitLoop.bind(this), this.updateInterval);
@@ -102,7 +101,6 @@ module.exports = class Rooms {
 
     sit(socket, deskIndex, chairIndex, loginUser){
         this.userIDToChairs[loginUser.userID] = {deskIndex : deskIndex, chairIndex : chairIndex};
-        console.log('sit broadcst',  deskIndex, chairIndex, loginUser)
         this.broadcast("RESPONSE_FRIEND_START_STUDY", {loginUser : loginUser, deskIndex : deskIndex, chairIndex : chairIndex})
     }
 
@@ -114,3 +112,4 @@ module.exports = class Rooms {
         }
     }
 }
+

@@ -15,7 +15,7 @@ export default function PostReply(props){
     return (
         <>
         <div className = {styles.postPageg}> 
-            <form>
+            <div>
                 <input
                 type="text"
                 className = {styles.chatInput}
@@ -25,7 +25,7 @@ export default function PostReply(props){
                     if(e.key === 'Enter')
                         sendMessage();
                 }}></input>
-            </form> 
+            </div> 
             <button type="button" onClick={() => sendButtonClick()}>
                 Send
             </button>

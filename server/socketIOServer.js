@@ -79,9 +79,9 @@ const SocketIOServer = () => {
     initRequestHandle(env);
 
     io.on("connection", (socket) => {
-      console.log("New client connected");
+      // console.log("New client connected");
       onRequestConnect(socket);     
-      console.log(socket.id);
+      // console.log(socket.id);
       env.libraryRoom.init(io, socket);
       env.restRoom.init(io, socket);
       setEventHandlers(socket);      
@@ -145,7 +145,7 @@ const SocketIOServer = () => {
     if (stateChanged) {
         stateChanged = false;
         broadcast("LOOP_POSITION", positionList);
-        console.log("LOOP_POSITION", room)
+        // console.log("LOOP_POSITION", room)
     }        
     if (getNumUsers() > 1) {
         setTimeout(emitLoop.bind(this), updateInterval);
@@ -198,7 +198,7 @@ const SocketIOServer = () => {
 
   const onLeaveChat = (socket, userID) => {
       if (env.addedUser[userID]) {
-        console.log("disconnected : "+userID);
+        // console.log("disconnected : "+userID);
         // echo globally that this client has left
         socket.broadcast.emit('user left', {
           username: userID
@@ -219,7 +219,7 @@ const SocketIOServer = () => {
 
   /* 아직 오류 있음 */
   const onCallChatLog = (socket, chatLog) => {
-    console.log('loading chat message...');
+    // console.log('loading chat message...');
     socket.to().emit('load chat log', {chatlog: chatLog});
   }
 
@@ -236,7 +236,7 @@ const SocketIOServer = () => {
         message: msg
       });
     }*/
-    console.log("useridlist: ", env.useridList);
+    // console.log("useridlist: ", env.useridList);
     for(let user in env.useridList){
       if(user === receiveuserID){
         console.log(`${senduserID} : ${msg}`);
@@ -250,7 +250,7 @@ const SocketIOServer = () => {
   }
 
   const onNewArtifact = (socket) => {
-    console.log('server : newArtifact')
+    // console.log('server : newArtifact')
     data = {
       goal : 'Study everyday',
       group : 'Slifour'
@@ -291,7 +291,7 @@ const SocketIOServer = () => {
   // }
 
   const onSceneUpdate = (socket, scene) => {
-    console.log('Client moved to {} scene'.format(scene))
+    // console.log('Client moved to {} scene'.format(scene))
     stateChanged = true;
     let user = users[socket.id];
     user.scene = scenes[newScene]
@@ -305,7 +305,7 @@ const SocketIOServer = () => {
 
   const onInitialize = (socket, data) => {
     let scene = data.scene
-    console.log("New user initialized");
+    // console.log("New user initialized");
     stateChanged = true;    
     
     let newUser = createUser(socket.id, data.name, data.group, data.position, data.scene); // Create a new user object
@@ -330,7 +330,7 @@ const SocketIOServer = () => {
     if (stateChanged) {
       stateChanged = false;
       socket.to(room).emit("stateUpdate", users);
-      console.log("stateUpdate")
+      // console.log("stateUpdate")
     }
     
     if (numUsers() > 0) {
@@ -374,7 +374,7 @@ const SocketIOServer = () => {
 
   /** log */  
   let logUsers = () =>  {
-    console.log("libraryRoom.numUsers :", env.libraryRoom.getNumUsers());
+    // console.log("libraryRoom.numUsers :", env.libraryRoom.getNumUsers());
     setTimeout(logUsers.bind(this), logInterval);
   }   
 
