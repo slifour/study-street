@@ -52,7 +52,7 @@ const SocketIOServer = () => {
   let io
   let { userList, groupList, invitationList, goalList, bookList } = require("./database");
   let interval;
-  let addedUser = false
+  //let addedUser = env.useridList.map(false
 
   // MUST: env = 1; <- 이런 식으로 env에 다른 값을 직접 대입하시면 안 돼요! 
   // env.libraryRoom = ... <- 이런 식으로 써 주세요~
@@ -60,7 +60,8 @@ const SocketIOServer = () => {
     libraryRoom: new Rooms('Library'),
     restRoom: new Rooms('Rest'),
     socketIDToRoom: {},
-    useridList: {}
+    useridList: {},
+    addedUser: {}
   };
 
   /** Methods */
@@ -182,26 +183,28 @@ const SocketIOServer = () => {
 
   /* 아직 오류 있음 */
   const onJoinChat = (socket, userID) => {
-    if (addedUser) return;
+    if (env.addedUser[userID]) return;
     // we store the username in the socket session for this client
     //socket.username = username;
     console.log("connected : "+userID);
-    addedUser = true;
+    env.addedUser[userID] = true;
     socket.emit('chatconnect');
     // echo globally (all clients) that a person has connected
     socket.broadcast.emit('user joined', {
       username: userID
     });
+
   }
 
   const onLeaveChat = (socket, userID) => {
-      if (addedUser) {
+      if (env.addedUser[userID]) {
         console.log("disconnected : "+userID);
         // echo globally that this client has left
         socket.broadcast.emit('user left', {
           username: userID
         });
       }
+      env.addedUser[userID] = false;
   }
 
   /* 아직 오류 있음 */

@@ -1,14 +1,10 @@
 # study-street
 
-## Dependencies
-
-> 제가 테스트하면서 사용한 버전이에요!
-
-- Node v14.18.1
+## Getting started to develop
+### Dependencies
+- Node v14
 - Browser: Chrome
-
-## Install
-
+### Install
 - Server
     - At the root directory
     - `cd server`
@@ -17,115 +13,103 @@
     - At the root directory
     - `cd client`
     - `npm install`
+### Run
 
-## Run
+In development environment, study-street uses `concurrently` to run two servers simultaneously.  
+- At the project root directory, do
+- `cd server`
+- `npm run dev`
+### Used libraries
 
-- [Updated]
-- Concurrently
-    - At the root directory
-    - `cd server`
-    - `npm run dev`
+There are three main libaries.
+- React: React is used for ui components and managing data
+- Phaser: Phaser is a javascript-based 2d game library. It is used for our virtual space shared by multiple users.
+- socket.io: socket.io is a library that supports a continuous and low-latency connection with clients and the server. It is used for all client-server communication, as well as for sharing states of virtual space.
 
-- [Outdated]
-- Server
-    - At the root directory
-    - `cd server`
-    - `node app.js`
-- Client
-    - At the root directory
-    - `cd client`
-    - `npm start`
+### Files and folder structure
+#### Criteria for choosing
 
-## Deploy
-
-> Deploy: 우리가 만든 작업물을 실제 서버에 올리는 일을 deploy라고 합니다
-> Note -- Deploy는 제출 전에만 하면 되니 지금 너무 신경쓰실 필요는 없을 것 같아요! 
-
-- 실행하세요
-    0. 아래 스크립트는 모두 Unix (Linux / macOS) 환경에서 실행하세요. Git bash 환경에서도 아마 될 것 같아요. 
-    1. `./build.sh`
-        이 스크립트는 deploy할 파일을 만들어 `deploy/client-deploy` 와 `deploy/server-deploy`에 복사해요.
-        이 두 폴더는 각각 server와 client의 Heroku용 repository와 연결되어 있어요. 
-    2. 빌드한 것을 서버에 올리기 위한 작업은 `deploy/README.md`를 확인하세요.  
-
-- 참고하세요
-    `deploy/build-files`
-    이 폴더에는 Procfile을 포함한 Heroku 관련 설정이 들어있어요
-
-
-
-## What the program do
-
-- React ↔ Phaser
-    - Phaser 컨테이너가 `<Game />` 컴포넌트로 `App.js` 에 들어가 있다.
-- React ↔ Socket io
-    - Socket io를 이용해 서버 시간을 받아와 보여주는 컴포넌트가 `<ClientComponent />` 컴포넌트로 `App.js` 에 들어가 있다.
-- Socket io ↔ Phaser
-
-
-# 판단 기준
-
-> 이런 것들을 고려하려고 노력했어요! 지금 버전이 기준과 맞지 않는 부분이 있더라도 나중에 참고하면 좋을 것 같아요.
-> 
-- 새로 배울 것이 너무 많으면 배우느라 구현할 시간이 부족해진다. 테크 스택을 너무 많이 쌓지 않기.
-- 버전을 고를 때는 각 라이브러리가 서로 잘 통합되어야 하고 공식 문서와 커뮤니티의 지원이 충분히 있어야 함을 고려하기.
-- 회의할 때 얘기한 것들은 모두가 공유하고 있다. 그러니 커뮤니케이션을 쉽게 하기 위해 그 내용을 충분히 반영하기.
-- 프로그램이 복잡하기 때문에 단순한 모듈로 나누면 다루기 쉬울 것이다. 그리고 일을 나누기에도 좋을 것이다. 그러니 High cohesion — Low coupling을 가지도록 프로그램을 나누기
-
-# 폴더 구조
-
-> Notion에서 보면 아마 더 보기 편할 겁니다!
+- Too many new technologies will make development hard. Do not be too much. 
+- Choose a version with which each library can be integrated easily and enough supports from documents and commmunity exist.  
+- Modularize program so that each module is simple enough. It will make cowork easier. Let modules have high cohesion and low coupling.
+#### Structure
 
 - client
     - src
         - components
-            - Game ← Phaser가 들어가는 폴더
+            - Game ← A folder for Phaser scripts
                 - entity
-                    - `Phaser entities (js files)`
-                        
-                        ```jsx
-                        export default class Firefly extends Phaser.Physics.Arcade.Sprite { ... }
-                        ```
-                        
+                    - Phaser entities (js files)  
                 - scenes
-                    - `Phaser scenes (js files)`
-                        
-                        ```jsx
-                        export default class MainScene extends Phaser.Scene { ... }	
-                        ```
-                        
-                - `index.js` ← Phaser base, as a React component
-                    
-                    ```jsx
-                    export default class Game extends React.Component { ... }
-                    ```
-                    
-            - `React components (js files)`
-                
-                ```jsx
-                class ClientComponent extends Component { ... }
-                ```
-                
-        - `index.js` ← 처음에 실행되는 스크립트
-        - `App.css` ← App.js를 위한 스타일 시트
-        - `App.js` ← 모든 컴포넌트를 감싸고 있는 리액트 컴포넌트
-            
-            ```jsx
-            class App extends Component { ... }
-            ```
+                    - Phaser scenes (js files)    
+                - `index.js` ← Phaser base, as a React component                    
+            - request
+                - React helper functions for server request. For more info, refer [client/src/components/request/README.md]
+            - ui
+                - React components. To explorer these components, start from [client/src/App.js].                
+        - `index.js` ← The initially executed script.
+        - `App.css` ← A stylesheet for App.js.
+        - `App.js` ← The base react component which is a parent for all other components.
+        - `socket.js` ← Singleton socket.io client instance.
             
     - public ← static files
-        - assets ← Phaser assets
-            - audio
-                - `Sound files (e.g. *.mp3)`
-            - backgrounds
-                - `Image files which will not move`                    
-            - sprites
-                - `Image files which will move`
+        - assets ← Phaser assets                
+            - images
+                - `Image files`
             - spriteSheets
                 - `Image files for animation`
-        - `index.html`  ← 처음에 보여지는 HTML 파일
+            - map
+                - `Image files for map` ← Tilemaps are used
+        - `*-icon-*.png` ← Site icons
+        - `index.html` ← Base HTML file
 - server
-    - routes
-        - `scripts for each route (js files)` ← `express` 로 들어온 HTTP 요청이 `index.js` 에 있는 라우팅 규칙에 따라 이곳에 있는 스크립트들로 전달된다.
-    - `index.js` ← 서버 스크립트. 지금은 모든 socketIO 요청과 응답을 여기서 처리하고 있음.
+    - `app.js` ← The initially executed script script of server. It initialize a new SocketIOServer instance.
+    - `socketIOServer.js` ← The base script for all socket io communication. It directly handles requests for virtual space and chat. 
+    - `requestHandle.js` ← This script handles most requests that do not require strict real time communication. Requests handled by this script is defined in [requestType.js]. For more information, refer [client/src/components/request/README.md].
+    - `requestType.js` ← Most constants for request and response are defined here.
+    - `room.js` ← A class for users and their positions in each scene.
+    - `database.js` ← A database. Currently, we do not use a persistent database. The database is stored in RAM through this file.
+  
+## How to login
+
+Type in your ID and click "Login". 
+
+> Please DO NOT use enter key throughout our app. It would reload the whole session.
+
+![Study-Street : Type in your campuswire name including whitespace and click green Login button. (*DO NOT press enter Key)](readme-resources/Login.png)
+
+<figcaption align="center">Study-Street : Type in your campuswire name including whitespace and click green Login button. (*DO NOT press enter Key)</figcaption>
+
+### Prepared ID list
+We do not have sign up functionality yet. Hence, we prepared accounts for each instructor and students of 2021 Fall CS473 Social Computing class.
+ 
+Login ID is your **full name registered in campuswire**  [CS473 2021 Fall].
+
+Please use exactly same name **including whitespace** between first and last name. We recommend to use Crtl+C Ctrl+V.
+
+You can check your name by clicking on the profile image on left below of the page.
+
+![In Campuswire web, click profile image on left below to see your full name (Hyeon Pyo)](./readme-resources/Campuswire%20profile.png)
+<figcaption align="center">In Campuswire web, click profile image on left below to see your full name (Hyeon Pyo)</figcaption>
+
+<br>
+
+![In Campuswire app, tap settings on the rightmost to see your full name (Hyeon Pyo)](./readme-resources/Campuswire%20setting.png)
+
+<figcaption align="center">In Campuswire app, tap settings on the rightmost to see your full name (Hyeon Pyo)</figcaption>
+
+#### Guest ID
+
+> `guest`
+
+"guest" (without quote mark and whitespace) is the guest id for spare.
+
+Use guest id only for brief explorations or tests. Please ask for new login id to experience whole features. Guest id is shared and app would terminate when another uses it. 
+
+## CONTACT
+
+Please let us know if you any problem with our app, including logins.
+
+megatwins@kaist.ac.kr (Hyeon Pyo)
+
+campuswire [CS473 2021 Fall] post or dm @Hyeon Pyo

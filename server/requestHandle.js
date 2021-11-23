@@ -153,6 +153,7 @@ const onRequestLogin = (socket, request) => {
   if (!env.useridList[userID]) {
     let id = socket.id
     env.useridList[userID] = id;
+    env.addedUser[userID] = false;
   }
 
   userList[userID].socketID = socket.id;
