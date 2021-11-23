@@ -48,7 +48,6 @@ export default class Library extends MapScene {
         portalPosition.x = 950;
         portalPosition.y = 1930;
         super.createPortal(portalPosition);
-        this.assignGroupArea("a", "Team Slifour", ["ff0000"]);
     }
 
     update() {
@@ -144,7 +143,6 @@ export default class Library extends MapScene {
         Object.keys(this.areas).forEach((value, i) =>{
             let desk = this.areas[i].desk;
             desk.getAll().forEach(sprite => {
-                this.physics.add.collider(this.user.body, sprite)
                 this.physics.add.collider(this.user, sprite);
             })
             let bookshelf = this.areas[i].bookshelf;
@@ -173,7 +171,10 @@ export default class Library extends MapScene {
             color: colorMain,
             align:'center', });
 
-        desk.assignGroup({groupID : groupID, groupName : groupNameText})
+        const allowed = groupID === this.loginUser.curGroup;
+        console.log(allowed, groupID, this.loginUser.curGroup);
+        
+        desk.assignGroup(allowed, {groupID : groupID, groupName : groupNameText})
         this.groupToIndex[groupID] = deskId;
 
         groupName.setOrigin(0,1);
@@ -215,7 +216,7 @@ export default class Library extends MapScene {
             return;
         }
         this.areas.forEach((area, index)=>{
-            let groupID = area.groupID;
+            let groupID = area.desk.group.groupID;
             console.log(area, index, groupID);
             if (Object.keys(books).includes(groupID)){
                 let questList = books[groupID] 

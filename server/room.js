@@ -10,7 +10,7 @@
  * User 가 scene 에 새로 들어오면 리스트의 항목을 새로 만들고 다른 scene으로 떠나면 삭제합니다.
  * @ 지금은 login id 대신 socket id 를 key로 사용하고 있습니다. * 
  */
- let { userList } = require("./database");
+ let { userList, groupList } = require("./database");
 
 module.exports = class Rooms {
     constructor(room){
@@ -53,6 +53,11 @@ module.exports = class Rooms {
 
     add(socket, x, y, loginUser){
         let socketID = socket.id; 
+
+        Object.entries(groupList).forEach(([groupID, groupInfo]) => {
+            let user = userList[this.idList[socketID]]
+            socket.emit('RESPONSE_NEW_GROUP', {payload : groupInfo})
+        })
         Object.entries(this.socketIDToPosition).forEach(([socketID, position]) => {
             let user = userList[this.idList[socketID]]
             socket.emit("RESPONSE_CREATE_FRIEND", {loginUser : user, x : position.x, y : position.y})
@@ -72,7 +77,7 @@ module.exports = class Rooms {
 
     remove(socket){
         let socketID = socket.id;
-        if (Object.keys(this.idList).includes(socketID)){
+        if (Object.keys(this.socketIDToPosition).includes(socketID)){
             socket.leave(this.room);         
             delete this.idList[socketID];
             delete this.socketIDToPosition[socketID];
