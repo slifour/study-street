@@ -94,7 +94,7 @@ export default class MapScene extends Phaser.Scene {
   createUser() {
     this.user = new User(this, 800, 400, 'user-girl', 'girl', this.loginUser).setScale(3/100 * 1.2); 
     this.user.init();
-    this.user.setDepth(1);
+    // this.user.setDepth(1);
     this.physics.add.collider(this.user.body, this.belowPlayer1);
     this.physics.add.collider(this.user.body, this.world1);
 
@@ -110,7 +110,7 @@ export default class MapScene extends Phaser.Scene {
       this.portalCollider = this.add.circle(position.x, position.y, 150).setScale(1, 0.2).setAlpha(0.1);
       this.physics.world.enable(this.portalCollider);
       this.portalCollider.body.setImmovable(true);
-      this.physics.add.collider(this.user, this.portalCollider, (() => {
+      this.physics.add.collider(this.user.body, this.portalCollider, (() => {
           this.user.disableBody(false);
           let newScene = this.key === 'Library'? 'Rest' : 'Library';
           this.changeScene(newScene, null);
