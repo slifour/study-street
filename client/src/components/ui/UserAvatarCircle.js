@@ -32,18 +32,29 @@ export default function UserAvatarCircle(props) {
     }
 
     return (
-        <div onClick={props.onClick} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} style = {{position : `relative`}}>
-            <StyledAvatar style={{
-                width: `${size}px`,
-                height: `${size}px`,            
-            }} src={props.user.profileImage} />
-            {
-                showItem?
-                <div className = {styles.userAvatarItem} style = {{top : `-14px`}}>
-                    {onMouseEnterItem}
-                </div> :
-                null
-            }    
-        </div>
+        <>
+            { props.user ? 
+                <div onClick={props.onClick} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} style = {{position : `relative`}}>
+                    <StyledAvatar style={{
+                        width: `${size}px`,
+                        height: `${size}px`,            
+                    }} src={props.user.profileImage} />
+                    {
+                        showItem?
+                        <div className = {styles.userAvatarItem} style = {{top : `-14px`}}>
+                            {onMouseEnterItem}
+                        </div> :
+                        null
+                    }    
+                </div>    
+                : <div>
+                  <StyledAvatar style={{
+                        width: `${size}px`,
+                        height: `${size}px`,            
+                    }} src={null} /> 
+                </div>
+            }
+        </>
+        
     )
 }

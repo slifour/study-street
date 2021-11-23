@@ -1,25 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import styled from 'styled-components';
-import socket from '../../socket';
 import Modal from 'react-overlays/Modal';
 import ChatOverlay from './ChatOverlay';
 import UserAvatarCircle from './UserAvatarCircle';
-
-const StyledAvatar = styled.div`
-    width: 70px;
-    height: 70px;
-    box-shadow: 0px 4px 4px rgba(88, 88, 88, 0.25);
-    border-radius: 50%;
-
-    color: #FDFDFD;
-    line-height: 70px;
-    text-align: center;
-    font-size: 28px;
-    font-weight: 600;
-    cursor: pointer;
-
-    background: ${props => props.color};
-`;
+import useRequest from '../request/useRequest';
 
 const StyledModal = styled(Modal)`
     position: fixed;
@@ -45,48 +29,54 @@ const Backdrop = styled("div")`
     opacity: 0.2;
 `;
 
-export default function SingleAvatar(props) {
+export default function SingleAvatar({userID}) {    
+
+    const [user, setUser] = useState(null);
+
+    const onResponseOK = useCallback(({payload}) => {
+        setUser(payload);
+    }, []);
     
-    const shortenName = props.userId.substr(0, 2).toUpperCase();
-    const [profile, setProfile] = useState({});
+    const onResponseFail = useCallback(({payload}) => {
+        console.warn(payload.msg || "Failed to load a user profile for chat (client msg)");
+    }, []);
+    
+    const makePayload = useCallback(() => ({ userID }), [userID]);
+
+    const [request, innerReloadTimeRef] = useRequest({
+        requestType: "REQUEST_MY_PROFILE",
+        responseType: "RESPONSE_MY_PROFILE",
+        makePayload,
+        onResponseOK,
+        onResponseFail
+    });
+
+    useEffect(() => {
+        request();
+    }, [request]); // It is guaranteed that there is a login user in library scene
 
     //this will be moved to hover-drop menu soon
     const [open, setOpen] = useState(false);
 
-    //status is expressed by 'studying', 'online', 'offline'
-    const [status, setStatus] = useState('online');
+    //status can be expressed by 'studying', 'online', 'offline'
+    // const [status, setStatus] = useState('online');
 
     const renderBackdrop = (props) => <Backdrop {...props} />;
 
-    useEffect(() => {
-        socket.emit("userProfileRequest", props.userId);
-    }, [])
-
-    socket.on("userProfile", (userInfo) => {
-        // setStatus(userInfo.status);
-        // setProfile(userInfo.profile);
-        
-        // dummy informations
-        setStatus('studying');
-        setProfile({
-            color : '#79ACBC',
-            image : false
-        });
-    })
+    if (!user) {
+        return (<div></div>);
+    }
 
     return (
         <div>
-            <StyledAvatar
-                color = {profile.color}
-                onClick = {() => setOpen(true)}
-            >{shortenName}</StyledAvatar>
+            <UserAvatarCircle user={user} size={100} onClick={() => setOpen(true)} onMouseEnterItem={user.userName} />
             <StyledModal
                 show = {open}
                 onHide = {() => setOpen(false)}
                 renderBackdrop = {renderBackdrop}
             ><ChatOverlay
-                userId = {props.userId}
-                color = {profile.color}
+                userId = {userID}
+                color = {"#79ACBC"} 
             ></ChatOverlay>
             </StyledModal>
         </div>

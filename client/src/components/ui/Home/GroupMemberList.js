@@ -12,16 +12,6 @@ export default function GroupMemberList({group}) {
 
     const {setReloadTime} = useContext(ReloadContext);
 
-    const dummyGroup = { // Dummy data
-        groupID: "a",
-        level: 3,
-        experiencePoint: 0.9,
-        groupName: "We love study",
-        leader: "eunki",
-        member: ["eunki", "haeseul"],
-        color: "#FFE76A"
-    };
-
     const onInvite = useCallback( () => {
         setReloadTime(new Date());
     }, [setReloadTime]);
