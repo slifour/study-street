@@ -150,11 +150,14 @@ const onRequestLogin = (socket, request) => {
     return responseFail(socket, requestKey, responseType, "Failed to login.");
   }
 
-  if (!env.useridList[userID]) {
+  /*if (!env.useridList[userID]) {
     let id = socket.id
     env.useridList[userID] = id;
     env.addedUser[userID] = false;
-  }
+  }*/
+  let id = socket.id
+  env.useridList[userID] = id;
+  env.addedUser[userID] = false;
 
   userList[userID].socketID = socket.id;
 
