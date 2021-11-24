@@ -93,8 +93,8 @@ export default class StatusText extends GameObjects.Container {
   setInteractions(setInteractionsbool = true){
     this.removeAllListeners();
     if(setInteractionsbool){
-      this.on('pointerover', this.onPointerOver); 
-      this.on('pointerout', this.onPointerOut); 
+      // this.on('pointerover', this.onPointerOver); 
+      // this.on('pointerout', this.onPointerOut); 
       this.on('pointerdown', this.onPointerDown); 
     }
   }

@@ -88,7 +88,12 @@ export default class Study extends Phaser.Scene {
   };
 
   createUser() {
-    this.user = new User(this, 0, 0, 'user-girl', 'girl', this.loginUser).setScale(3/100 * 1.2);
+    console.log("Create user: Login user: ", this.loginUser);
+    const avatarSprite = this.loginUser.avatarSprite || "user_1";
+    const avatarAnimSuffix = avatarSprite; // user_1이 'girl' animation suffix에 해당하는데, 다른 user도 animation은 같아서 그대로 뒀어요.
+
+    this.user = new User(this, 800, 400, avatarSprite, avatarAnimSuffix, this.loginUser, 3/100 * 1.2);
+
   }
 
   /** createDesk

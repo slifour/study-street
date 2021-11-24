@@ -20,18 +20,18 @@ export default class User extends UserContainer {
     this.status.setInteractions();
   }
 
-  init(){
-    // this.setCollideWorldBounds(true);
-    // this.initialize({currentScene : this.scene.key});
-    // this.initialize({prevScene : this.scene.prevScene, currentScene : this.scene.key});
-    /* Status display */
-    this.setInteractive();
-    this.prepareStatusView();
-    // this.prepareName();
-    this.on('pointerover', this.onPointerOver);
-    this.on('pointerout', this.onPointerOut);
+  // init(){
+  //   // this.setCollideWorldBounds(true);
+  //   // this.initialize({currentScene : this.scene.key});
+  //   // this.initialize({prevScene : this.scene.prevScene, currentScene : this.scene.key});
+  //   /* Status display */
+  //   this.setInteractive();
+  //   this.prepareStatusView();
+  //   // this.prepareName();
+  //   this.on('pointerover', this.onPointerOver);
+  //   this.on('pointerout', this.onPointerOut);
     
-  }
+  // }
 
   /** initialize : tell server to create this user */
   initialize(payload) {    
@@ -81,23 +81,23 @@ export default class User extends UserContainer {
     this.sprite.updateAnimation(animState)
   }
 
-  showStatus() {
-    /* 플레이어를 호버할 때 status view를 보여주기 */
-    const loginUser = this.registry.get("loginUser");
-    if (loginUser) {
-      this.statusView.text = loginUser.status;
-    } else {
-      this.statusView.text = "Please login first.";
-    }
-    super.showStatus();
-    // this.statusView.setActive(true).setVisible(true);
-    // this.statusView.setInteractive();
-    // this.statusView.setInteractions();
-  }
+  // showStatus() {
+  //   /* 플레이어를 호버할 때 status view를 보여주기 */
+  //   const loginUser = this.registry.get("loginUser");
+  //   if (loginUser) {
+  //     this.statusView.text = loginUser.status;
+  //   } else {
+  //     this.statusView.text = "Please login first.";
+  //   }
+  //   super.showStatus();
+  //   // this.statusView.setActive(true).setVisible(true);
+  //   // this.statusView.setInteractive();
+  //   // this.statusView.setInteractions();
+  // }
 
   /** @param {Phaser.Types.Input.Keyboard.CursorKeys} cursors */
   update(cursors) {
-    super.update();
+    // super.update();
     this.updateMovement(cursors);
     let positionData = {x : this.x, y : this.y};
     if (!this.stop){

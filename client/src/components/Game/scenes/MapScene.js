@@ -243,7 +243,7 @@ export default class MapScene extends Phaser.Scene {
     console.log("onResponseNewStatus", socketID, status, response.payload)
     if (socketID === this.socketID) {
       console.log("if (socketID === this.socketID)")
-      this.user.updateStatus(status);
+      this.user.updateStatus(status, todayStudyTime);
     }
     else if (Object.keys(this.friendDict).includes(socketID)){
       this.friendDict[socketID].updateStatus(status, todayStudyTime);

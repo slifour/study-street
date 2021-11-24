@@ -17,6 +17,7 @@ class UserSprite extends Phaser.Physics.Arcade.Sprite {
     this.setDisplaySize(this.width*sizeFactor, this.height*sizeFactor);
     this.width = this.width*sizeFactor;
     this.height = this.height*sizeFactor
+    this.setInteractive()
 
     this.animName = {
       'idle': 'user-idle-' + animSuffix,
@@ -48,15 +49,19 @@ export default class UserContainer extends GameObjects.Container{
     this.createSprite(scene, spriteKey, animSuffix, sizeFactor);
     console.log("createSprite", this.sprite.width, this.sprite.height)
     console.log("createSprite", this.sprite.displayWidth, this.sprite.displayHeight)
+    console.log("createSprite", this.sprite.listeners('pointerover'), this.sprite.active)
     this.createName();
     this.createStatus(loginUser.status === null ? initialtext : loginUser.status, loginUser.todayStudyTime);
+    this.setInteractive();
+    this.setInteractions();
   }
 
   init(){
     // this.prepareStatusView();
     /* Status display */
-    this.sprite.setInteractive();
-    this.setInteractions();    
+    console.log("UserContainer, init()");
+    // this.sprite.setInteractive();
+    // this.setInteractions();    
 
     this.requestKey = null;
     this.onResponseOK = null;
@@ -64,12 +69,11 @@ export default class UserContainer extends GameObjects.Container{
   }
 
   setInteractions(setInteractionsbool = true){
+    this.sprite.removeAllListeners();
     if(setInteractionsbool){
+      this.on('pointerdown', this.status.onPointerDown);
       this.sprite.on('pointerover', this.onPointerOver, this); 
       this.sprite.on('pointerout', this.onPointerOut, this);
-    }
-    else{
-      this.removeAllListeners();
     }
   }  
 
@@ -116,12 +120,14 @@ export default class UserContainer extends GameObjects.Container{
   createStatus(initialtext, todayStudyTime) {
     this.namePadding = -10;
     this.status = new StatusText(this.scene, 0, 0, initialtext, todayStudyTime);
+    // this.scene.add.existing(this.status);
+    this.status.setInteractive();
+    this.status.setInteractions();
     console.log(this.status);
     this.add(this.status);
-    this.status.setVisible(false);
+    // this.status.setVisible(false);
     this.status.setSize(10);
   }
-
 
   /* Status display methods */
   prepareStatusView() {
@@ -132,6 +138,7 @@ export default class UserContainer extends GameObjects.Container{
   }
 
   onPointerOver() {
+    console.log("onPointerOver()")
     this.status.showStatus()
   }
 
@@ -167,6 +174,8 @@ export default class UserContainer extends GameObjects.Container{
     this.sprite.setFrame(frame);
     let chairAt = desk.getIndex(this.chair)
     desk.addAt(this, chairAt + indexer)
+
+    this.chair.setInteractions(false);
     console.log("sit", this.chair.x, this.chair.y, this.x, this.y);
     // this.status
   }
