@@ -172,7 +172,10 @@ export default class MapScene extends Phaser.Scene {
     this.onResponseRemoveFriend(socketID);
     console.log("createFriend")
     this.onResponseFriendStopStudy(socketID);
-    const friend = new Friend(this, {x : payload.x, y: payload.y} , 'user-wizard', 'wizard', payload.loginUser).setScale(1);
+
+    const avatarSprite = payload.loginUser.avatarSprite || "user_1";
+    const avatarAnimSuffix = avatarSprite;
+    const friend = new Friend(this, {x : payload.x, y: payload.y} , avatarSprite, avatarAnimSuffix, payload.loginUser).setScale(3/100 * 1.2);
     friend.init();
     return friend;
   }
