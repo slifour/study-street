@@ -111,6 +111,7 @@ export default function ChecklistPersonal(props) {
         let updateList = {};
         const checklistKey = uniqueString();
         updateList[checklistKey] = {
+            checklistID: checklistKey,
             content: inputValue,
             isDone: false
         }
