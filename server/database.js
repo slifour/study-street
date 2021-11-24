@@ -89,7 +89,7 @@ let userList = {
     "profileImage": dummyAvatars[2],
     "todayStudyTime": 7200 * 1000,
     "status": "Putting map objects",
-    "curGroup" : "b",
+    "curGroup" : "a",
     "socketID": null
   },
   "jeonghoon": {
@@ -98,7 +98,7 @@ let userList = {
     "profileImage": dummyAvatars[3],
     "todayStudyTime": 7200 * 1000,
     "status": "Designing figma prototype",
-    "curGroup" : "b",
+    "curGroup" : "a",
     "socketID": null
   },
   "Alua Orazbek": {

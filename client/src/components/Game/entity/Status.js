@@ -34,6 +34,14 @@ export default class Status extends GameObjects.Container {
     this.add(this.textView);
 
     this.setDepth(50);
+    const width = this.textView.width + 2 * this.paddingX;
+    const height = this.textView.height + 2 * this.paddingY;
+    this.setSize(width, height)
+  }
+
+  init(){
+    this.setInteractive();
+    this.setInteractions();
   }
 
   update() { 
@@ -73,8 +81,18 @@ export default class Status extends GameObjects.Container {
 
     }
   }
+  setInteractions(setInteractionsbool = true){
+    if(setInteractionsbool){
+      this.on('pointerover', this.onPointerOver); 
+      this.on('pointerout', this.onPointerOut);
+    }
+    else{
+      this.removeAllListeners();
+    }
+  }  
 
   onPointerOver() {
+    console.log("HIIIIII")
     this.host.setPosition.pointerOnStatus = true; 
   }
 

@@ -11,6 +11,7 @@ import styled from "styled-components";
 import Modal from 'react-overlays/Modal';
 import LoginOverlay from "./components/ui/LoginOverlay";
 import StatusInput from "./components/ui/StatusInput"; 
+import StatusContainer from "./components/ui/StatusContainer";
 
 /* Example of LoginUserContext value
   {
@@ -73,14 +74,15 @@ function App() {
     }      
   }, [])
 
-  useEffect(() => {
-    let timeout = null;
-    if (game.current !== null && game.current.game){
-      game.current.game.events.on("EVENT_INPUT_STATUS", () => {
-        setShowStatusInput(true);
-      })
-    }
-  }, [])
+  // useEffect(() => {
+  //   let timeout = null;
+  //   if (game.current !== null && game.current.game){
+  //     game.current.game.events.on("EVENT_INPUT_STATUS", () => {
+  //       setShowStatusInput(true);
+  //     })
+  //     console.log('server / useEffect() / EVENT_INPUT_STATUS ')
+  //   }
+  // }, [showStatusInput])
 
 
   const emitToGame = ((msg, data) => {
@@ -110,10 +112,7 @@ function App() {
           { !isHome && (scene !== "Study") ? <Avatars/> : null }
           { scene === "Study" ? <StudyMain/> : null }
           { !isHome ? <QuickMoveButton emitToGame = {emitToGame}/> : null }
-          { showStatusInput ? <StyledModal
-                    show = {showStatusInput}
-                    onHide = {() => setShowStatusInput(false)}
-                    ><StatusInput/></StyledModal> : null}
+          <StatusContainer></StatusContainer>
           <ConfirmAlert show = {showConfirmAlert} setShow = {setshowConfirmAlert}/>
         </div>
         <div className="game-container">

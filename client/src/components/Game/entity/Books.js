@@ -34,7 +34,7 @@ export default class Books extends Phaser.GameObjects.Container {
     console.log(this.questList)
     this.questList.forEach((quest, i) => {
       let size = quest.doneUsers.length;
-      console.log(size);
+      // console.log(size);
       let book = new Book(this.scene, bookX, 0, quest)
       this.add(book)
       if (i > this.prevMaxIndex){
@@ -46,7 +46,7 @@ export default class Books extends Phaser.GameObjects.Container {
         // this.add(alert)        
       }
       bookX += book.displayWidth;
-      console.log(size, book.displayWidth)
+      // console.log(size, book.displayWidth)
     }, this) 
   }
 

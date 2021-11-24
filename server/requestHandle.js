@@ -37,6 +37,7 @@ const onRequest = (socket, requestName, request) => {
     case RequestType.ACCEPT_QUEST : onRequestAcceptQuest(socket, request); break;
     case RequestType.NEW_QUEST: onRequestNewQuest(socket, request); break;
     case RequestType.CREATE_FRIEND: onRequestCreateFriend(socket, request); break;
+    case RequestType.STATUS: onRequestStatus(socket, request); break;
     // case RequestType.MOVE: onRequestMove(socket, request); break; 
     default: break;
   }
@@ -172,6 +173,40 @@ const onRequestLogin = (socket, request) => {
     responseType,
     status: ResponseStatus.OK,
     payload: userList[userID]
+  });
+}
+
+const onRequestStatus = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.STATUS;
+
+  console.log("onRequestStatus", request);
+
+  let userID, status;
+  try {
+    ({userID, status} = payload);
+  } catch {
+    return responseFail(socket, requestKey, responseType, "Invalid request.");
+  }
+
+  if (!userList[userID]) {
+    return responseFail(socket, requestKey, responseType, "Failed to login.");
+  }
+
+  userList[userID].status = status;
+
+  // status update side effects
+  const sideEffectResponseType = 'RESPONSE_NEW_STATUS'
+  
+  env.io.emit(sideEffectResponseType, {
+    payload: {socketID: socket.id, status : status, todayStudyTime : userList[userID].todayStudyTime}
+  })
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: {}
   });
 }
 

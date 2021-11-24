@@ -7,8 +7,8 @@ import UserContainer from './UserContainer';
 
 export default class Friend extends UserContainer{
   constructor(scene, position, spriteKey, animSuffix, loginUser) {
-    super(scene, position, spriteKey, animSuffix, loginUser);
-    this.velocity = 200;
+    super(scene, position, spriteKey, animSuffix, loginUser, 1, "...");
+    this.velocity = 200;    
   }
 
   showStatus() {
@@ -97,36 +97,11 @@ export default class Friend extends UserContainer{
     })
   }
 
-  sit(desk, chairIndex){
-    let indexer = 1;
-    let depthMargin = 1;
-    let marginX = -5;
-    let marginY = 0;
-    let frame = 0;    
-    this.chair = desk.indexToChair[chairIndex];
-    if (this.chair.dir === 'down'){
-      indexer = 0;
-      marginY = -10;
-      frame = 11;
-    }
-    this.chair.setInteractions(false);
-
-    this.setPosition(this.chair.x + marginX, this.chair.y + marginY);
-
-    this.showStatus();
-    this.setInteractions(false);
-    desk.addAt(this, desk.getIndex(this.chair) + indexer)
-    desk.addAt(this.statusView, desk.getIndex(this.chair) + indexer)
-    // this.setDepth(desk.deskDepth+depthMargin)
-    this.sprite.setFrame(frame);
-
-    console.log("sit", desk, this.chair);
-  }
-
   stand(){
-    this.chair.setInteractions(true);
-    this.chair = null;
-    this.statusView.destroy();
+    if (this.chair !== null){
+      this.chair.setInteractions(true);
+      this.chair = null;
+    }
   }
 } 
 

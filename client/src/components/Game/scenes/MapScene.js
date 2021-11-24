@@ -92,7 +92,7 @@ export default class MapScene extends Phaser.Scene {
   };
 
   createUser() {
-    this.user = new User(this, 800, 400, 'user-girl', 'girl', this.loginUser).setScale(3/100 * 1.2); 
+    this.user = new User(this, 800, 400, 'user-girl', 'girl', this.loginUser, 3/100 * 1.2);
     this.user.init();
     // this.user.setDepth(1);
     this.physics.add.collider(this.user, this.belowPlayer1);
@@ -218,8 +218,21 @@ export default class MapScene extends Phaser.Scene {
       this.socket.on("RESPONSE_REMOVE_FRIEND", this.onResponseRemoveFriend.bind(this));
       this.socket.on("RESPONSE_FRIEND_START_STUDY", this.onResponseFriendStartStudy.bind(this));
       this.socket.on("RESPONSE_FRIEND_STOP_STUDY", this.onResponseFriendStopStudy.bind(this));
+      this.socket.on('RESPONSE_NEW_STATUS', this.onResponseNewStatus.bind(this));
     }
   }
+
+  onResponseNewStatus(response){
+    const {socketID, status, todayStudyTime} = response.payload
+    console.log("onResponseNewStatus", socketID, status, response.payload)
+    if (socketID === this.socketID) {
+      console.log("if (socketID === this.socketID)")
+      this.user.updateStatus(status);
+    }
+    else if (Object.keys(this.friendDict).includes(socketID)){
+      this.friendDict[socketID].updateStatus(status, todayStudyTime);
+    }
+}
 
   onEventID(user){
     // console.log('Log. mapscene.onEventID() user  =', user);    
