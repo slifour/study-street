@@ -395,8 +395,8 @@ const SocketIOServer = () => {
     let userID = env.useridList[socket.id]
     console.log("Client disconnected");    
     // Remove user from state on disconnect
-    env.libraryRoom.remove(socket);
     env.libraryRoom.stand(socket, userID);
+    env.libraryRoom.remove(socket);
     env.restRoom.remove(socket);
     clearInterval(interval);
     stateChanged = true;

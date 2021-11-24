@@ -47,10 +47,10 @@ export default class Desk extends Phaser.GameObjects.Container {
     }
   }
 
-  assignGroup(group){
+  assignGroup(allowed, group){
     this.group = group
     Object.values(this.indexToChair).forEach( (chair) => {
-      chair.setAllowed(false, group.groupName);
+      chair.setAllowed(allowed, group.groupName);
     })
   }
 

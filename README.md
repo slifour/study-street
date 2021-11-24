@@ -106,6 +106,24 @@ You can check your name by clicking on the profile image on left below of the pa
 
 Use guest id only for brief explorations or tests. Please ask for new login id to experience whole features. Guest id is shared and app would terminate when another uses it. 
 
+
+## How to explore Study Street
+This guideline is made to support your end-to-end scenario. For detailed information, you may refer to the instruction(Welcome!) and feature parts written in the High-Fi Prototype Report.
+
+- First, to access to our server, login to the main by using your Campuswire account. For detailed instruction, refer to ‘How to login’ in the README.md.
+- Before you enter the library, you can view your name, profile image, and status. You can also invite others, or check the invitation from friends by entering the group page on the left side bar.
+- You can enter to the library by clicking the door button written in ‘Walk to the library’. Then, you can control your avatar by using the direction key in the keyboard.
+- When you are in the library / rest scene, these are the things you can explore.
+    - Status of other users and group area (group area for library scene): The desk and bookshelf are assigned when your group is made. You can study with your group members at the located group area. Also, you can see what others are doing by hovering the mouse at other users’ avatar. You can start studying and move to study scene by clicking the chair.
+    - Chatting with other friends: Press the member icon with circled shape on the left side. Then, you can send private messages to other group members. This is also available in the rest scene.
+    - Checklist and artifact (artifact for library scene): Press the second button at the bottom. Then, you can view your daily checklist and group quests. In each of the taps, you can add your personal to-dos and share group quests with other members. To look for the artifacts that you received after you accomplished your group quest, click the red books in the bookshelf located at your group area.
+    - Go to Rest / Return to Study: When you want to take a rest or restart studying, you can move by pressing the button ‘Go to Rest’ and ‘Return to Study’, respectively.
+- When you are in the study scene, these are the things you can explore.
+    - Checklist: This is the same as the one you see in the study scene.
+    - Stickies: You can still chat with other friends. But, to concentrate on your study, the stickies asynchronously show the messages in constant period. You can reply to the friends after you check it, but they aren’t delivered to others immediately either.
+    - Date and Stopwatch: You can check the date and the amount of time you studied.
+
+
 ## CONTACT
 
 Please let us know if you any problem with our app, including logins.
