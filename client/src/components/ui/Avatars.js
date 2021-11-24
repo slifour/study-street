@@ -3,6 +3,7 @@ import { LoginUserContext } from '../../App';
 import SingleAvatar from './SingleAvatar';
 import styles from './ui.module.css';
 import useRequest from '../request/useRequest';
+import GroupAvatarCircle from './GroupAvatarCircle';
 
 export default function Avatars() {
     const {loginUser} = useContext(LoginUserContext);
@@ -36,16 +37,14 @@ export default function Avatars() {
 
     return(
         <div className={styles.avatarContainer}>
-            {/* Print avatars           
-            {avatarList.map((avatar) => (
-                <SingleAvatar userId={avatar.userId}></SingleAvatar>
-            ))} */}
-
-            {
-                group ?
-                group.member.map(userID => (
+            { group ?
+                <>
+                <GroupAvatarCircle group={group} onMouseEnterItem={group.groupName} />
+                { group.member.map(userID => (
                     <SingleAvatar userID={userID} key={userID}/>
-                )) : null
+                )) }
+                </>
+                : null
             }
         </div>
     )
