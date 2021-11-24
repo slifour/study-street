@@ -14,7 +14,7 @@ const StyledDiv = styled.div`
 
 export default function PostButton(props) {
 
-    const POST_UPDATE_INTERVAL = 5000;
+    const POST_UPDATE_INTERVAL = 1000 * 60 * 5;
 
     const {loginUser} = useContext(LoginUserContext);
 
