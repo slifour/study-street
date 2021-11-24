@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import socket from "../../socket";
 import styles from './login.module.css';
-import { LoginUserContext } from "../../App";
+import { LoginUserContext, GameContext } from "../../App";
 import uniqueString from 'unique-string';
 
 export default function LoginOverlay(props) {
     const [userID, setUserID] = useState('');
     const { loginUser, setLoginUser } = useContext(LoginUserContext);
+    const { emitToGame } = useContext(GameContext);
     let usedRequestKeyRef = useRef(null);
 
     const onResponse = ({ requestKey, status, payload }) => {
@@ -16,6 +17,7 @@ export default function LoginOverlay(props) {
           switch (status) {
             case "STATUS_OK": 
                 setLoginUser(payload);
+                emitToGame("EVENT_ID", payload);
                 props.callClose();
                 break;
             case "STATUS_FAIL": 
@@ -47,7 +49,7 @@ export default function LoginOverlay(props) {
     }
 
     const onLoginKeyUp = e => {
-        if (e.keyCode === 13) {
+        if (e.keyCode === 13 && loginUser===null) {
             e.preventDefault();
             onLoginClick();
         }
@@ -63,7 +65,7 @@ export default function LoginOverlay(props) {
             <div className={styles.divider}></div>
             <div className={styles.loginContent}>
                 <div className={styles.loginContentText}>ID</div>
-                <form className={styles.loginForm}>
+                <div className={styles.loginForm}>
                     <input
                         type = "text"
                         className={styles.loginInput}
@@ -71,7 +73,7 @@ export default function LoginOverlay(props) {
                         onChange={changeUserID}
                         onKeyUp={onLoginKeyUp}
                     ></input>
-                </form>
+                </div>
             </div>
             <div className={styles.loginFooter}>
                 {(userID==='') && <div className={styles.loginButtonDisabled}>Login</div>}

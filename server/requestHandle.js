@@ -7,7 +7,7 @@ let env;
 let update;
 
 const onRequest = (socket, requestName, request) => {
-  console.log("Got request:", request);
+  // console.log("Got request:", request);
   let requestUser, requestKey, requestType, payload;
   try {
     ({requestUser, requestKey, requestType, payload} = request);
@@ -36,6 +36,8 @@ const onRequest = (socket, requestName, request) => {
     case RequestType.TOGGLE_CHECKLIST : onRequestToggleChecklist(socket, request); break;
     case RequestType.ACCEPT_QUEST : onRequestAcceptQuest(socket, request); break;
     case RequestType.NEW_QUEST: onRequestNewQuest(socket, request); break;
+    case RequestType.CREATE_FRIEND: onRequestCreateFriend(socket, request); break;
+    case RequestType.STATUS: onRequestStatus(socket, request); break;
     // case RequestType.MOVE: onRequestMove(socket, request); break; 
     default: break;
   }
@@ -57,6 +59,22 @@ const onRequest = (socket, requestName, request) => {
   });
 };
 
+const onRequestCreateFriend = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.MY_GROUP_LIST;
+  const socketIDFriend = payload.socketID
+
+  if (!requestUser) {
+    return responseFail(socket, requestKey, responseType, "Login is required.");
+  };
+
+  return socket.emit(responseType, {
+    requestKey, 
+    responseType,
+    status: ResponseStatus.OK,
+    payload: {loginUser : userList[env.useridList[socketIDFriend]], x : 300, y : 300}
+  });
+};
 
 const onRequestMyGroupList = (socket, request) => {
   const {requestUser, requestKey} = request;
@@ -120,7 +138,7 @@ const onRequestLogin = (socket, request) => {
   const {requestUser, requestKey, payload} = request;
   const responseType = ResponseType.LOGIN;
 
-  console.log("onRequestLogin: ", request); 
+  // console.log("onRequestLogin: ", request); 
 
   let userID;
   try {
@@ -133,10 +151,11 @@ const onRequestLogin = (socket, request) => {
     return responseFail(socket, requestKey, responseType, "Failed to login.");
   }
 
-  if (!env.useridList[userID]) {
-    let id = socket.id
-    env.useridList[userID] = id;
-  }
+  let id = socket.id
+  env.useridList[userID] = id;
+  env.addedUser[userID] = false;
+
+  userList[userID].socketID = socket.id;
 
   // login side effects
   try {
@@ -154,6 +173,40 @@ const onRequestLogin = (socket, request) => {
     responseType,
     status: ResponseStatus.OK,
     payload: userList[userID]
+  });
+}
+
+const onRequestStatus = (socket, request) => {
+  const {requestUser, requestKey, payload} = request;
+  const responseType = ResponseType.STATUS;
+
+  console.log("onRequestStatus", request);
+
+  let userID, status;
+  try {
+    ({userID, status} = payload);
+  } catch {
+    return responseFail(socket, requestKey, responseType, "Invalid request.");
+  }
+
+  if (!userList[userID]) {
+    return responseFail(socket, requestKey, responseType, "Failed to login.");
+  }
+
+  userList[userID].status = status;
+
+  // status update side effects
+  const sideEffectResponseType = 'RESPONSE_NEW_STATUS'
+  
+  env.io.emit(sideEffectResponseType, {
+    payload: {socketID: socket.id, status : status, todayStudyTime : userList[userID].todayStudyTime}
+  })
+
+  return socket.emit(responseType, {
+    requestKey,
+    responseType,
+    status: ResponseStatus.OK,
+    payload: {}
   });
 }
 
@@ -247,7 +300,7 @@ const onRequestCreateGroup = (socket, request) => {
     groupName,
     leader: requestUser,
     member: [requestUser],
-    colors: colors || defaultColors,
+    colors: colors && colors[0] ? colors : defaultColors,
     quests: {}
   };
 
@@ -363,9 +416,9 @@ const onRequestChangeScene = (socket, request) => {
   const {requestUser, requestKey, payload} = request;
   const responseType = ResponseType.CHANGE_SCENE;
 
-  let prevScene, currentScene;
+  let prevScene, currentScene, deskIndex, chairIndex;
   try {
-    ({prevScene, currentScene} = payload);
+    ({prevScene, currentScene, deskIndex, chairIndex} = payload);
   } catch {
     return responseFail(socket, requestKey, responseType, "Invalid scene.");
   }
@@ -376,25 +429,41 @@ const onRequestChangeScene = (socket, request) => {
   socket.join(currentScene);
 
   let id = socket.id;
+  let initialPosition = {x:300, y:300}
+  let user = userList[requestUser];
+  // console.log('onRequestChangeScene user:', prevScene, currentScene);
+
+  switch (currentScene) {
+    case "Home": ; break;
+    case "Library": {      
+      env.socketIDToRoom[id] = env.libraryRoom; 
+      env.libraryRoom.setUserId(id, requestUser); 
+      env.libraryRoom.add(socket, initialPosition.x, initialPosition.y, user)  
+      onRequestNewDoneQuest(socket); 
+      break;    
+    } 
+    case "Study": {
+      env.libraryRoom.sit(socket, deskIndex, chairIndex, user); 
+      break;}
+    case "Rest": {
+      env.socketIDToRoom[id] = env.restRoom; 
+      env.restRoom.setUserId(id, requestUser); 
+      env.restRoom.add(socket, initialPosition.x, initialPosition.y, user)  
+      break;
+    }
+  }
 
   switch (prevScene) {
     case "Home": ; break;
     case "Library": env.libraryRoom.remove(socket); break;
-    case "Study": ; break;
+    case "Study": env.libraryRoom.stand(socket, user.userID); break;
     case "Rest": env.restRoom.remove(socket); break;
-  }
-
-  switch (currentScene) {
-    case "Home": ; break;
-    case "Library": onRequestNewDoneQuest(socket); env.roomDict[id] = env.libraryRoom; env.libraryRoom.setUserId(id, requestUser); env.libraryRoom.update(socket, requestUser, 300, 300);  break;
-    case "Study": ; break;
-    case "Rest": env.roomDict[id] = env.restRoom; env.restRoom.setUserId(id, requestUser); env.restRoom.update(socket, requestUser, 300, 300); break;
   }
 
   try {
     update = updateAttendance(requestUser);
   } catch {
-    return reponseFail(socket, requestKey, responseType, "Failed to update attendance");
+    return responseFail(socket, requestKey, responseType, "Failed to update attendance");
   }
   if(update){
     onRequestNewDoneQuest(socket);
@@ -505,7 +574,6 @@ const onRequestUpdateCurrentGroup = (socket, request) => {
 }
 
 
-
 const onRequestPersonalChecklist = (socket, request) => {
   const {requestUser, requestKey, payload} = request;
   const responseType = ResponseType.PERSONAL_CHECKLIST;
@@ -519,8 +587,10 @@ const onRequestPersonalChecklist = (socket, request) => {
   //handle getter
   let wrap = [];
   wrap[0] = userList[payload.userID].checklist;
-  wrap[1] = groupList[userList[payload.userID].curGroup].quests;
-  wrap[2] = groupList[userList[payload.userID].curGroup].groupName;
+  if (userList[payload.userID].curGroup !== null){
+    wrap[1] = groupList[userList[payload.userID].curGroup].quests;
+    wrap[2] = groupList[userList[payload.userID].curGroup].groupName;
+  }
 
   return socket.emit(responseType, {
     requestKey,
@@ -535,7 +605,7 @@ const onRequestToggleChecklist = (socket, request) => {
   const responseType = ResponseType.TOGGLE_CHECKLIST;
   userList[payload.userID].checklist[payload.checklistID].isDone = payload.isDone;
 
-  console.log(userList[payload.userID].checklist)
+  // console.log(userList[payload.userID].checklist)
   return socket.emit(responseType, {
     requestKey,
     responseType,
@@ -614,6 +684,7 @@ const onRequestNewDoneQuest = (socket) => {
   const requestKey = null;
   const responseType = "RESPONSE_NEW_DONE_QUEST";
   const books = createBooks();
+  console.log("onRequestNewDoneQuest", books)
 
   //setter
   return socket.emit(responseType, {
@@ -634,8 +705,8 @@ const onRequestNewDoneQuest = (socket) => {
 //   } catch {
 //     return responseFail(socket, requestKey, responseType, "Invalid scene.");
 //   }
-//   if (env.roomDict[requestUser] !== undefined){
-//     env.roomDict[requestUser].update(socket, requestUser, position.x, position.y);
+//   if (env.socketIDToRoom[requestUser] !== undefined){
+//     env.socketIDToRoom[requestUser].update(socket, requestUser, position.x, position.y);
 //   }
 
 //   return socket.emit(responseType, {

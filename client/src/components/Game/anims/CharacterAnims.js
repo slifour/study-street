@@ -76,3 +76,45 @@ export function createCharacterAnimsGirl(anims) {
     repeat: -1
   });
 }
+
+export function createCharacterAnimsDefault(anims) {
+  const USER_SPRITESHEETS_MAX_INDEX = 4;
+  for (var i = 1; i <= USER_SPRITESHEETS_MAX_INDEX; i += 1) {
+    const spriteSheetName = `user_${i}`;
+    const suffix = spriteSheetName;
+
+    anims.create({
+      key: `user-idle-${suffix}`,
+      frames: anims.generateFrameNumbers(spriteSheetName, {frames: [1]}),
+      frameRate: 1,
+      repeat: -1
+    });
+    anims.create({
+      key: `user-down-${suffix}`,
+      frames: anims.generateFrameNumbers(spriteSheetName, { frames: [0, 1, 0, 2] }),
+      frameRate: 10,
+      repeat: -1
+    });
+  
+    anims.create({
+      key: `user-left-${suffix}`,
+      frames: anims.generateFrameNumbers(spriteSheetName, { frames: [3, 4, 3, 5] }),
+      frameRate: 10,
+      repeat: -1
+    });
+  
+    anims.create({
+      key: `user-right-${suffix}`,
+      frames: anims.generateFrameNumbers(spriteSheetName, { frames: [6, 7, 6, 8] }),
+      frameRate: 10,
+      repeat: -1
+    });
+  
+    anims.create({
+      key: `user-up-${suffix}`,
+      frames: anims.generateFrameNumbers(spriteSheetName, { frames: [9, 10, 9, 11] }),
+      frameRate: 10,
+      repeat: -1
+    });
+  }
+}

@@ -9,5 +9,5 @@ export function getParsedDuration(ms) {
   const minutes = parseInt( seconds / 60 ); // 60 seconds in 1 minute
   // 4- Keep only seconds not extracted to minutes:
   seconds = seconds % 60;
-  return `${hours}h ${minutes}min`;
+  return `${hours}h ${minutes}m`;
 };

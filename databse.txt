@@ -1,0 +1,502 @@
+{
+  "Alua Orazbek": {
+    "userID": "Alua Orazbek",
+    "userName": "Alua Orazbek",
+    "profileImage": dummyAvatars[4],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Assem Zhunis": {
+    "userID": "Assem Zhunis",
+    "userName": "Assem Zhunis",
+    "profileImage": dummyAvatars[9],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Auejin Ham": {
+    "userID": "Auejin Ham",
+    "userName": "Auejin Ham",
+    "profileImage": dummyAvatars[5],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Bauyrzhan Tokenov": {
+    "userID": "Bauyrzhan Tokenov",
+    "userName": "Bauyrzhan Tokenov",
+    "profileImage": dummyAvatars[6],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Bekzat Tilekbay": {
+    "userID": "Bekzat Tilekbay",
+    "userName": "Bekzat Tilekbay",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Charlie .": {
+    "userID": "Charlie .",
+    "userName": "Charlie .",
+    "profileImage": dummyAvatars[8],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Cheryl Siy": {
+    "userID": "Cheryl Siy",
+    "userName": "Cheryl Siy",
+    "profileImage": dummyAvatars[3],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Chigon Ryu": {
+    "userID": "Chigon Ryu",
+    "userName": "Chigon Ryu",
+    "profileImage": dummyAvatars[3],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Chloe McCracken": {
+    "userID": "Chloe McCracken",
+    "userName": "Chloe McCracken",
+    "profileImage": dummyAvatars[4],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Chulhwan Kim": {
+    "userID": "Chulhwan Kim",
+    "userName": "Chulhwan Kim",
+    "profileImage": dummyAvatars[7],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Dain Kim": {
+    "userID": "Dain Kim",
+    "userName": "Dain Kim",
+    "profileImage": dummyAvatars[5],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Diyar Tulenov": {
+    "userID": "Diyar Tulenov",
+    "userName": "Diyar Tulenov",
+    "profileImage": dummyAvatars[9],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Eunki Joung": {
+    "userID": "Eunki Joung",
+    "userName": "Eunki Joung",
+    "profileImage": dummyAvatars[6],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "fathony achmad": {
+    "userID": "fathony achmad",
+    "userName": "fathony achmad",
+    "profileImage": dummyAvatars[1],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Haeseul Cha": {
+    "userID": "Haeseul Cha",
+    "userName": "Haeseul Cha",
+    "profileImage": dummyAvatars[9],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Haesoo Kim": {
+    "userID": "Haesoo Kim",
+    "userName": "Haesoo Kim",
+    "profileImage": dummyAvatars[6],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "hong beom yoo": {
+    "userID": "hong beom yoo",
+    "userName": "hong beom yoo",
+    "profileImage": dummyAvatars[3],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Huikyeong An": {
+    "userID": "Huikyeong An",
+    "userName": "Huikyeong An",
+    "profileImage": dummyAvatars[9],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Hyeon Pyo": {
+    "userID": "Hyeon Pyo",
+    "userName": "Hyeon Pyo",
+    "profileImage": dummyAvatars[1],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Hyunwoo Kim": {
+    "userID": "Hyunwoo Kim",
+    "userName": "Hyunwoo Kim",
+    "profileImage": dummyAvatars[4],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Inhwa Song": {
+    "userID": "Inhwa Song",
+    "userName": "Inhwa Song",
+    "profileImage": dummyAvatars[1],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Jeongeon Park": {
+    "userID": "Jeongeon Park",
+    "userName": "Jeongeon Park",
+    "profileImage": dummyAvatars[4],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Jeonghoon Han": {
+    "userID": "Jeonghoon Han",
+    "userName": "Jeonghoon Han",
+    "profileImage": dummyAvatars[6],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "JeongYoon Shin": {
+    "userID": "JeongYoon Shin",
+    "userName": "JeongYoon Shin",
+    "profileImage": dummyAvatars[6],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Jinhyen Kim": {
+    "userID": "Jinhyen Kim",
+    "userName": "Jinhyen Kim",
+    "profileImage": dummyAvatars[7],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Jiseung Ryu": {
+    "userID": "Jiseung Ryu",
+    "userName": "Jiseung Ryu",
+    "profileImage": dummyAvatars[9],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Juho Kim": {
+    "userID": "Juho Kim",
+    "userName": "Juho Kim",
+    "profileImage": dummyAvatars[2],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Junyeong Park": {
+    "userID": "Junyeong Park",
+    "userName": "Junyeong Park",
+    "profileImage": dummyAvatars[1],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Kim Taewoo": {
+    "userID": "Kim Taewoo",
+    "userName": "Kim Taewoo",
+    "profileImage": dummyAvatars[2],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Kwanghyun Jung": {
+    "userID": "Kwanghyun Jung",
+    "userName": "Kwanghyun Jung",
+    "profileImage": dummyAvatars[5],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Lee jeonga": {
+    "userID": "Lee jeonga",
+    "userName": "Lee jeonga",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Minh Hoang Dang": {
+    "userID": "Minh Hoang Dang",
+    "userName": "Minh Hoang Dang",
+    "profileImage": dummyAvatars[9],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Ngoc Doan": {
+    "userID": "Ngoc Doan",
+    "userName": "Ngoc Doan",
+    "profileImage": dummyAvatars[6],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Nicole Lee": {
+    "userID": "Nicole Lee",
+    "userName": "Nicole Lee",
+    "profileImage": dummyAvatars[3],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Nurlykhan Kopenov": {
+    "userID": "Nurlykhan Kopenov",
+    "userName": "Nurlykhan Kopenov",
+    "profileImage": dummyAvatars[2],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "SeongHye Cho": {
+    "userID": "SeongHye Cho",
+    "userName": "SeongHye Cho",
+    "profileImage": dummyAvatars[6],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Seungho Baek": {
+    "userID": "Seungho Baek",
+    "userName": "Seungho Baek",
+    "profileImage": dummyAvatars[5],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Shinung Ahn": {
+    "userID": "Shinung Ahn",
+    "userName": "Shinung Ahn",
+    "profileImage": dummyAvatars[2],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Subin Kim": {
+    "userID": "Subin Kim",
+    "userName": "Subin Kim",
+    "profileImage": dummyAvatars[7],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Suchan Kim": {
+    "userID": "Suchan Kim",
+    "userName": "Suchan Kim",
+    "profileImage": dummyAvatars[1],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Tung Duong Mai": {
+    "userID": "Tung Duong Mai",
+    "userName": "Tung Duong Mai",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Yeon Su Park": {
+    "userID": "Yeon Su Park",
+    "userName": "Yeon Su Park",
+    "profileImage": dummyAvatars[8],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Yohan Yun": {
+    "userID": "Yohan Yun",
+    "userName": "Yohan Yun",
+    "profileImage": dummyAvatars[7],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Yoonjeong Park": {
+    "userID": "Yoonjeong Park",
+    "userName": "Yoonjeong Park",
+    "profileImage": dummyAvatars[4],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Yoonjoo Lee": {
+    "userID": "Yoonjoo Lee",
+    "userName": "Yoonjoo Lee",
+    "profileImage": dummyAvatars[7],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Yumi Lee": {
+    "userID": "Yumi Lee",
+    "userName": "Yumi Lee",
+    "profileImage": dummyAvatars[2],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Zhaoyan Wang": {
+    "userID": "Zhaoyan Wang",
+    "userName": "Zhaoyan Wang",
+    "profileImage": dummyAvatars[1],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Zihan Lin": {
+    "userID": "Zihan Lin",
+    "userName": "Zihan Lin",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "�� �濬": {
+    "userID": "�� �濬",
+    "userName": "�� �濬",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "guest": {
+    "userID": "guest",
+    "userName": "guest",
+    "profileImage": dummyAvatars[],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  }
+}

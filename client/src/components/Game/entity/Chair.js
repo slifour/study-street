@@ -4,25 +4,27 @@ import Phaser from 'phaser';
 import TooltipStatic from './TooltipStatic';
 
 export default class Chair extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y, spriteKey, dir, id = 0) {
+  constructor(scene, x, y, spriteKey, dir, index) {
     super(scene, x, y, spriteKey);
     this.scene = scene;
     this.scene.add.existing(this);
     this.scene.physics.world.enable(this);
-    this.id = id;
+    this.index = index;
     this.dir = dir;    
     this.gap = 50;
     this.allowed = true;
-    console.log('New Chair:', x, y);
+    this.groupName = "";
+    // console.log('New Chair:', x, y);
   }
 
   init(desk, interactive = true){    
     this.desk = desk;        
-    console.log('init(chiar):', this.x, this.desk.x, this.y, this.desk.y);
+    // console.log('deskIndex', desk.index)
+    // console.log('init(chiar):', this.x, this.desk.x, this.y, this.desk.y);
     this.tooltip = new TooltipStatic(this.scene, this.x+this.desk.x, this.y+this.desk.y, "");    
     this.scene.add.existing(this.tooltip);
     this.scene.physics.world.enable(this.tooltip);
-    console.log('init(chiar):', this.tooltip.x, this.tooltip.y);
+    // console.log('init(chiar):', this.tooltip.x, this.tooltip.y);
     if(!interactive){
       return;
     }
@@ -30,23 +32,32 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
     this.setInteractions();    
   }
 
-  setInteractions(){
-    this.on('pointerover', this.onPointerOver, this); 
-    this.on('pointerout', this.onPointerout, this); 
-    this.on('pointerdown', this.onPointerDown, this); 
+  setInteractions(setInteractionsbool = true){
+    if(setInteractionsbool){
+      this.on('pointerover', this.onPointerOver, this); 
+      this.on('pointerout', this.onPointerout, this); 
+      this.on('pointerdown', this.onPointerDown, this); 
+    }
+    else{
+      this.removeAllListeners();
+    }
   }
 
   sit(){
     let indexer = 1;
-    let margin = 0;
+    let marginX = -5;
+    let marginY = 0;
+    let frame = 0;
     if (this.dir === 'down'){
       indexer = 0;
-      margin = -30;
+      marginY = -10;
+      frame = 11
     }
-    this.scene.user.setPosition(this.x, this.y + margin);
-    this.index = this.desk.getIndex(this)
-    this.desk.addAt(this.scene.user, this.index + indexer)
-    console.log("sit", this.desk, this.scene.user);
+    this.scene.user.setPosition(this.x+marginX, this.y + marginY);
+    this.scene.user.sprite.setFrame(frame);
+    let chairAt = this.desk.getIndex(this)
+    this.desk.addAt(this.scene.user, chairAt + indexer)
+    // console.log("sit", this.desk, this.scene.user);
   }
 
   onPointerDown(){
@@ -57,23 +68,25 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
       return;  
     }    
     this.sit();
-    this.scene.changeScene('Study', this.index)
+    // console.log("onpointerdown", this.allowed, this.desk.index, this.index)
+    this.scene.changeScene('Study', {deskIndex : this.desk.index, chairIndex : this.index})
   }
 
   onPointerOver(){
+    // console.log("onPointerOver", this.allowed)
     let text = "";
     if(this.allowed){
       this.setScale(1.2);
       text = "Click to Start Study.";
     }
     else{
-      text= "Allowed only for groupName";
+      text= "Allowed only for " + this.groupName;
     }
-    console.log(text);
+    // console.log(text);
     this.tooltip.update(text);
     this.tooltip.setActive(true).setVisible(true);
 
-    console.log(this.tooltip.active, this.tooltip.visible)
+    // console.log(this.tooltip.active, this.tooltip.visible)
     // if (this.alert !== undefined){
     //   this.alert.setPosition(this.alert.x + this.displayWidth*(this.size/1.5-this.size/2), this.alert.y - this.displayHeight*0.1)
     // }
@@ -94,6 +107,11 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
 
   resetScale(){
     this.setScale(1);
+  }
+
+  setAllowed(allowed, groupName = ""){
+    this.allowed = allowed
+    this.groupName = groupName
   }
 }
 

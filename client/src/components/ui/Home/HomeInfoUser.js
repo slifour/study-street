@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { LoginUserContext } from "../../../App";
 import styles from "./home.module.css";
 import UserAvatarCircle from "../UserAvatarCircle";
+import UserAvatarSpritePreview from "./UserAvatarSpritePreview";
 
 export default function HomeInfoUser() {
   const {loginUser} = useContext(LoginUserContext);
@@ -11,12 +12,11 @@ export default function HomeInfoUser() {
       <h1>
         {loginUser.userName}
       </h1>
-      <div>
-        <UserAvatarCircle user={loginUser}/>
-      </div>
-      <div>
-        {loginUser.status}
-      </div>
+      <UserAvatarCircle user={loginUser}/>
+      <h2> Avatar </h2>
+      <UserAvatarSpritePreview user={loginUser}/>
+      <h2> Status </h2>
+      <p> {loginUser.status} </p>
     </div>
   );
 }

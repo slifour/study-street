@@ -3,6 +3,7 @@ import { LoginUserContext } from "../../App";
 import socket from '../../socket';
 import styles from "./ui.module.css";
 import styled from 'styled-components';
+import { GameContext } from "../../App";
 
 const StyledIcon = styled.div`
     width: 40px;
@@ -31,8 +32,10 @@ export default function ChatOverlay(props) {
     const chatlog = {}; //[]의 {} 꼴로 채팅방별로 백업해야 함! 방에 아이디를 부여해서 아이디별로 백업?
     const [isConnected, setIsConnected] = useState(socket.connected);
     const [Msg, setMessage] = useState(null);
+    const {game, gameEnableInput, gameDisableInput} = useContext(GameContext);
 
     const addChatMessage = () => {
+        console.log("Connected to chat");
         let message = 'Connected to chat';
         setchats(chats.concat(message));
     }
@@ -42,9 +45,22 @@ export default function ChatOverlay(props) {
     }
 
     useEffect(() => {
-        
+        const disableInput = () => {
+          console.log("Game: ", game.current);
+          game.current.game.input.keyboard.enabled = false;
+          game.current.game.input.mouse.enabled = false;
+        } 
+        game.current.game.events.on("ready", disableInput);
+        return () => {
+          game.current.game.events.off("ready", disableInput);
+          game.current.game.input.keyboard.enabled = true;
+          game.current.game.input.mouse.enabled = true;
+        }
+      }, []);
+
+    useEffect(() => {
         //이전 채팅 기록을 불러오는 함수
-        socket.emit('call chat log', chatlog);
+        //socket.emit('call chat log', chatlog);
         socket.emit('add user', nickname);
 
         socket.on('chatconnect', () => {
@@ -55,12 +71,16 @@ export default function ChatOverlay(props) {
             loadChatLog(data.chatlog);
         })
         socket.on('user joined', (data) =>{
-        setchats(chats.concat(`${data.username} joined`));
-        chatlog.concat(`${data.username} joined`);
+        if(data.username === props.userId){
+            setchats(chats.concat(`${data.username} joined`));
+        }
+        //chatlog.concat(`${data.username} joined`);
         })
         socket.on('user left', (data) => {
-        setchats(chats.concat(`${data.username} left`));
-        chatlog.concat(`${data.username} left`);
+        if(data.username === props.userId){
+            setchats(chats.concat(`${data.username} left`));
+        }
+        //chatlog.concat(`${data.username} left`);
         });
         socket.on('chatdisconnect', () => {
         setIsConnected(false);
@@ -73,10 +93,11 @@ export default function ChatOverlay(props) {
         if(data.sendname === props.userId){
             setchats(chats.concat(`${data.sendname} : ${data.message}`));
         }
-        chatlog.concat(`${data.sendname} : ${data.message}`);
+        //chatlog.concat(`${data.sendname} : ${data.message}`);
         });
 
         return () => {
+        //socket.emit('chatdisconnect', nickname);
         socket.off('chatconnect');
         socket.off('chatdisconnect');
         socket.off('chat message');

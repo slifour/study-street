@@ -14,7 +14,7 @@ import { LoginUserContext } from "../../../App";
 import { GameContext } from "../../../App";
 import HomeInfoCloseButton from "./HomeInfoCloseButton";
 import { ReloadContext } from "../../request/ReloadContext";
-import OverlayButton from "../OverlayButton";
+import WalkToLibraryButton from "./WalkToLibraryButton";
 
 export default function HomeMain({onWalkToLibrary}) {
   const SHOW_USER = "SHOW_USER";
@@ -100,10 +100,13 @@ export default function HomeMain({onWalkToLibrary}) {
     <ReloadContext.Provider value = {{reloadTime, setReloadTime}}>
       <div className={styles.backdrop}></div>
       <div>
-        <div className={styles.walkButton} onClick={onWalkToLibrary}> 
-          <img src="/assets/images/door.png" alt="Walk to library"/>
-          <p>Walk to library</p>
-        </div>
+        { currentShow !== SHOW_GROUP ? 
+          <WalkToLibraryButton disabled>
+            To walk in, <br/> 
+            select a group from sidebar
+          </WalkToLibraryButton>
+          : <WalkToLibraryButton onClick={onWalkToLibrary}>Walk to library</WalkToLibraryButton>
+        }
         <div className={styles.sidebar}>        
           <div onClick={onClickUser}><HomeUserAvatar/></div>
           <GroupIconList onSetGroup={onSetGroup}/>

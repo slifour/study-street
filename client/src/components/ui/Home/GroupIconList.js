@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import styles from "./home.module.css";
-import GroupAvatarCircle from './GroupAvatarCircle';
+import GroupAvatarCircle from '../GroupAvatarCircle';
 import useRequest from '../../request/useRequest';
 import useLiveReload from '../../request/useLiveReload';
 
@@ -35,8 +35,8 @@ export default function GroupIconList({onSetGroup}) {
     <div>
       {
         groupList.map(group => (
-          <div className={styles.sidebarItem} key={group.groupID} onClick={onGroupIconClick.bind(this, group)}>
-            <GroupAvatarCircle group={group}/>
+          <div className={styles.sidebarItem} key={group.groupID}>
+            <GroupAvatarCircle group={group} onClick={onGroupIconClick.bind(this, group)}/>
           </div>
         ))
       }

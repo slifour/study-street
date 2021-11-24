@@ -1,4 +1,5 @@
 import GroupArea from '../entity/GroupArea';
+import Phaser from 'phaser';
 import Desk from '../entity/Desk';
 import Bookshelf from '../entity/Bookshelf';
 import HtmlModal from '../entity/HtmlModal';
@@ -18,13 +19,17 @@ export default class Library extends MapScene {
         this.groupToIndex = {};
         this.borderWidth = 3  
         this.nextdeskId = 0;
+        this.friendDictStudying = {};
+        console.log("this.nextdeskId", this.nextdeskId);
     };
 
     preload() {
         super.preload()
-        this.load.image('desk', 'assets/images/desk_4.png');
+        this.load.image('desk', 'assets/images/desk.png');
         this.load.image('chair', 'assets/images/chair.png');
-        this.load.image('sitShadow', 'assets/images/sitShadow.png');
+        this.load.image('chair_up', 'assets/images/chair_up.png');
+        this.load.image('chair_down', 'assets/images/chair_down.png');
+        this.load.image('sitShadow', 'assets/images/sitSghadow.png');
         this.load.image('sitText', 'assets/images/sitText.png');
         this.load.image('bookshelf', 'assets/images/book-shelf.png');
         this.load.image('book-side', 'assets/images/book-red.png');
@@ -42,10 +47,9 @@ export default class Library extends MapScene {
         this.setEventHandlers();
         this.socket.emit("initializeLibrary");
         let portalPosition = {x : this.world1.displayWidth/2, y : this.world1.displayHeight};
-        portalPosition.x = 1000;
-        portalPosition.y = 250;
+        portalPosition.x = 950;
+        portalPosition.y = 1930;
         super.createPortal(portalPosition);
-        this.assignGroupArea("a", "Team Slifour", ["ff0000"]);
     }
 
     update() {
@@ -104,15 +108,14 @@ export default class Library extends MapScene {
 
         // Group Area Example (Manual)
         // this.createGroupArea('a');
-
         // Create desks
-        this.deskPositions = [{x:500, y:450}, {x:1000, y:450}, {x:1500, y: 450}]
+        this.deskPositions = [{x:500, y:450}, {x:1000, y:450}, {x:1500, y: 450}, {x:450, y:1250}, {x:1500, y:1250}, {x:450, y: 1650}, {x:1500, y: 1650}]
         this.bookshelfPositions = [{x:500, y:350}, {x:1000, y:350}, {x:1500, y: 350}]
         let deskIndex = 0
-        this.deskPositions.forEach((position, i) =>{
+        this.deskPositions.forEach((position, index) =>{
             let bookshelf = this.createBookshelf(position.x, position.y, 'bookshelf');
-            let desk = this.createDesk(position.x, position.y, 'desk', 'chair');
-            this.areas[i] = {desk : desk, bookshelf : bookshelf, groupID : null};
+            let desk = this.createDesk(position.x, position.y, 'desk', {down: 'chair_down', up :'chair_up'}, index);
+            this.areas[index] = {desk : desk, bookshelf : bookshelf, groupID : null};
         })
 
         // don't go out of the map
@@ -130,8 +133,8 @@ export default class Library extends MapScene {
      * @parameter x, y, deskKey : spritekey for desk, chairkey : spritekey for chair
      * @return Desk : extends sprite, defined in entity/Desk.js
      */
-    createDesk(x, y, deskKey, chairKey) {
-        return new Desk(this, x, y, deskKey, chairKey);    
+    createDesk(x, y, deskKey, chairKey, index) {
+        return new Desk(this, x, y, deskKey, chairKey, index);    
     }  
 
     createBookshelf(x, y, bookshelfKey) {
@@ -149,35 +152,40 @@ export default class Library extends MapScene {
         })
     }
 
-
-
     /** assignGroupArea
      * @parameter deskId: id of desk to assign, groupId : to be implemented
      * 
      */
     assignGroupArea(groupID, groupNameText, colors){      
+        if (Object.keys(this.groupToIndex).includes(groupID)){
+            return;
+        }
         const colorMain = colors[0];
+        const colorInt = parseInt(colorMain.substr(1), 16);
         /** get Id of next desk prepared to be assigned */
         let deskId = this.nextdeskId;  
+        if (this.areas === undefined){
+            console.log("this.areas is undefined");
+            return;
+        }
         let desk = this.areas[deskId].desk;        
 
         /** Create Container, children = [border, groupName] */
         let container = this.add.container(desk.x, desk.y); 
         container.setSize(350, 350);        
-        let border = this.add.rectangle(0, 0, container.width, container.height);
-        console.log(groupNameText)
+        let border = this.add.rectangle(0, 0, container.width, container.height, colorInt, 0.1).setStrokeStyle(this.borderWidth, colorInt);
         let groupName = this.add.text(-container.width/2, container.height/2, groupNameText, { 
             fontSize: '16px', 
             fontFamily: 'Lato',
             color: colorMain,
             align:'center', });
 
-        this.areas[deskId].groupID = groupID;
+        const allowed = groupID === this.loginUser.curGroup;
+        
+        desk.assignGroup(allowed, {groupID : groupID, groupName : groupNameText})
         this.groupToIndex[groupID] = deskId;
 
         groupName.setOrigin(0,1);
-        border.setStrokeStyle(this.borderWidth, colorMain)
-        console.log(container)
         container.add(border);
         container.add(groupName);
         container.setDepth(-5);
@@ -214,8 +222,7 @@ export default class Library extends MapScene {
             return;
         }
         this.areas.forEach((area, index)=>{
-            let groupID = area.groupID;
-            console.log(area, index, groupID);
+            let groupID = area.desk.group.groupID;
             if (Object.keys(books).includes(groupID)){
                 let questList = books[groupID] 
                 this.areas[index].bookshelf.updateBooks(questList);
@@ -228,6 +235,13 @@ export default class Library extends MapScene {
         const {payload} = request;
         this.assignGroupArea(payload.groupID, payload.groupName, payload.colors)
     }  
+
+    onResponseRemoveFriend(socketID){
+        if (Object.keys(this.friendDict).includes(socketID)){
+          this.friendDict[socketID].destroy();
+          delete this.friendDict[socketID];
+        }
+    }
 
     onNewArtifact(data){
         // console.log('recieve : newArtifact')

@@ -7,11 +7,14 @@
 const express = require("express");
 const http = require("http");
 
-const port = process.env.PORT || 4001;
-const index = require("./routes/index");
+const port = process.env.port || 4001;
+const indexRoute = require("./routes/index");
+const adminRoute = require("./routes/admin");
 
 const app = express();
-app.use(index);
+app.use(indexRoute);
+app.use("/admin", adminRoute);
+app.use('/public', express.static('public'));
 
 const server = http.createServer(app);
 

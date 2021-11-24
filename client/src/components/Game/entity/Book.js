@@ -62,13 +62,6 @@ export default class Book extends Phaser.GameObjects.Sprite {
 
   init(){
     this.scene.input.on('pointerdown', function(){
-      this.handleChairClicked();
-      // this.scene.start('Rest');
-      // this.scene.launch('Rest')
-      // console.log("FirstScene -> LoadScene. Input : pointerdown")
-      // this.scene.resucme('LoadScene');  
-      // console.log("LoadScene resumed")
-      // this.scene.stop('FirstScene');
    }, this);
   }
 

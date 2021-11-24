@@ -394,6 +394,13 @@
     font-size: 16px;
 }
 
+.horizontalAvatarList{
+    margin-left: 20px;
+    display: flex;
+    flex-direction: horizontal;
+}
+
+
 .floatButtonMain {
     position: fixed;
     right: 85px;

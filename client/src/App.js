@@ -10,12 +10,15 @@ import StudyMain from "./components/ui/Study/StudyMain";
 import styled from "styled-components";
 import Modal from 'react-overlays/Modal';
 import LoginOverlay from "./components/ui/LoginOverlay";
+import StatusInput from "./components/ui/StatusInput"; 
+import StatusContainer from "./components/ui/StatusContainer";
 
 /* Example of LoginUserContext value
   {
     "userID": "eunki",
     "userName": "은기",
     "status": "Developing user data system",
+    "socketID" : "socketID"
   }
   */
 export const LoginUserContext = React.createContext(null);
@@ -42,6 +45,7 @@ function App() {
   const [showConfirmAlert, setshowConfirmAlert] = useState(false);  
   const game = useRef(null);
   const [open, setOpen] = useState(true);
+  const [showStatusInput, setShowStatusInput] = useState(false);
 
   const [fadeProp, setFadeProp] = useState({
     fade: 'fade-in'
@@ -50,7 +54,8 @@ function App() {
 
   useEffect(() => {
     if (game.current !== null && game.current.game) {
-      game.current.game.registry.set("loginUser", loginUser);
+      console.log(loginUser)
+      game.current.game.registry.set("loginUser", loginUser);      
     }
   }, [game.current, loginUser]);
 
@@ -69,11 +74,22 @@ function App() {
     }      
   }, [])
 
-  const emitToGame = (data => {
+  // useEffect(() => {
+  //   let timeout = null;
+  //   if (game.current !== null && game.current.game){
+  //     game.current.game.events.on("EVENT_INPUT_STATUS", () => {
+  //       setShowStatusInput(true);
+  //     })
+  //     console.log('server / useEffect() / EVENT_INPUT_STATUS ')
+  //   }
+  // }, [showStatusInput])
+
+
+  const emitToGame = ((msg, data) => {
     if (game.current !== null && game.current.game) {
-      game.current.emit(data)
+      game.current.game.events.emit(msg, data) 
     }
-    console.log('emitToGame', data)
+    console.log('emitToGame', msg, data)
   }) 
 
   const onWalkToLibrary = () => {
@@ -93,9 +109,10 @@ function App() {
         <div className="content">
           { isHome ? <HomeMain onWalkToLibrary={onWalkToLibrary}/> : null }
           { !isHome ? <MenuBar/> : null }
-          { !isHome ? <Avatars/> : null }
+          { !isHome && (scene !== "Study") ? <Avatars/> : null }
           { scene === "Study" ? <StudyMain/> : null }
           { !isHome ? <QuickMoveButton emitToGame = {emitToGame}/> : null }
+          <StatusContainer></StatusContainer>
           <ConfirmAlert show = {showConfirmAlert} setShow = {setshowConfirmAlert}/>
         </div>
         <div className="game-container">

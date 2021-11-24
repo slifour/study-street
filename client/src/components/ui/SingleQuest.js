@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { LoginUserContext } from '../../App';
 import { ReloadContext } from "../request/ReloadContext";
 import useRequest from '../request/useRequest';
+import UserAvatarCircle from './UserAvatarCircle';
 
 const GaugeBox = styled.div`
     position : absolute;
@@ -121,6 +122,13 @@ export default function SingleQuest(props) {
                                 <div className={styles.tagText}>
                                     {Object.keys(props.doneUsers).length}
                                 </div>
+                                <div className = {styles.horizontalAvatarList}>
+                                    {
+                                    Object.values(props.doneUsers).map(user => {
+                                        return <UserAvatarCircle user = {user} size={40} onMouseEnterItem = {user.userName}/>
+                                    })
+                                    }
+                                </div>
                             </div>
                         }
                         {(Object.keys(props.participatingUsers).length !== 0) &&
@@ -129,6 +137,13 @@ export default function SingleQuest(props) {
                                 <div className={styles.tagText}>
                                     {Object.keys(props.participatingUsers).length}
                                 </div>
+                                <div className = {styles.horizontalAvatarList}>
+                                    {
+                                    Object.values(props.participatingUsers).map(user => {
+                                        return <UserAvatarCircle user = {user} size={40} onMouseEnterItem = {user.userName}/>
+                                    })
+                                    }
+                                </div>
                             </div>
                         }
                         {(Object.keys(props.notYetUsers).length !== 0) &&
@@ -136,6 +151,14 @@ export default function SingleQuest(props) {
                                 <div className={styles.yetTag}>Not Yet</div>
                                 <div className={styles.tagText}>
                                     {Object.keys(props.notYetUsers).length}
+                                </div>
+                                {/** Show Avatar List */}
+                                <div className = {styles.horizontalAvatarList}>
+                                    {
+                                    Object.values(props.notYetUsers).map(user => {
+                                        return <UserAvatarCircle user = {user} size={40} onMouseEnterItem = {user.userName}/>
+                                    })
+                                    }
                                 </div>
                             </div>
                         }

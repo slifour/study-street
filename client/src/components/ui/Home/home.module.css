@@ -8,10 +8,17 @@
 
 .walkButton {
   position: absolute;
-  right: 30%;
+  width: 200px;
+  right: 25%;
   top: 40%;
   cursor: pointer;
   color: white;
+}
+
+.disabledImage {
+  -webkit-filter: grayscale(1); /* Safari 6.0 - 9.0 */
+  filter: grayscale(1);
+  cursor: default;
 }
 
 .sidebar {

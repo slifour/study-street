@@ -1,118 +1,64 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect, useRef } from 'react';
 import HTMLFlipBook from "react-pageflip";
 import PostPage from './PostPage'; 
-import PostReply from './PostReply'; 
-import PostCloseButton from './PostCloseButton';
 import styles from "./study.module.css";
-
-const StyledDiv = styled.div`
-    position: fixed;
-    z-index: 1040;
-    top: 150px;
-`;
-
-//const socketIo = require("socket.io");
-// function Reply() {
-//     return (
-//         <div className = {styles.postContainer} ref={ref}> /* ref required */
-//                 <form className = {styles.chatInputContainer}>
-//                     <input
-//                         type="text"
-//                         className = {styles.chatInput}
-//                         onChange={onChange} value={Msg} class="inputMessage" 
-//                         placeholder="Type here..." 
-//                         onKeyPress={(e)=>{
-//                             if(e.key === 'Enter')
-//                                 sendMessage();
-//                         }}></input>
-//                 </form> 
-//             <button type="button" onClick={() => {}}>
-//                 Send
-//             </button>
-//         </div>
-//     );
-// }
-
-// const Page = React.forwardRef((props, ref) => {
-//     const {post, onChange, Msg, sendMessage} = props;
-//     const [showReply, setShowReply] = useState(false);
-
-//     const replyButtonClick = () => {
-//         setShowReply(true)
-//     }
-
-//     return (
-//         <>
-//         <div className = {styles.postContainer} ref={ref}> /* ref required */
-//             <p>From {post.id} :</p>
-//             <p>{post.msg}</p>
-//             <button type="button" onClick={() => replyButtonClick()}>
-//                 Reply
-//             </button>
-//         </div>
-//         {showReply? <PostReply onChange = {onChange} Msg ={Msg} sendMessage = {sendMessage} ></PostReply> : null }
-//         </>
-//     );
-// });
-
 
 export default function PostOverlay(props) {
     // const {show, postList} = props;
-    const {setShow, onChange, Msg, sendMessage} = props;
-
-    const postList = [{id: 'hyeon', msg : 'hello'}, {id: 'hyeon', msg : 'hello'}, {id: 'hyeon', msg : 'hello'}];
-
-    const [pageList, setpageList] = useState([])
-    const [isReplying, setIsReplying] = useState(false);
-
+    const {posts, setIdx} = props;
+    const [num, setNum] = useState(0);
     const flipBook = useRef(null);
-    useEffect(() => {
 
-    }, [isReplying]);
-
-    const replyButtonClick = () => {
-        setIsReplying(true)
-    }
+    useEffect(()=>{
+        setIdx(num);
+    }, [num])
 
     const nextButtonClick = () => {
-        flipBook.getPageFlip().flipNext();
+        flipBook.current.pageFlip().flipNext();
+        setNum(num+1);
     };
     
     const prevButtonClick = () => {
-        flipBook.getPageFlip().flipPrev();
+        flipBook.current.pageFlip().flipPrev();
+        setNum(num-1);
     };
     
-    const onClickPostClose = () => {
-        setShow(false);
+    const mapPages = () => {
+        let returnComponents = [];
+        let i = 1;
+        for (let key in posts) {
+            let post = posts[key];
+
+            returnComponents.push(<PostPage
+                key = {key}
+                post = {post}
+                num = {Object.keys(posts).length}
+                idx = {i}
+            ></PostPage>)
+            i += 1;
+        }
+        return returnComponents.map(el => el)
     }
 
     return(        
-        <>
-        {/* {show? */}
-        <div className={styles.postAreaContainer}>
-        {/* // <div className="postContainer"> */}
-    
-            <HTMLFlipBook ref={flipBook} width={280} height={300} size="fixed" postList = {postList}>
-                {/* <Page key={postList[0].msg} number="1">{postList[0].msg}</Page> */}
-                {postList.map((post, index) => (
-                    <PostPage key={post.msg} post={post} onChange = {onChange} Msg ={Msg} sendMessage = {sendMessage}></PostPage>
-                ))}
-            {/* <Page number="1">Hi</Page> */}
-            </HTMLFlipBook>
-            {isReplying? <PostReply setIsReplying = {setIsReplying}></PostReply> : null}    
-            <div className={styles.postButtonSmall} onClick={replyButtonClick}>Reply</div>     
-            <div>
-                <button type="button" onClick={() => prevButtonClick}>
-                    Previous
-                </button>
-                <button type="button" onClick={() => nextButtonClick}>
-                    Next 
-                </button>
+        <div className = {styles.innerContainer}>
+            <div className = {styles.buttonFlip} onClick= {() => prevButtonClick()}>
+                <div className = {styles.icons}>chevron_left</div>
             </div>
-            <PostCloseButton onClick={onClickPostClose}/>
+            <div className = {styles.page}>
+                <HTMLFlipBook 
+                    ref = {flipBook} 
+                    width = {260} 
+                    height = {290} 
+                    size = "fixed"
+                    useMouseEvents = {false}
+                >
+                    {mapPages()}
+                </HTMLFlipBook>
+            </div>
+            <div className = {styles.buttonFlip} onClick = {() => nextButtonClick()}>
+                <div className = {styles.icons}>chevron_right</div>
+            </div>
         </div>
-        {/* : null} */}
-        </>
     )
 }
