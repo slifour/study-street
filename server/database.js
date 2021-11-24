@@ -49,6 +49,7 @@ let userList = {
     "userName": "은기",
     "status": "Developing user data system",
     "profileImage": dummyAvatars[0],
+    "avatarSprite": "user_1",
     "curGroup" : "a",
     "todayStudyTime": 7200 * 1000,
     "checklist" : {
@@ -68,6 +69,7 @@ let userList = {
   "haeseul": {
     "userID": "haeseul",
     "userName": "해슬",
+    "avatarSprite": "user_2",
     "profileImage": dummyAvatars[1],
     "todayStudyTime": 7200 * 1000,
     "status": "Making chatting system",
@@ -77,6 +79,7 @@ let userList = {
   "guest": {
     "userID": "guest",
     "userName": "게스트",
+    "avatarSprite": "user_3",
     "profileImage": dummyAvatars[1],
     "todayStudyTime": 7200 * 1000,
     "status": "Making chatting system",
@@ -86,6 +89,7 @@ let userList = {
   "hyeon": {
     "userID": "hyeon",
     "userName": "현",
+    "avatarSprite": "user_4",
     "profileImage": dummyAvatars[2],
     "todayStudyTime": 7200 * 1000,
     "status": "Putting map objects",
@@ -95,6 +99,7 @@ let userList = {
   "jeonghoon": {
     "userID": "jeonghoon",
     "userName": "정훈",
+    "avatarSprite": "user_1",
     "profileImage": dummyAvatars[3],
     "todayStudyTime": 7200 * 1000,
     "status": "Designing figma prototype",
@@ -254,6 +259,7 @@ let userList = {
   "Haesoo Kim": {
     "userID": "Haesoo Kim",
     "userName": "Haesoo Kim",
+    "avatarSprite": "user_1",
     "profileImage": dummyAvatars[6],
     "todayStudyTime": null,
     "status": null,
@@ -294,6 +300,7 @@ let userList = {
   "Hyunwoo Kim": {
     "userID": "Hyunwoo Kim",
     "userName": "Hyunwoo Kim",
+    "avatarSprite": "user_2",
     "profileImage": dummyAvatars[4],
     "todayStudyTime": null,
     "status": null,
@@ -314,6 +321,7 @@ let userList = {
   "Jeongeon Park": {
     "userID": "Jeongeon Park",
     "userName": "Jeongeon Park",
+    "avatarSprite": "user_3",
     "profileImage": dummyAvatars[4],
     "todayStudyTime": null,
     "status": null,
@@ -364,6 +372,7 @@ let userList = {
   "Juho Kim": {
     "userID": "Juho Kim",
     "userName": "Juho Kim",
+    "avatarSprite": "user_4",
     "profileImage": dummyAvatars[2],
     "todayStudyTime": null,
     "status": null,
@@ -544,6 +553,7 @@ let userList = {
   "Yoonjoo Lee": {
     "userID": "Yoonjoo Lee",
     "userName": "Yoonjoo Lee",
+    "avatarSprite": "user_1",
     "profileImage": dummyAvatars[7],
     "todayStudyTime": null,
     "status": null,

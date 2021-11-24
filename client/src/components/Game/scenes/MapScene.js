@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import User from '../entity/User';
 import Friend from '../entity/Friend';
 import socket from '../../../socket';
-import { createCharacterAnimsGirl, createCharacterAnimsWizard } from '../anims/CharacterAnims';
+import { createCharacterAnimsDefault, createCharacterAnimsGirl, createCharacterAnimsWizard } from '../anims/CharacterAnims';
 import Request from '../request'
 import Study from './StudyScene';
 import GroupArea from '../entity/GroupArea';
@@ -49,6 +49,14 @@ export default class MapScene extends Phaser.Scene {
   // }
 
   preload() {
+    const USER_SPRITESHEETS_MAX_INDEX = 4;
+    for (var i = 1; i <= USER_SPRITESHEETS_MAX_INDEX; i += 1) {
+      this.load.spritesheet(`user_${i}`, `assets/spriteSheets/user_${i}.png`, {
+        frameWidth: 32 * (100/3),
+        frameHeight: 42 * (100/3),
+      });    
+    }
+
     this.load.spritesheet('user-girl', 'assets/spriteSheets/user_1.png', {
         frameWidth: 32 * (100/3),
         frameHeight: 42 * (100/3)
@@ -70,6 +78,7 @@ export default class MapScene extends Phaser.Scene {
     /** Create Animations */
     createCharacterAnimsWizard(this.anims);
     createCharacterAnimsGirl(this.anims);
+    createCharacterAnimsDefault(this.anims);
 
     /** Create Inputs */
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -92,7 +101,11 @@ export default class MapScene extends Phaser.Scene {
   };
 
   createUser() {
-    this.user = new User(this, 800, 400, 'user-girl', 'girl', this.loginUser).setScale(3/100 * 1.2); 
+    console.log("Create user: Login user: ", this.loginUser);
+    const avatarSprite = this.loginUser.avatarSprite || "user_1";
+    const avatarAnimSuffix = avatarSprite; // user_1이 'girl' animation suffix에 해당하는데, 다른 user도 animation은 같아서 그대로 뒀어요.
+
+    this.user = new User(this, 800, 400, avatarSprite, avatarAnimSuffix, this.loginUser).setScale(3/100 * 1.2); 
     this.user.init();
     // this.user.setDepth(1);
     this.physics.add.collider(this.user, this.belowPlayer1);
