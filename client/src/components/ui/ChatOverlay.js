@@ -50,7 +50,7 @@ export default function ChatOverlay(props) {
           game.current.game.input.keyboard.enabled = false;
           game.current.game.input.mouse.enabled = false;
         } 
-        game.current.game.events.on("ready", disableInput);
+        disableInput();
         return () => {
           game.current.game.events.off("ready", disableInput);
           game.current.game.input.keyboard.enabled = true;
@@ -133,7 +133,7 @@ export default function ChatOverlay(props) {
             <div className={styles.chatContent}></div>
             <hr className={styles.styledHr}/>
             <div className = {styles.chatFooter}>
-                <form className = {styles.chatInputContainer}>
+                <div className = {styles.chatInputContainer}>
                     <input
                         type="text"
                         className = {styles.chatInput}
@@ -143,7 +143,7 @@ export default function ChatOverlay(props) {
                             if(e.key === 'Enter')
                                 sendMessage();
                         }}></input>
-                </form>    
+                </div>    
                 <div className = {styles.chatButton}>
                     <div className={styles.hvrGrow}>
                         <span className={styles.iconsWhite} onClick={sendMessage}>send</span>
