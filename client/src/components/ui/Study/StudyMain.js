@@ -11,14 +11,12 @@ import useWindowDimensions from "./UseWindowDimension";
 const StyledChecklistWrapper = styled.div`
   height: ${props => props.height}px;
 
-  /*
   .${checklistStyles.personalContainer} {
     height: ${props => props.personalContainerHeight}px;
   }
   .${checklistStyles.groupGoalsContainer} {
     height: ${props => props.groupGoalsContainerHeight}px;
   }
-  */
 `
 
 export default function StudyMain() {
@@ -37,7 +35,9 @@ export default function StudyMain() {
       <PostButton/>
       <StyledChecklistWrapper 
           className={`${studyStyles.checklist} ${checklistStyles.dark}`}
-          height={Math.min(700, height - 200)}>
+          height={Math.min(700, height - 200)}
+          personalContainerHeight={Math.min(520, height - 380)}
+          groupGoalsContainerHeight={Math.min(670, height - 230)}>
         <ChecklistContainer/>
       </StyledChecklistWrapper>
     </div>
