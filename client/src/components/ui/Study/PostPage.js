@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React from 'react';
 import styles from "./study.module.css";
 
 const PostPage = React.forwardRef((props, ref) => {

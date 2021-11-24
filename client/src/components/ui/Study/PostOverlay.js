@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import HTMLFlipBook from "react-pageflip";
 import PostPage from './PostPage'; 
 import styles from "./study.module.css";
