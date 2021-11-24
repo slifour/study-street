@@ -1,3 +1,4 @@
+
 /**
  * Rooms
  * 한 Scene 안에서 현재 위치하고 있는 user들과 그 위치를 다루기 위한 class 입니다.
@@ -10,7 +11,7 @@
  * User 가 scene 에 새로 들어오면 리스트의 항목을 새로 만들고 다른 scene으로 떠나면 삭제합니다.
  * @ 지금은 login id 대신 socket id 를 key로 사용하고 있습니다. * 
  */
- let { userList } = require("./database");
+ let { userList, groupList } = require("./database");
 
 module.exports = class Rooms {
     constructor(room){
@@ -48,11 +49,15 @@ module.exports = class Rooms {
         let socketID = socket.id;
         this.socketIDToPosition[socketID] = {x:x, y:y};
         this.stateChanged = true;   
-        console.log("Log: room.update() this.socketIDPositio[socketID] after update=", this.socketIDToPosition[socketID]);
     }
 
     add(socket, x, y, loginUser){
         let socketID = socket.id; 
+
+        Object.entries(groupList).forEach(([groupID, groupInfo]) => {
+            let user = userList[this.idList[socketID]]
+            socket.emit('RESPONSE_NEW_GROUP', {payload : groupInfo})
+        })
         Object.entries(this.socketIDToPosition).forEach(([socketID, position]) => {
             let user = userList[this.idList[socketID]]
             socket.emit("RESPONSE_CREATE_FRIEND", {loginUser : user, x : position.x, y : position.y})
@@ -72,7 +77,7 @@ module.exports = class Rooms {
 
     remove(socket){
         let socketID = socket.id;
-        if (Object.keys(this.idList).includes(socketID)){
+        if (Object.keys(this.socketIDToPosition).includes(socketID)){
             socket.leave(this.room);         
             delete this.idList[socketID];
             delete this.socketIDToPosition[socketID];
@@ -85,7 +90,6 @@ module.exports = class Rooms {
         if (this.stateChanged) {
             this.stateChanged = false;
             this.broadcast("LOOP_POSITION", this.socketIDToPosition);
-            console.log("LOOP_POSITION", this.room)
         }        
         if (this.getNumUsers() > 1) {
             setTimeout(this.emitLoop.bind(this), this.updateInterval);
@@ -97,7 +101,6 @@ module.exports = class Rooms {
 
     sit(socket, deskIndex, chairIndex, loginUser){
         this.userIDToChairs[loginUser.userID] = {deskIndex : deskIndex, chairIndex : chairIndex};
-        console.log('sit broadcst',  deskIndex, chairIndex, loginUser)
         this.broadcast("RESPONSE_FRIEND_START_STUDY", {loginUser : loginUser, deskIndex : deskIndex, chairIndex : chairIndex})
     }
 
@@ -109,3 +112,4 @@ module.exports = class Rooms {
         }
     }
 }
+

@@ -12,6 +12,7 @@ export default class Status extends GameObjects.Container {
     this.scene = scene;
     this.host = hostObject;
     this.text = text;
+    this.pointerOutFlag = 0;
 
     this.paddingX = 20;
     this.paddingY = 10;
@@ -72,6 +73,37 @@ export default class Status extends GameObjects.Container {
 
     }
   }
+
+  onPointerOver() {
+    this.host.setPosition.pointerOnStatus = true; 
+  }
+
+  onPointerOut() {
+    // const responseType = "RESPONSE_MY_PROFILE";
+    this.pointerOutFlag += 1;
+    this.scene.time.addEvent({
+      callback : this.closeSatus,
+      callbackScope: this,
+      delay : 3000
+    })
+
+    // socket.off(responseType, this.onResponse);
+  }
+
+  closeSatus() {
+    this.pointerOutFlag -= 1;
+    if (this.pointerOutFlag === 0){
+      this.setActive(false).setVisible(false);
+      this.host.setPosition.pointerOnStatus = true;
+    }
+  }
+
+  onPointerDown() {
+    this.game.events.emit("EVENT_INPUT_STATUS");
+  }
+
+  // let tooltip = this.add.dom(screenCenterX, screenCenterY);             
+  // tooltip.createFromCache('newArtifact');updateBooks
 
   updateTime() {
     let elapsedTime = this.tiemerEvent.getRepeatCount()*1000;

@@ -10,7 +10,6 @@ class UserSprite extends Phaser.Physics.Arcade.Sprite {
     this.scene = scene;
     this.scene.add.existing(this);
     this.scene.physics.world.enable(this);
-    // this.setCollideWorldBounds(true);
 
     this.animName = {
       'idle': 'user-idle-' + animSuffix,
@@ -36,6 +35,7 @@ export default class UserContainer extends GameObjects.Container{
     console.log("Log. UserContainer() userName=", this.userName)
     this.scene.add.existing(this);
     this.scene.physics.world.enable(this);
+    this.body.setCollideWorldBounds(true);
 
     this.createSprite(scene, spriteKey, animSuffix);
     this.createName();
@@ -86,12 +86,14 @@ export default class UserContainer extends GameObjects.Container{
   createName() {
     console.log('createName', this.userName)
     this.namePadding = -10;
-    // this.name = this.scene.add.text(0, -(this.sprite.height/2 + this.namePadding), this.userName, { 
-    this.name = this.scene.add.text(0, 0, this.userName, { 
-      fontSize: '12px', 
+    this.name = this.scene.add.text(0, -(this.sprite.height/2 + this.namePadding), this.userName, { 
+    // this.name = this.scene.add.text(0, 0, this.userName, { 
+      fontSize: '14px', 
       fontFamily: 'Lato',
-      color: '#dddddd',
+      color: '#ffffff',
+      backgroundColor: "000000",
       align:'center', });
+    this.name.setOrigin(0.5, 0);
     console.log(this.name);
     this.add(this.name);
   }
@@ -110,7 +112,14 @@ export default class UserContainer extends GameObjects.Container{
 
   onPointerOut() {
     const responseType = "RESPONSE_MY_PROFILE";
-    this.statusView.setActive(false).setVisible(false);
+
+    this.statusView.onPointerOut();
+
     socket.off(responseType, this.onResponse);
   }
+
+  closeSatusView() {
+    this.statusView.setActive(false).setVisible(false);
+  }
+
 }

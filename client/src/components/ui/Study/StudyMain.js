@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { LoginUserContext } from "../../../App";
 import ChecklistContainer from "../ChecklistContainer";
-import styles from "../ui.module.css";
 import ClockStudy from "./ClockStudy";
 import studyStyles from "./study.module.css";
 import PostButton from "./PostButton";

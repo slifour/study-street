@@ -1,4 +1,5 @@
 import GroupArea from '../entity/GroupArea';
+import Phaser from 'phaser';
 import Desk from '../entity/Desk';
 import Bookshelf from '../entity/Bookshelf';
 import HtmlModal from '../entity/HtmlModal';
@@ -48,7 +49,6 @@ export default class Library extends MapScene {
         portalPosition.x = 950;
         portalPosition.y = 1930;
         super.createPortal(portalPosition);
-        this.assignGroupArea("a", "Team Slifour", ["ff0000"]);
     }
 
     update() {
@@ -144,7 +144,6 @@ export default class Library extends MapScene {
         Object.keys(this.areas).forEach((value, i) =>{
             let desk = this.areas[i].desk;
             desk.getAll().forEach(sprite => {
-                this.physics.add.collider(this.user.body, sprite)
                 this.physics.add.collider(this.user, sprite);
             })
             let bookshelf = this.areas[i].bookshelf;
@@ -158,6 +157,7 @@ export default class Library extends MapScene {
      */
     assignGroupArea(groupID, groupNameText, colors){      
         const colorMain = colors[0];
+        const colorInt = parseInt(colorMain.substr(1), 16);
         /** get Id of next desk prepared to be assigned */
         let deskId = this.nextdeskId;  
         let desk = this.areas[deskId].desk;        
@@ -165,7 +165,8 @@ export default class Library extends MapScene {
         /** Create Container, children = [border, groupName] */
         let container = this.add.container(desk.x, desk.y); 
         container.setSize(350, 350);        
-        let border = this.add.rectangle(0, 0, container.width, container.height);
+        console.log("colorMain", colorMain, colorInt)
+        let border = this.add.rectangle(0, 0, container.width, container.height, colorInt, 0.1).setStrokeStyle(this.borderWidth, colorInt);
         console.log(groupNameText)
         let groupName = this.add.text(-container.width/2, container.height/2, groupNameText, { 
             fontSize: '16px', 
@@ -173,11 +174,13 @@ export default class Library extends MapScene {
             color: colorMain,
             align:'center', });
 
-        desk.assignGroup({groupID : groupID, groupName : groupNameText})
+        const allowed = groupID === this.loginUser.curGroup;
+        console.log(allowed, groupID, this.loginUser.curGroup);
+        
+        desk.assignGroup(allowed, {groupID : groupID, groupName : groupNameText})
         this.groupToIndex[groupID] = deskId;
 
         groupName.setOrigin(0,1);
-        border.setStrokeStyle(this.borderWidth, colorMain)
         console.log(container)
         container.add(border);
         container.add(groupName);
@@ -215,7 +218,7 @@ export default class Library extends MapScene {
             return;
         }
         this.areas.forEach((area, index)=>{
-            let groupID = area.groupID;
+            let groupID = area.desk.group.groupID;
             console.log(area, index, groupID);
             if (Object.keys(books).includes(groupID)){
                 let questList = books[groupID] 

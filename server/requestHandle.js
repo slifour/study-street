@@ -7,7 +7,7 @@ let env;
 let update;
 
 const onRequest = (socket, requestName, request) => {
-  console.log("Got request:", request);
+  // console.log("Got request:", request);
   let requestUser, requestKey, requestType, payload;
   try {
     ({requestUser, requestKey, requestType, payload} = request);
@@ -137,7 +137,7 @@ const onRequestLogin = (socket, request) => {
   const {requestUser, requestKey, payload} = request;
   const responseType = ResponseType.LOGIN;
 
-  console.log("onRequestLogin: ", request); 
+  // console.log("onRequestLogin: ", request); 
 
   let userID;
   try {
@@ -150,11 +150,6 @@ const onRequestLogin = (socket, request) => {
     return responseFail(socket, requestKey, responseType, "Failed to login.");
   }
 
-  /*if (!env.useridList[userID]) {
-    let id = socket.id
-    env.useridList[userID] = id;
-    env.addedUser[userID] = false;
-  }*/
   let id = socket.id
   env.useridList[userID] = id;
   env.addedUser[userID] = false;
@@ -401,15 +396,15 @@ const onRequestChangeScene = (socket, request) => {
   let id = socket.id;
   let initialPosition = {x:300, y:300}
   let user = userList[requestUser];
-  console.log('onRequestChangeScene user:', prevScene, currentScene);
+  // console.log('onRequestChangeScene user:', prevScene, currentScene);
 
   switch (currentScene) {
     case "Home": ; break;
-    case "Library": {
-      onRequestNewDoneQuest(socket); 
+    case "Library": {      
       env.socketIDToRoom[id] = env.libraryRoom; 
       env.libraryRoom.setUserId(id, requestUser); 
       env.libraryRoom.add(socket, initialPosition.x, initialPosition.y, user)  
+      onRequestNewDoneQuest(socket); 
       break;    
     } 
     case "Study": {
@@ -575,7 +570,7 @@ const onRequestToggleChecklist = (socket, request) => {
   const responseType = ResponseType.TOGGLE_CHECKLIST;
   userList[payload.userID].checklist[payload.checklistID].isDone = payload.isDone;
 
-  console.log(userList[payload.userID].checklist)
+  // console.log(userList[payload.userID].checklist)
   return socket.emit(responseType, {
     requestKey,
     responseType,
@@ -654,6 +649,7 @@ const onRequestNewDoneQuest = (socket) => {
   const requestKey = null;
   const responseType = "RESPONSE_NEW_DONE_QUEST";
   const books = createBooks();
+  console.log("onRequestNewDoneQuest", books)
 
   //setter
   return socket.emit(responseType, {

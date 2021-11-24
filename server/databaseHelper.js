@@ -74,8 +74,8 @@ const createBooks = () => {
   books = {}
   Object.entries(groupList).forEach(([groupListkey, groupListValue])=>{
     questList = []    
-    console.log(groupListValue)
-    console.log(groupListValue.quests)
+    // console.log(groupListValue)
+    // console.log(groupListValue.quests)
     Object.entries(groupListValue.quests).forEach(([questKey, questValue])=>{
       book = {}
       book.type = questValue.type;

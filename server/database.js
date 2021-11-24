@@ -257,7 +257,7 @@ let userList = {
     "profileImage": dummyAvatars[6],
     "todayStudyTime": null,
     "status": null,
-    "curGroup": null,
+    "curGroup": "kixlab",
     "socketID": null,
     "checklist": null
   },
@@ -297,7 +297,7 @@ let userList = {
     "profileImage": dummyAvatars[4],
     "todayStudyTime": null,
     "status": null,
-    "curGroup": null,
+    "curGroup": "kixlab",
     "socketID": null,
     "checklist": null
   },
@@ -317,7 +317,7 @@ let userList = {
     "profileImage": dummyAvatars[4],
     "todayStudyTime": null,
     "status": null,
-    "curGroup": null,
+    "curGroup": "kixlab",
     "socketID": null,
     "checklist": null
   },
@@ -367,7 +367,7 @@ let userList = {
     "profileImage": dummyAvatars[2],
     "todayStudyTime": null,
     "status": null,
-    "curGroup": null,
+    "curGroup": "kixlab",
     "socketID": null,
     "checklist": null
   },
@@ -547,7 +547,7 @@ let userList = {
     "profileImage": dummyAvatars[7],
     "todayStudyTime": null,
     "status": null,
-    "curGroup": null,
+    "curGroup": "kixlab",
     "socketID": null,
     "checklist": null
   },
@@ -604,6 +604,65 @@ let userList = {
 };
 
 let groupList = {
+  "kixlab": {
+    groupID: "kixlab",
+    groupName: "KIXLAB",
+    leader: "Juho Kim",
+    member: ["Juho Kim", "Yoonjoo Lee", "Haesoo Kim", "Hyunwoo Kim", "Jeongeon Park",],
+    colors: ['#F79489', '#F9F1F0'],
+    quests: {
+      "eq2dm5" : {
+          questID : "eq2dm5",
+          type : "Attendance",
+          content : "11/18",
+          contentDate : new Date(2021, 11, 18, 0, 0),
+          acceptedUsers : ["Hyunwoo Kim", "Jeongeon Park",], // TODO: acceptedUsers, doneUsers, notYetUsers 중 하나는 없어도 됨.
+          doneUsers : ["Hyunwoo Kim", "Jeongeon Park",],
+          participatingUsers : [],
+          notYetUsers : ["Juho Kim", "Yoonjoo Lee", "Haesoo Kim",]
+      },
+      "nbxm3m" : {
+          questID : "nbxm3m",
+          type : "Attendance",
+          content : "11/2-",
+          contentDate : new Date(2021, 11, 18, 0, 0),
+          acceptedUsers : ["Juho Kim", "Yoonjoo Lee", "Haesoo Kim",],
+          doneUsers : ["Juho Kim", "Yoonjoo Lee"],
+          participatingUsers : ["Haesoo Kim"],
+          notYetUsers : ["Hyunwoo Kim", "Jeongeon Park",]
+      },
+      "jkqb7p" : {
+        questID : "jkqb7p",
+        type : "Goal",
+        content : "3 hours",
+        contentDate : 3 * 3600 * 1000,
+        acceptedUsers : ["Juho Kim", "Yoonjoo Lee", "Haesoo Kim", "Hyunwoo Kim", "Jeongeon Park",],
+        doneUsers : ["Juho Kim", "Yoonjoo Lee", "Hyunwoo Kim", "Jeongeon Park",],
+        participatingUsers : ["Haesoo Kim"],
+        notYetUsers : []
+      },
+      "ukir6b" : {
+        questID : "ukir6b",
+        type : "Goal",
+        content : "2 hours",
+        contentDate : 2 * 3600 * 1000,
+        acceptedUsers : ["Juho Kim", "Yoonjoo Lee", "Haesoo Kim",],
+        doneUsers : ["Jeongeon Park",],
+        participatingUsers : ["Juho Kim", "Yoonjoo Lee", "Hyunwoo Kim", ],
+        notYetUsers : ["Hyunwoo Kim", "Jeongeon Park",]
+      },      
+      "hdjf3f" : {
+        questID : "hdjf3f",
+        type : "Goal",
+        content : "2 hours",
+        contentDate : 2 * 3600 * 1000,
+        acceptedUsers : ["Haesoo Kim", "Hyunwoo Kim", "Jeongeon Park",],
+        doneUsers : ["Haesoo Kim", ],
+        participatingUsers : ["Hyunwoo Kim", "Jeongeon Park",],
+        notYetUsers : ["Juho Kim", "Yoonjoo Lee", ]
+      },            
+    }      
+  },
   "a": {
     groupID: "a",
     groupName: "We love study",
@@ -633,14 +692,14 @@ let groupList = {
       }
     }
   },
-  "b": {
-    groupID: "b",
-    groupName: "We love slifour",
-    leader: "hyeon",
-    member: ["eunki", "hyeon", "jeonghoon"],
-    colors: ['#003B73', '#BFD7ED'],
-    quests: {}
-  },
+  // "b": {
+  //   groupID: "b",
+  //   groupName: "We love slifour",
+  //   leader: "hyeon",
+  //   member: ["eunki", "hyeon", "jeonghoon"],
+  //   colors: ['#003B73', '#BFD7ED'],
+  //   quests: {}
+  // },
 };
 
 /* 살짝 창의적으로 키를 띄어쓰기로 구분한 두 아이디로 써봤어요. "{Group ID} {User ID}" 형식입니다.
