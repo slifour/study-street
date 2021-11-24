@@ -113,3 +113,27 @@ Please let us know if you any problem with our app, including logins.
 megatwins@kaist.ac.kr (Hyeon Pyo)
 
 campuswire [CS473 2021 Fall] post or dm @Hyeon Pyo
+
+<br/>
+
+## Cautions and Limitations
+
+- Browser Issue
+
+    You must use **Chrome browser** to open our app. It would be safer if your Chrome browser is latest version. If not, our app may not be operated and styled in the same way we intended or even not work at all.
+
+- Hosting Server Issue
+
+    We are deploying our app using **Heroku**'s server which is very fine except for some fatal flaws. 
+    
+    (1) It refreshes its server once for everyday. As a result of refreshing, since we do not still have external database connected, your **data would be lost after a day** and cleared to the restored to its initial state. 
+
+    (2) As the limit of the quality of Heroku's server, our app may not be able to hold a lot of users simultaneously. Loading speed may be slow regarding to the condition of the server.
+
+- Refresh Issue
+
+    Since we do not save any cache data, you will be logged out when you refresh the app. So, we recommend you to **avoid refreshing** while experiencing our app. As a trick, you can refresh in order to log out.
+
+- Responsibility Issue 
+    
+    Since some components consisting our app is not supporting responsibility due to the various screen size, we recommend you to use the app in **desktop or laptop** environment instead of using external monitor or mobile devices. Even if you are using our app with laptop, few components can be overlapped.

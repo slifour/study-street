@@ -1,12 +1,9 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { LoginUserContext } from "../../../App";
 import socket from '../../../socket';
 import styles from "./study.module.css";
 import styled from 'styled-components';
 import PostOverlay from './PostOverlay';
-import Modal from 'react-overlays/Modal';
-
-//const socketIo = require("socket.io");
 
 const StyledDiv = styled.div`
     position: fixed;
@@ -16,7 +13,7 @@ const StyledDiv = styled.div`
 `;
 
 export default function PostButton(props) {
-    // const shortenName = props.userId.substr(0, 2).toUpperCase();
+
     const POST_UPDATE_INTERVAL = 5000;
 
     const {loginUser} = useContext(LoginUserContext);
