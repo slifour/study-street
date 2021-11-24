@@ -68,7 +68,8 @@ export default class Study extends Phaser.Scene {
     this.initialize({prevScene : this.prevScene, currentScene : this.key, deskIndex : this.deskIndex, chairIndex : this.chairIndex});
     console.log("StudyScene", this.deskIndex, this.chairIndex, this.desk)
     const chair = this.desk.indexToChair[this.chairIndex];
-    chair.sit();
+    // chair.sit();
+    this.user.sit(this.desk, this.chairIndex)
     this.cameras.main.centerOn(this.desk.x + this.cameras.main.width/3, this.desk.y - this.cameras.main.height/6);
     this.setEventHandlers();
 

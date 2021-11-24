@@ -13,7 +13,12 @@ export default class Desk extends Phaser.GameObjects.Container {
     this.group = {}    
 
     let margin = 10
-    let desk = this.scene.physics.add.image(0, 0, deskKey).setScale(0.8);
+    let desk = this.scene.physics.add.image(0, 0, deskKey);
+    const sizeFactor = 0.8;
+    desk.setSize(desk.width*sizeFactor, desk.height*sizeFactor);
+    desk.setDisplaySize(desk.width*sizeFactor, desk.height*sizeFactor);
+    desk.width = desk.width*sizeFactor;
+    desk.height = desk.height*sizeFactor
     desk.setImmovable();
 
     // this.deskDepth = desk.depth; 

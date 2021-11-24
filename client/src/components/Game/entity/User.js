@@ -11,11 +11,13 @@ import UserContainer from './UserContainer';
 
 
 export default class User extends UserContainer {
-  constructor(scene, x, y, spriteKey, animSuffix, loginUser) {
-    super(scene, {x:x, y:y},  spriteKey, animSuffix, loginUser);
+  constructor(scene, x, y, spriteKey, animSuffix, loginUser, sizeFactor ) {
+    super(scene, {x:x, y:y},  spriteKey, animSuffix, loginUser, sizeFactor, "Click to set status");
     this.registry = this.scene.game.registry;
     this.stop = true
     this.socket = socket    
+    this.status.setInteractive();
+    this.status.setInteractions();
   }
 
   init(){
@@ -87,7 +89,10 @@ export default class User extends UserContainer {
     } else {
       this.statusView.text = "Please login first.";
     }
-    this.statusView.setActive(true).setVisible(true);
+    super.showStatus();
+    // this.statusView.setActive(true).setVisible(true);
+    // this.statusView.setInteractive();
+    // this.statusView.setInteractions();
   }
 
   /** @param {Phaser.Types.Input.Keyboard.CursorKeys} cursors */
