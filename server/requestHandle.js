@@ -300,7 +300,7 @@ const onRequestCreateGroup = (socket, request) => {
     groupName,
     leader: requestUser,
     member: [requestUser],
-    colors: colors || defaultColors,
+    colors: colors && colors[0] ? colors : defaultColors,
     quests: {}
   };
 
