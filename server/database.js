@@ -322,7 +322,7 @@ let userList = {
     "userID": "Jeongeon Park",
     "userName": "Jeongeon Park",
     "avatarSprite": "user_3",
-    "profileImage": dummyAvatars[4],
+    "profileImage": dummyAvatars[5],
     "todayStudyTime": null,
     "status": null,
     "curGroup": "kixlab",
@@ -626,51 +626,21 @@ let groupList = {
           type : "Attendance",
           content : "11/18",
           contentDate : new Date(2021, 11, 18, 0, 0),
-          acceptedUsers : ["Hyunwoo Kim", "Jeongeon Park",], // TODO: acceptedUsers, doneUsers, notYetUsers 중 하나는 없어도 됨.
-          doneUsers : ["Hyunwoo Kim", "Jeongeon Park",],
+          acceptedUsers : ["Juho Kim", "Yoonjoo Lee", "Haesoo Kim", "Hyunwoo Kim", "Jeongeon Park",], // TODO: acceptedUsers, doneUsers, notYetUsers 중 하나는 없어도 됨.
+          doneUsers : ["Juho Kim", "Yoonjoo Lee", "Haesoo Kim", "Hyunwoo Kim", "Jeongeon Park",],
           participatingUsers : [],
-          notYetUsers : ["Juho Kim", "Yoonjoo Lee", "Haesoo Kim",]
-      },
-      "nbxm3m" : {
-          questID : "nbxm3m",
-          type : "Attendance",
-          content : "11/2-",
-          contentDate : new Date(2021, 11, 18, 0, 0),
-          acceptedUsers : ["Juho Kim", "Yoonjoo Lee", "Haesoo Kim",],
-          doneUsers : ["Juho Kim", "Yoonjoo Lee"],
-          participatingUsers : ["Haesoo Kim"],
-          notYetUsers : ["Hyunwoo Kim", "Jeongeon Park",]
+          notYetUsers : []
       },
       "jkqb7p" : {
         questID : "jkqb7p",
         type : "Goal",
         content : "3 hours",
         contentDate : 3 * 3600 * 1000,
-        acceptedUsers : ["Juho Kim", "Yoonjoo Lee", "Haesoo Kim", "Hyunwoo Kim", "Jeongeon Park",],
-        doneUsers : ["Juho Kim", "Yoonjoo Lee", "Hyunwoo Kim", "Jeongeon Park",],
-        participatingUsers : ["Haesoo Kim"],
-        notYetUsers : []
+        acceptedUsers : ["Juho Kim", "Yoonjoo Lee", "Jeongeon Park"],
+        doneUsers : ["Juho Kim"],
+        participatingUsers : [],
+        notYetUsers : ["Yoonjoo Lee", "Jeongeon Park"]
       },
-      "ukir6b" : {
-        questID : "ukir6b",
-        type : "Goal",
-        content : "2 hours",
-        contentDate : 2 * 3600 * 1000,
-        acceptedUsers : ["Juho Kim", "Yoonjoo Lee", "Haesoo Kim",],
-        doneUsers : ["Jeongeon Park",],
-        participatingUsers : ["Juho Kim", "Yoonjoo Lee", "Hyunwoo Kim", ],
-        notYetUsers : ["Hyunwoo Kim", "Jeongeon Park",]
-      },      
-      "hdjf3f" : {
-        questID : "hdjf3f",
-        type : "Goal",
-        content : "2 hours",
-        contentDate : 2 * 3600 * 1000,
-        acceptedUsers : ["Haesoo Kim", "Hyunwoo Kim", "Jeongeon Park",],
-        doneUsers : ["Haesoo Kim", ],
-        participatingUsers : ["Hyunwoo Kim", "Jeongeon Park",],
-        notYetUsers : ["Juho Kim", "Yoonjoo Lee", ]
-      },            
     }      
   },
   "a": {
