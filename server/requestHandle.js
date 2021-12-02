@@ -142,7 +142,7 @@ const onRequestLogin = (socket, request) => {
 
   let userID;
   try {
-    ({userID} = payload);
+    ({userID, avatarSprite} = payload);
   } catch {
     return responseFail(socket, requestKey, responseType, "Invalid request.");
   }
@@ -156,6 +156,8 @@ const onRequestLogin = (socket, request) => {
   env.addedUser[userID] = false;
 
   userList[userID].socketID = socket.id;
+  userList[userID].avatarSprite = avatarSprite;
+  console.log('avatarSprite :', userList[userID].avatarSprite)
 
   // login side effects
   try {

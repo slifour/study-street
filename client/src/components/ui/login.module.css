@@ -39,16 +39,16 @@
 .loginContent {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 35px;
-
-    margin: auto 0;
+    justify-content: left;
+    gap: 30px;
+    margin: 5px 55px;
 }
 
 .loginContentText {
     font-family: 'Lato', sans-serif;
     font-weight: 400;
     font-size: 18px;
+    width: 35px;
 }
 
 .loginInput {

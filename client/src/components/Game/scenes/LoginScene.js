@@ -14,8 +14,8 @@ export default class Login extends Phaser.Scene {
     }
     update() {
         if (this.game.registry.get("loginUser") !== null){
-            console.log(this.game.registry.get("loginUser"))
             this.scene.start('Library', "newLoginUser");
+            // this.scene.start('Library');
         }
     }
 

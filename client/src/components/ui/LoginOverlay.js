@@ -3,11 +3,15 @@ import socket from "../../socket";
 import styles from './login.module.css';
 import { LoginUserContext, GameContext } from "../../App";
 import uniqueString from 'unique-string';
+import UserAvatarSpriteSelection from "./UserAvatarSpriteSelection";
 
 export default function LoginOverlay(props) {
-    const [userID, setUserID] = useState('');
+    const [ userID, setUserID ] = useState('');
+    const [ avatarID, setAvatarID ] = useState('1');
     const { loginUser, setLoginUser } = useContext(LoginUserContext);
     const { emitToGame } = useContext(GameContext);
+    const spriteIDList = ['1','2','3','4'];
+    const [ selectedSprite, setSelectedSprite ] = useState('user_1');
     let usedRequestKeyRef = useRef(null);
 
     const onResponse = ({ requestKey, status, payload }) => {
@@ -40,12 +44,13 @@ export default function LoginOverlay(props) {
             requestUser: null,
             requestKey: usedRequestKeyRef.current,
             requestType,
-            payload: { userID }
+            payload: { userID : userID, avatarSprite : selectedSprite }
         });
     }
     
     const changeUserID = (e) => {
         setUserID(e.target.value);
+        setAvatarID('1');
     }
 
     const onLoginKeyUp = e => {
@@ -55,7 +60,6 @@ export default function LoginOverlay(props) {
         }
       };
 
-
     return(
         <div className={styles.loginContainer}>
             <div className={styles.loginHeader}>
@@ -63,6 +67,14 @@ export default function LoginOverlay(props) {
                 <div className={styles.loginTitle}>Login</div>
             </div>
             <div className={styles.divider}></div>
+            <div className={styles.loginContent}>
+                <div className={styles.loginContentText}>Avatar</div>  
+                <div className={styles.loginContent}>
+                { spriteIDList.map(spriteID => (
+                    <UserAvatarSpriteSelection avatarSprite={`user_${spriteID}`} width={40} onClick={()=>setSelectedSprite(`user_${spriteID}`)} selected={`user_${spriteID}` === selectedSprite}/>
+                )) }
+                </div>           
+            </div>
             <div className={styles.loginContent}>
                 <div className={styles.loginContentText}>ID</div>
                 <div className={styles.loginForm}>
