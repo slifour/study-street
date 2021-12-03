@@ -108,7 +108,6 @@
 .checklist {
   position: fixed;
   width: 600px;
-  height: 700px;
   z-index: 1040;
   bottom: -1%;
   right: 3%;
