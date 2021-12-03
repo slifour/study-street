@@ -25,6 +25,7 @@ export default class StatusText extends GameObjects.Container {
     this.createGraphics();
     this.createText(text, style);
     this.update(text, todayStudyTime);
+    this.setData(10); 
   }
 
   createText(text, style){

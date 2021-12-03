@@ -672,6 +672,25 @@ let groupList = {
       }
     }
   },
+  "cs473": {
+    groupID: "cs473",
+    groupName: "CS473 LET'S NAIL FINAL",
+    leader: "hyeon",
+    member: ["hyeon", "Eunki Joung", "Haeseul Cha", "Jeonghoon Han"],
+    colors: ['#A0E7E5', '#B4F8C8'],
+    quests: {
+      "eq2dm5" : {
+          questID : "eq2dm5",
+          type : "Attendance",
+          content : "12/03",
+          contentDate : new Date(2021, 12, 3, 0, 0),
+          acceptedUsers : ["hyeon", "Eunki Joung", "Haeseul Cha", "Jeonghoon Han"], // TODO: acceptedUsers, doneUsers, notYetUsers 중 하나는 없어도 됨.
+          doneUsers : ["hyeon", "Eunki Joung", "Haeseul Cha", "Jeonghoon Han"],
+          participatingUsers : [],
+          notYetUsers : []
+      },
+    }
+  },
   // "b": {
   //   groupID: "b",
   //   groupName: "We love slifour",
@@ -698,7 +717,25 @@ let invitationList = {
     friendID: "haeseul",
     hostUser: "jeonghoon",
     inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
-  }
+  },
+  "cs473 Eunki Joung": {
+    groupID: "cs473",
+    friendID: "Eunki Joung",
+    hostUser: "hyeon",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 Haeseul Cha": {
+    groupID: "cs473",
+    friendID: "Haeseul Cha",
+    hostUser: "hyeon",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 Jeonghoon Han": {
+    groupID: "cs473",
+    friendID: "Jeonghoon Han",
+    hostUser: "hyeon",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
 }
 
 let goalList = {
