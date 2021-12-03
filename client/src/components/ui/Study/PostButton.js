@@ -14,8 +14,7 @@ const StyledDiv = styled.div`
 
 export default function PostButton(props) {
 
-    // const POST_UPDATE_INTERVAL = 1000 * 60 * 5;
-    const POST_UPDATE_INTERVAL = 1000 * 10;
+    const POST_UPDATE_INTERVAL = 1000 * 60 * 5;
 
     const {loginUser} = useContext(LoginUserContext);
 
@@ -63,24 +62,15 @@ export default function PostButton(props) {
         }     
     }, [willUpdate, newPost, chatObj]);
 
-    // useEffect(() => {
-    //     console.log(socket.id);
-    //     const activatePost = setInterval(() => {
-    //             setWillUpdate(true);
-    //         }, POST_UPDATE_INTERVAL);
-    //         return () => {
-    //             clearInterval(activatePost);
-    //         };
-    // }, []);
-    
     useEffect(() => {
-        const activatePost = setTimeout(() => {
-            if (willUpdate != true) {
+        console.log(socket.id);
+        const activatePost = setInterval(() => {
                 setWillUpdate(true);
-            }
-        }, POST_UPDATE_INTERVAL);
-        return () => clearTimeout(activatePost);
-    }, [willUpdate]);
+            }, POST_UPDATE_INTERVAL);
+            return () => {
+                clearInterval(activatePost);
+            };
+    }, []);      
 
     const onChange = (e) => {
         setText(e.target.value);
