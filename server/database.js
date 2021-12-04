@@ -741,6 +741,26 @@ let userList = {
     "socketID": null,
     "checklist": null
   },
+  "als121401": {
+    "userID": "als121401",
+    "userName": "als121401",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "musemary": {
+    "userID": "musemary",
+    "userName": "musemary",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
 };
 
 let groupList = {
@@ -931,6 +951,18 @@ let invitationList = {
   "cs473 손손히": {
     groupID: "cs473",
     friendID: "손손히",
+    hostUser: "eunki",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 als121401": {
+    groupID: "cs473",
+    friendID: "als121401",
+    hostUser: "eunki",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 musemary": {
+    groupID: "cs473",
+    friendID: "musemary",
     hostUser: "eunki",
     inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
   },
