@@ -761,6 +761,16 @@ let userList = {
     "socketID": null,
     "checklist": null
   },
+  "jung2min0524": {
+    "userID": "jung2min0524",
+    "userName": "jung2min0524",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
 };
 
 let groupList = {
@@ -963,6 +973,12 @@ let invitationList = {
   "cs473 musemary": {
     groupID: "cs473",
     friendID: "musemary",
+    hostUser: "eunki",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 jung2min0524": {
+    groupID: "cs473",
+    friendID: "jung2min0524",
     hostUser: "eunki",
     inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
   },
