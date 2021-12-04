@@ -10,7 +10,7 @@ const StyledAvatar = styled.img`
 
 export default function UserAvatarCircle(props) {
     // props: user, size, onHover, onClick
-    const size = props.size || 70; // default size in px
+    const size = props.size || 60; // default size in px
     // const fontSize = size / 2.5;
     // const lineHeight = size;
     // const shortID = user.userID.substr(0, 2).toUpperCase();
@@ -31,14 +31,16 @@ export default function UserAvatarCircle(props) {
         setShowItem(false)
     }
 
+    const findImageSrc = user => (user.avatarSprite ? `/assets/images/${user.avatarSprite}_preview.gif` : null);
+
     return (
         <>
             { props.user ? 
                 <div onClick={props.onClick} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} style = {{position : `relative`}}>
                     <StyledAvatar style={{
                         width: `${size}px`,
-                        height: `${size}px`,            
-                    }} src={props.user.profileImage} />
+                        // height: `${size}px`,            
+                    }} src={findImageSrc(props.user)} />
                     {
                         showItem?
                         <div className = {styles.userAvatarItem} style = {{top : `-14px`}}>

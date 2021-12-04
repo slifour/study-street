@@ -73,12 +73,12 @@ export default class Friend extends UserContainer{
       this.stop = false;
     }
     // Move up
-    if (this.y < y) {
+    if (this.y > y) {
       animState = this.animName.up;
       this.stop = false;
     }
     // Move down
-    else if (this.y > y) {
+    else if (this.y < y) {
       animState = this.animName.down;
       this.stop = false;
     }

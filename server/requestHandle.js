@@ -140,7 +140,7 @@ const onRequestLogin = (socket, request) => {
 
   // console.log("onRequestLogin: ", request); 
 
-  let userID;
+  let userID, avatarSprite;
   try {
     ({userID, avatarSprite} = payload);
   } catch {
@@ -155,6 +155,12 @@ const onRequestLogin = (socket, request) => {
   env.useridList[userID] = id;
   env.addedUser[userID] = false;
 
+  if( userID === 'hyeon'){
+    avatarSprite = 'user_5'
+  }
+  if( userID === 'eunki'){
+    avatarSprite = 'user_6'
+  }  
   userList[userID].socketID = socket.id;
   userList[userID].avatarSprite = avatarSprite;
   console.log('avatarSprite :', userList[userID].avatarSprite)

@@ -56,13 +56,13 @@ export default class MapScene extends Phaser.Scene {
       });    
     }
     this.load.spritesheet(`user_5`, `assets/spriteSheets/user_pika.png`, {
-      frameWidth: 32 * (100/3),
-      frameHeight: 42 * (100/3),
+      frameWidth: 64,
+      frameHeight: 64,
     });  
 
     this.load.spritesheet(`user_6`, `assets/spriteSheets/user_host.png`, {
-      frameWidth: 32 * (100/3),
-      frameHeight: 42 * (100/3),
+      frameWidth: (224/3),
+      frameHeight: (368/4),
     });  
 
     this.load.spritesheet('user-girl', 'assets/spriteSheets/user_1.png', {
@@ -113,7 +113,14 @@ export default class MapScene extends Phaser.Scene {
     const avatarSprite = this.loginUser.avatarSprite || "user_1";
     const avatarAnimSuffix = avatarSprite; // user_1이 'girl' animation suffix에 해당하는데, 다른 user도 animation은 같아서 그대로 뒀어요.
 
-    this.user = new User(this, 800, 400, avatarSprite, avatarAnimSuffix, this.loginUser, 3/100 * 1.2);
+    let scale = 0;
+    switch (avatarSprite) {
+      case "user_5": scale = 1.2; break;
+      case "user_6": scale = 0.75; break;
+      default : scale = 3/100 * 1.2;
+    }
+
+    this.user = new User(this, 800, 400, avatarSprite, avatarAnimSuffix, this.loginUser, scale);
     this.user.init();
     // this.user.setDepth(1);
     this.physics.add.collider(this.user, this.belowPlayer1);
@@ -183,7 +190,14 @@ export default class MapScene extends Phaser.Scene {
 
     const avatarSprite = payload.loginUser.avatarSprite || "user_1";
     const avatarAnimSuffix = avatarSprite;
-    const friend = new Friend(this, {x : payload.x, y: payload.y} , avatarSprite, avatarAnimSuffix, payload.loginUser, 3/100 * 1.2);
+    let scale = 0;
+    switch (avatarSprite) {
+      case "user_5": scale = 1.2; break;
+      case "user_6": scale = 0.75; break;
+      default : scale = 3/100 * 1.2;
+    }
+
+    const friend = new Friend(this, {x : payload.x, y: payload.y} , avatarSprite, avatarAnimSuffix, payload.loginUser, scale);
     friend.init();
     return friend;
   }
