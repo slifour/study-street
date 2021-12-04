@@ -155,14 +155,18 @@ const onRequestLogin = (socket, request) => {
   env.useridList[userID] = id;
   env.addedUser[userID] = false;
 
+  let avatars
   if( userID === 'hyeon'){
-    avatarSprite = 'user_5'
+    avatars = 'user_5';
   }
-  if( userID === 'eunki'){
-    avatarSprite = 'user_6'
+  else if( userID === 'eunki'){
+    avatars = 'user_6';
   }  
+  else{
+    avatars = avatarSprite;
+  }
   userList[userID].socketID = socket.id;
-  userList[userID].avatarSprite = avatarSprite;
+  userList[userID].avatarSprite = avatars ;
   console.log('avatarSprite :', userList[userID].avatarSprite)
 
   // login side effects
