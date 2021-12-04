@@ -49,8 +49,8 @@ let userList = {
     "userName": "은기",
     "status": "Developing user data system",
     "profileImage": dummyAvatars[0],
-    "avatarSprite": "user_1",
-    "curGroup" : "a",
+    "avatarSprite": "user_5",
+    "curGroup" : "cs473",
     "todayStudyTime": 7200 * 1000,
     "checklist" : {
       "8d4jnx" : {
@@ -89,7 +89,7 @@ let userList = {
   "hyeon": {
     "userID": "hyeon",
     "userName": "**Hyeon**",
-    "avatarSprite": "user_4",
+    "avatarSprite": "user_6",
     "profileImage": dummyAvatars[2],
     "todayStudyTime": 7200 * 1000,
     "status": "Linear Algebra Chp.7",
@@ -610,7 +610,137 @@ let userList = {
     "curGroup": null,
     "socketID": null,
     "checklist": null
-  }  
+  },
+  "Guest1": {
+    "userID": "Guest1",
+    "userName": "Guest1",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Guest2": {
+    "userID": "Guest2",
+    "userName": "Guest2",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Guest3": {
+    "userID": "Guest3",
+    "userName": "Guest3",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Guest4": {
+    "userID": "Guest4",
+    "userName": "Guest4",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Guest5": {
+    "userID": "Guest5",
+    "userName": "Guest5",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Guest6": {
+    "userID": "Guest6",
+    "userName": "Guest6",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Guest7": {
+    "userID": "Guest7",
+    "userName": "Guest7",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Guest8": {
+    "userID": "Guest8",
+    "userName": "Guest8",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Guest9": {
+    "userID": "Guest9",
+    "userName": "Guest9",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "Guest10": {
+    "userID": "Guest10",
+    "userName": "Guest10",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "sehoon": {
+    "userID": "sehoon",
+    "userName": "sehoon",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "woojung": {
+    "userID": "woojung",
+    "userName": "woojung",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
+  "손손히": {
+    "userID": "손손히",
+    "userName": "손손히",
+    "profileImage": dummyAvatars[0],
+    "todayStudyTime": null,
+    "status": null,
+    "curGroup": null,
+    "socketID": null,
+    "checklist": null
+  },
 };
 
 let groupList = {
@@ -675,8 +805,8 @@ let groupList = {
   "cs473": {
     groupID: "cs473",
     groupName: "CS473 LET'S NAIL FINAL",
-    leader: "hyeon",
-    member: ["hyeon"],
+    leader: "eunki",
+    member: ["eunki", "hyeon"],
     colors: ['#A0E7E5', '#B4F8C8'],
     quests: {
     }
@@ -696,9 +826,9 @@ let groupList = {
    i.e. [Group ID, User ID]가 invitation 테이블의 primary key입니다.
 */
 let invitationList = {
-  "a hyeon": {
+  "a eunki": {
     groupID: "a",
-    friendID: "hyeon",
+    friendID: "eunki",
     hostUser: "eunki",
     inviteTime: new Date('07 Nov 2021 14:30:00 GMT+9')
   },
@@ -711,19 +841,97 @@ let invitationList = {
   "cs473 Eunki Joung": {
     groupID: "cs473",
     friendID: "Eunki Joung",
-    hostUser: "hyeon",
+    hostUser: "eunki",
     inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
   },
   "cs473 Haeseul Cha": {
     groupID: "cs473",
     friendID: "Haeseul Cha",
-    hostUser: "hyeon",
+    hostUser: "eunki",
     inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
   },
   "cs473 Jeonghoon Han": {
     groupID: "cs473",
     friendID: "Jeonghoon Han",
-    hostUser: "hyeon",
+    hostUser: "eunki",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 Guest1": {
+    groupID: "cs473",
+    friendID: "Guest1",
+    hostUser: "eunki",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 Guest2": {
+    groupID: "cs473",
+    friendID: "Guest2",
+    hostUser: "eunki",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 Guest3": {
+    groupID: "cs473",
+    friendID: "Guest3",
+    hostUser: "eunki",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 Guest4": {
+    groupID: "cs473",
+    friendID: "Guest4",
+    hostUser: "eunki",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 Guest5": {
+    groupID: "cs473",
+    friendID: "Guest5",
+    hostUser: "eunki",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 Guest6": {
+    groupID: "cs473",
+    friendID: "Guest6",
+    hostUser: "eunki",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 Guest7": {
+    groupID: "cs473",
+    friendID: "Guest7",
+    hostUser: "eunki",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 Guest8": {
+    groupID: "cs473",
+    friendID: "Guest8",
+    hostUser: "eunki",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 Guest9": {
+    groupID: "cs473",
+    friendID: "Guest9",
+    hostUser: "eunki",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 Guest10": {
+    groupID: "cs473",
+    friendID: "Guest10",
+    hostUser: "eunki",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 sehoon": {
+    groupID: "cs473",
+    friendID: "sehoon",
+    hostUser: "eunki",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 woojung": {
+    groupID: "cs473",
+    friendID: "woojung",
+    hostUser: "eunki",
+    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+  },
+  "cs473 손손히": {
+    groupID: "cs473",
+    friendID: "손손히",
+    hostUser: "eunki",
     inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
   },
 }

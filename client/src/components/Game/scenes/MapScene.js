@@ -184,9 +184,12 @@ export default class MapScene extends Phaser.Scene {
     if (socketID === this.socketID) {
       return false;
     }
-    this.onResponseRemoveFriend(socketID);
-    console.log("createFriend")
-    this.onResponseFriendStopStudy(socketID);
+    if (this.key =='Library'){
+      this.onResponseRemoveFriend(socketID);
+      console.log("createFriend")
+      this.onResponseFriendStopStudy(socketID);
+    }
+
 
     const avatarSprite = payload.loginUser.avatarSprite || "user_1";
     const avatarAnimSuffix = avatarSprite;

@@ -72,8 +72,8 @@ export default class UserContainer extends GameObjects.Container{
     this.sprite.removeAllListeners();
     if(setInteractionsbool){
       this.on('pointerdown', this.status.onPointerDown);
-      this.sprite.on('pointerover', this.onPointerOver, this); 
-      this.sprite.on('pointerout', this.onPointerOut, this);
+      // this.sprite.on('pointerover', this.onPointerOver, this); 
+      // this.sprite.on('pointerout', this.onPointerOut, this);
     }
   }  
 
