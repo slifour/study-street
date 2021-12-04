@@ -34,7 +34,6 @@ export default class MapScene extends Phaser.Scene {
     // this.userID = this.game.registry.get("loginUser").userID;
     this.prevScene = (data === undefined) ? undefined : data.prevScene    
     console.log("Welcome to ", this.key);  
-
     this.loginUser = this.game.registry.get("loginUser");
     this.socketID = this.loginUser.socketID;
     this.userID = this.loginUser.userID;
@@ -56,6 +55,15 @@ export default class MapScene extends Phaser.Scene {
         frameHeight: 42 * (100/3),
       });    
     }
+    this.load.spritesheet(`user_5`, `assets/spriteSheets/user_pika.png`, {
+      frameWidth: 32 * (100/3),
+      frameHeight: 42 * (100/3),
+    });  
+
+    this.load.spritesheet(`user_6`, `assets/spriteSheets/user_host.png`, {
+      frameWidth: 32 * (100/3),
+      frameHeight: 42 * (100/3),
+    });  
 
     this.load.spritesheet('user-girl', 'assets/spriteSheets/user_1.png', {
         frameWidth: 32 * (100/3),
