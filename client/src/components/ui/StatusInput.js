@@ -65,6 +65,19 @@ export default function StatusInput(props) {
         }
       }, [game.current, showStatusInput])   
 
+    useEffect(() => {
+        const disableInput = () => {
+          console.log("Game: ", game.current);
+          game.current.game.input.keyboard.enabled = false;
+          game.current.game.input.mouse.enabled = false;
+        } 
+        disableInput();
+        return () => {
+          game.current.game.events.off("ready", disableInput);
+          game.current.game.input.keyboard.enabled = true;
+          game.current.game.input.mouse.enabled = true;
+        }
+    }, []);
 
     //**socket related functions**
     const onResponseOK = useCallback(({payload}) => {
@@ -136,6 +149,13 @@ export default function StatusInput(props) {
         console.log('emited')
     }
 
+    const onLoginKeyUp = e => {
+        if (e.keyCode === 13 && loginUser===null) {
+            e.preventDefault();
+            handleInput();
+        }
+    };
+
     return(
 
             <div className={styles.personalContainer}>
@@ -156,6 +176,7 @@ export default function StatusInput(props) {
                                         className={styles.addChecklist}
                                         value={inputValue}
                                         onChange={changeInputValue}
+                                        onKeyUp={onLoginKeyUp}
                                     ></input>
                                 </form>
                                 <div className = {styles.addButton} onClick={handleInput}>

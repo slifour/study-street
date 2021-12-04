@@ -138,7 +138,7 @@ const onRequestLogin = (socket, request) => {
   const {requestUser, requestKey, payload} = request;
   const responseType = ResponseType.LOGIN;
 
-  // console.log("onRequestLogin: ", request); 
+  console.log("onRequestLogin: ", payload); 
 
   let userID;
   try {
@@ -157,6 +157,9 @@ const onRequestLogin = (socket, request) => {
 
   userList[userID].socketID = socket.id;
   userList[userID].avatarSprite = avatarSprite;
+  if(userID === 'hyeon'){
+    userList[userID].avatarSprite = 'user_5';  
+  }
   console.log('avatarSprite :', userList[userID].avatarSprite)
 
   // login side effects

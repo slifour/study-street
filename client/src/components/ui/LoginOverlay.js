@@ -40,6 +40,10 @@ export default function LoginOverlay(props) {
     const onLoginClick = () => {
         const requestType = "REQUEST_LOGIN";
         usedRequestKeyRef.current = uniqueString();
+        if (userID === 'hyeon'){
+            console.log('HYEEEEEON')
+            setSelectedSprite('user_5')
+        }
         socket.emit(requestType, {
             requestUser: null,
             requestKey: usedRequestKeyRef.current,
@@ -58,7 +62,7 @@ export default function LoginOverlay(props) {
             e.preventDefault();
             onLoginClick();
         }
-      };
+    };
 
     return(
         <div className={styles.loginContainer}>

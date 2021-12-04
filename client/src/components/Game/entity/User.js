@@ -16,6 +16,8 @@ export default class User extends UserContainer {
     this.registry = this.scene.game.registry;
     this.stop = true
     this.socket = socket    
+    this.setInteractive();
+    this.setInteractions();
     this.status.setInteractive();
     this.status.setInteractions();
   }

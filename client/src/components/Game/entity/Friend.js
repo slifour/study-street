@@ -8,7 +8,7 @@ import UserContainer from './UserContainer';
 export default class Friend extends UserContainer{
   constructor(scene, position, spriteKey, animSuffix, loginUser, sizeFactor) {
     super(scene, position, spriteKey, animSuffix, loginUser, sizeFactor, "...");
-    this.velocity = 200;    
+    this.velocity = 200;        
   }
 
   // showStatus() {

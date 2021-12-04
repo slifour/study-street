@@ -47,13 +47,9 @@ export default class UserContainer extends GameObjects.Container{
     // this.body.setCollideWorldBounds(true);
 
     this.createSprite(scene, spriteKey, animSuffix, sizeFactor);
-    console.log("createSprite", this.sprite.width, this.sprite.height)
-    console.log("createSprite", this.sprite.displayWidth, this.sprite.displayHeight)
-    console.log("createSprite", this.sprite.listeners('pointerover'), this.sprite.active)
     this.createName();
     this.createStatus(loginUser.status === null ? initialtext : loginUser.status, loginUser.todayStudyTime);
-    this.setInteractive();
-    this.setInteractions();
+
   }
 
   init(){

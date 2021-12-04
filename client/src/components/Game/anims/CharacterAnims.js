@@ -78,7 +78,7 @@ export function createCharacterAnimsGirl(anims) {
 }
 
 export function createCharacterAnimsDefault(anims) {
-  const USER_SPRITESHEETS_MAX_INDEX = 4;
+  const USER_SPRITESHEETS_MAX_INDEX = 5;
   for (var i = 1; i <= USER_SPRITESHEETS_MAX_INDEX; i += 1) {
     const spriteSheetName = `user_${i}`;
     const suffix = spriteSheetName;

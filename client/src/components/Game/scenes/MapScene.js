@@ -56,7 +56,10 @@ export default class MapScene extends Phaser.Scene {
         frameHeight: 42 * (100/3),
       });    
     }
-
+    this.load.spritesheet('user_5', 'assets/spriteSheets/user_5.png', {
+      frameWidth: 224/3,
+      frameHeight: 368/4,
+    });
     this.load.spritesheet('user-girl', 'assets/spriteSheets/user_1.png', {
         frameWidth: 32 * (100/3),
         frameHeight: 42 * (100/3)
@@ -105,7 +108,18 @@ export default class MapScene extends Phaser.Scene {
     const avatarSprite = this.loginUser.avatarSprite || "user_1";
     const avatarAnimSuffix = avatarSprite; // user_1이 'girl' animation suffix에 해당하는데, 다른 user도 animation은 같아서 그대로 뒀어요.
 
-    this.user = new User(this, 800, 400, avatarSprite, avatarAnimSuffix, this.loginUser, 3/100 * 1.2);
+    // if (this.loginUser.userID === 'hyeon'){
+    //   this.user = new User(this, 1000, 1200, avatarSprite, avatarAnimSuffix, this.loginUser, 0.5);
+    // }
+    // else{
+    //   this.user = new User(this, 1000, 1200, avatarSprite, avatarAnimSuffix, this.loginUser, 3/100 * 1.2);
+    // }
+    let scale = 3/100 * 1.2
+    if(avatarSprite == 'user_5'){
+      scale = 1.5;
+    }
+    this.user = new User(this, 1000, 1200, avatarSprite, avatarAnimSuffix, this.loginUser, scale);
+
     this.user.init();
     // this.user.setDepth(1);
     this.physics.add.collider(this.user, this.belowPlayer1);

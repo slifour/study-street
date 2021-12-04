@@ -36,21 +36,6 @@ export default class Rest extends MapScene {
         super.update(); 
     }
 
-    /**assignGroupArea
-     * @parameter deskId: id of desk to assign, groupId : to be implemented
-     * 
-     */
-    assignGroupArea(deskId){        
-        let desk = this.desks[deskId];
-        let container = this.add.container(desk.x, desk.y); 
-        container.setSize(350, 300);        
-        let border = this.add.rectangle(0, 0, container.width, container.height);
-        border.setStrokeStyle(this.borderWidth, 0xff0000)        
-        border.setDepth(-1);
-        container.add(border);
-        // container.add(desk)
-    };
-
     changeScene(){
         super.changeScene('Library')
     };
