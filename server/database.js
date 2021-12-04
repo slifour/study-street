@@ -88,12 +88,12 @@ let userList = {
   },
   "hyeon": {
     "userID": "hyeon",
-    "userName": "현",
+    "userName": "**Hyeon**",
     "avatarSprite": "user_4",
     "profileImage": dummyAvatars[2],
     "todayStudyTime": 7200 * 1000,
-    "status": "Putting map objects",
-    "curGroup" : "a",
+    "status": "Linear Algebra Chp.7",
+    "curGroup" : "cs473",
     "socketID": null
   },
   "jeonghoon": {
@@ -676,19 +676,9 @@ let groupList = {
     groupID: "cs473",
     groupName: "CS473 LET'S NAIL FINAL",
     leader: "hyeon",
-    member: ["hyeon", "Eunki Joung", "Haeseul Cha", "Jeonghoon Han"],
+    member: ["hyeon"],
     colors: ['#A0E7E5', '#B4F8C8'],
     quests: {
-      "eq2dm5" : {
-          questID : "eq2dm5",
-          type : "Attendance",
-          content : "12/03",
-          contentDate : new Date(2021, 12, 3, 0, 0),
-          acceptedUsers : ["hyeon", "Eunki Joung", "Haeseul Cha", "Jeonghoon Han"], // TODO: acceptedUsers, doneUsers, notYetUsers 중 하나는 없어도 됨.
-          doneUsers : ["hyeon", "Eunki Joung", "Haeseul Cha", "Jeonghoon Han"],
-          participatingUsers : [],
-          notYetUsers : []
-      },
     }
   },
   // "b": {
