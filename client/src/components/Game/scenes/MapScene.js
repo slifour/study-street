@@ -85,7 +85,7 @@ export default class MapScene extends Phaser.Scene {
     this.load.html('alert', 'assets/NewAlert.html');
   }
 
-  create() {   
+  create(portalPosition, cameraBound) {   
     
     /** Create Animations */
     createCharacterAnimsWizard(this.anims);
@@ -96,8 +96,11 @@ export default class MapScene extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
 
     /** Create User Avatar */
-    this.createUser();
+    this.createUser(cameraBound);
     this.initialize({prevScene : this.prevScene, nextScene : this.key});
+
+    /** Create Portal */
+    this.createPortal(portalPosition)
   }
 
   update() {
@@ -112,7 +115,7 @@ export default class MapScene extends Phaser.Scene {
     // request(requestType, responseType, makePayload, onRequest, onResponseOK, onResponseFail, socket)
   };
 
-  createUser() {
+  createUser(cameraBound) {
     console.log("Create user: Login user: ", this.loginUser);
     const avatarSprite = this.loginUser.avatarSprite || "user_1";
     const avatarAnimSuffix = avatarSprite; // user_1이 'girl' animation suffix에 해당하는데, 다른 user도 animation은 같아서 그대로 뒀어요.
@@ -130,7 +133,7 @@ export default class MapScene extends Phaser.Scene {
     this.physics.add.collider(this.user, this.belowPlayer1);
     this.physics.add.collider(this.user, this.world1);
 
-    this.updateCamera();
+    this.updateCamera(cameraBound);
   }
 
   /** createPortal
@@ -149,7 +152,7 @@ export default class MapScene extends Phaser.Scene {
       }));
   }
 
-  updateCamera() {    
+  updateCamera(cameraBound) {    
     this.cameras.main.startFollow(this.user);
     this.cameras.main.roundPixels = true; // avoid tile bleed
     /**
@@ -158,7 +161,7 @@ export default class MapScene extends Phaser.Scene {
      * this.world1.displayHeight가 1228.8 이 나오는데 width 보다도 훨씬 짧아서 맵의 절반까지 밖에 커버가 안됩니다. 왜일까요 ?
      * 
      */
-    this.cameras.main.setBounds(0, 0, this.belowPlayer1.displayWidth, this.belowPlayer1.displayHeight);
+    this.cameras.main.setBounds(0, 0, cameraBound.x, cameraBound.y);
   }
 
   onLoopPosition(socketIDToPosition){

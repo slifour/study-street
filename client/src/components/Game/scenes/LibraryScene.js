@@ -42,14 +42,16 @@ export default class Library extends MapScene {
 
     create() {
         this.createMap();    
-        super.create();    
+        const worldWidth = 32*60;        
+        const worldHeight = 32*60;
+        super.create({x : worldWidth/2, y : worldHeight}, {x : worldWidth, y: worldHeight});    
         this.setDeskCollider()
         this.setEventHandlers();
         this.socket.emit("initializeLibrary");
-        let portalPosition = {x : this.world1.displayWidth/2, y : this.world1.displayHeight};
-        portalPosition.x = 950;
-        portalPosition.y = 1930;
-        super.createPortal(portalPosition);
+        // let portalPosition = {x : this.world1.displayWidth/2, y : this.world1.displayHeight};
+        // portalPosition.x = 950;
+        // portalPosition.y = 1930;
+        // super.createPortal(portalPosition);
     }
 
     update() {
@@ -120,9 +122,11 @@ export default class Library extends MapScene {
         })
 
         // don't go out of the map
-        // console.log(this.belowPlayer1.displayWidth, this.belowPlayer1.displayHeight)
-        // console.log(this.world1.displayWidth, this.world1.displayHeight)
-        // console.log(this.map.widthInPixels, this.map.heightInPixels)
+        console.log(this.belowPlayer1.displayWidth, this.belowPlayer1.displayHeight)
+        console.log(this.world1.displayWidth, this.world1.displayHeight)
+        console.log(this.world1.width, this.world1.height)
+        console.log(this.map.tileWidth, this.map.tileHeight )
+        console.log(this.map.widthInPixels, this.map.heightInPixels)
         // this.physics.world.bounds.width = this.belowPlayer1.displayWidth;
         // this.physics.world.bounds.height = this.belowPlayer1.displayHeight;
         // this.cameras.main.setBounds(0, 0, this.belowPlayer1.displayWidth, this.belowPlayer1.displayHeight);
