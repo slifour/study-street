@@ -32,6 +32,10 @@ export default class MapScene extends Phaser.Scene {
     //   this.scene.pause()
     // }    
     // this.userID = this.game.registry.get("loginUser").userID;
+
+    /** If this value is true, this.changeScene will do nothing. */
+    this.sceneChanging = false;
+
     this.prevScene = (data === undefined) ? undefined : data.prevScene    
     console.log("Welcome to ", this.key);  
     this.loginUser = this.game.registry.get("loginUser");
@@ -158,16 +162,19 @@ export default class MapScene extends Phaser.Scene {
   }
 
   onLoopPosition(socketIDToPosition){
-    console.log("onLoopPosition", this.friendDict);
+    // console.log("onLoopPosition", this.friendDict);
 
     if(this.friendDict === undefined) {return;}    
     Object.entries(socketIDToPosition).forEach(([socketID, position])=>{  
-      console.log("this", this);
-      console.log(socketID, this.socketID);      
-      console.log('Log. mapscene.friendDict =', this.friendDict);
-      console.log('Log. mapscene.onLoopPosition socketIDToPosition =', socketIDToPosition);
+      // console.log("this", this);
+      // console.log(socketID, this.socketID);      
+      // console.log('Log. mapscene.friendDict =', this.friendDict);
+      // console.log('Log. mapscene.onLoopPosition socketIDToPosition =', socketIDToPosition);
 
-      if (socketID === this.socketID) {console.log('returned'); return;}
+      if (socketID === this.socketID) {
+        // console.log('returned'); 
+        return;
+      }
 
       if (Object.keys(this.friendDict).includes(socketID)){
         this.friendDict[socketID].updateMovement(position.x, position.y);
@@ -284,6 +291,10 @@ export default class MapScene extends Phaser.Scene {
 
 
   changeScene(newScene, data){
+    if (this.sceneChanging) {
+      return;
+    }
+    this.sceneChanging = true;
     console.log('this.scene.start:', data);
     this.game.events.emit("changeScene", newScene);
     this.cameras.main.fadeOut(1000, 0, 0, 0)
@@ -292,6 +303,7 @@ export default class MapScene extends Phaser.Scene {
         // this.doUpdate = false
         // data.prevScene = this.key;
         console.log('this.scene.start:', data);
+        // this.scene.stop();
         this.socket.removeAllListeners();
         this.scene.start(newScene, data);
     })  

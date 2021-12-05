@@ -129,7 +129,6 @@ const SocketIOServer = () => {
     Object.values(RequestType).forEach( requestType => {
       socket.on(requestType, onRequest.bind(null, socket, requestType));      
     });
-    updateDate(socket);    
   }
 
   const onRequestMove = (socket, position) => {
@@ -376,20 +375,7 @@ const SocketIOServer = () => {
   let logUsers = () =>  {
     // console.log("libraryRoom.numUsers :", env.libraryRoom.getNumUsers());
     setTimeout(logUsers.bind(this), logInterval);
-  }   
-
-  const updateDate = (socket) => {
-    if (interval) {
-      clearInterval(interval);
-    }
-    interval = setInterval(() => getApiAndEmit(socket), 1000);
   }
-
-  const getApiAndEmit = (socket) => {
-    const response = new Date();
-    // Emitting a new message. Will be consumed by the client
-    socket.emit("FromAPI", response);
-  };
 
   const onDisconnect = (socket) => {
     let userID = env.useridList[socket.id]

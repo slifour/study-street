@@ -11,6 +11,7 @@ import UserContainer from './UserContainer';
 
 
 export default class User extends UserContainer {
+
   constructor(scene, x, y, spriteKey, animSuffix, loginUser, sizeFactor ) {
     super(scene, {x:x, y:y},  spriteKey, animSuffix, loginUser, sizeFactor, "Click to set status");
     this.registry = this.scene.game.registry;
@@ -18,6 +19,14 @@ export default class User extends UserContainer {
     this.socket = socket    
     this.status.setInteractive();
     this.status.setInteractions();
+
+    /** a cache for delayed request of moving */
+    this.requestMoveCache = {
+      /** if pos is null, it means there is no waiting request. */
+      pos: null,
+      /** @type {boolean} */
+      timerRunning: false
+    }
   }
 
   // init(){
@@ -41,9 +50,27 @@ export default class User extends UserContainer {
     // request(requestType, responseType, makePayload, onRequest, onResponseOK, onResponseFail, socket)
   };
 
-  /** sendPosition : tell server to move this user */
+  /** 
+   * tell server to move this user.
+   * Do not use this method outside, if you use cachedRequestMove(pos).
+   */
   requestMove(positionData) {
     this.socket.emit('REQUEST_MOVE', positionData);
+  };
+
+  /** 
+   * Tell server to move this user. Continous requests will be cached and sent in some interval.  
+   */
+  cachedRequestMove(pos) {
+    const REQUEST_MOVE_INTERVAL = 200;
+    this.requestMoveCache.pos = pos;
+    if (!this.requestMoveCache.timerRunning) {
+      setTimeout(() => {
+        this.requestMove(this.requestMoveCache.pos);
+        this.requestMoveCache.timerRunning = false;
+      }, REQUEST_MOVE_INTERVAL);
+      this.requestMoveCache.timerRunning = true;
+    }
   };
 
   /** @param {Phaser.Types.Input.Keyboard.CursorKeys} cursors */
@@ -101,7 +128,8 @@ export default class User extends UserContainer {
     this.updateMovement(cursors);
     let positionData = {x : this.x, y : this.y};
     if (!this.stop){
-      this.requestMove(positionData);
+      // this.requestMove(positionData);
+      this.cachedRequestMove(positionData);
     }
   }
 }
