@@ -302,7 +302,7 @@ export default class MapScene extends Phaser.Scene {
         // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
         // this.doUpdate = false
         // data.prevScene = this.key;
-        console.log('this.scene.start:', data);
+        // console.log('this.scene.start:', data);
         // this.scene.stop();
         this.socket.removeAllListeners();
         this.scene.start(newScene, data);

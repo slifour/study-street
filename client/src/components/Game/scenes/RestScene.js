@@ -51,9 +51,9 @@ export default class Rest extends MapScene {
         // container.add(desk)
     };
 
-    changeScene(){
-        super.changeScene('Library')
-    };
+    // changeScene(){
+    //     super.changeScene('Library', )
+    // };
 
     setEventHandlers(){
         super.setEventHandlers()

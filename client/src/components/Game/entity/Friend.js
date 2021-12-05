@@ -83,7 +83,9 @@ export default class Friend extends UserContainer{
       this.stop = false;
     }
 
-    this.sprite.updateAnimation(animState)
+    if (this.sprite) { // Update animation only after this.sprite is loaded.
+      this.sprite.updateAnimation(animState);
+    }
     
     // this.setPosition(x, y);
     let duration = Phaser.Math.Distance.Between(this.x, this.y, x, y) / this.velocity;

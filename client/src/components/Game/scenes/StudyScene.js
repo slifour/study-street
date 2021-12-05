@@ -80,12 +80,12 @@ export default class Study extends Phaser.Scene {
   }
 
   /** initialize : tell server to create this user */
-  initialize(payload) {    
-    console.log('initialize :', payload)
-    let request = new Request(this.socket, this.loginUser)
-    request.request("REQUEST_CHANGE_SCENE", payload);
-    // request(requestType, responseType, makePayload, onRequest, onResponseOK, onResponseFail, socket)
-  };
+  // initialize(payload) {    
+  //   console.log('initialize :', payload)
+  //   let request = new Request(this.socket, this.loginUser)
+  //   request.request("REQUEST_CHANGE_SCENE", payload);
+  //   // request(requestType, responseType, makePayload, onRequest, onResponseOK, onResponseFail, socket)
+  // };
 
   createUser() {
     console.log("Create user: Login user: ", this.loginUser);
