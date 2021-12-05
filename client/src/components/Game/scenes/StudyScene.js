@@ -80,12 +80,12 @@ export default class Study extends Phaser.Scene {
   }
 
   /** initialize : tell server to create this user */
-  // initialize(payload) {    
-  //   console.log('initialize :', payload)
-  //   let request = new Request(this.socket, this.loginUser)
-  //   request.request("REQUEST_CHANGE_SCENE", payload);
-  //   // request(requestType, responseType, makePayload, onRequest, onResponseOK, onResponseFail, socket)
-  // };
+  initialize(payload) {    
+    console.log('initialize :', payload)
+    let request = new Request(this.socket, this.loginUser)
+    request.request("REQUEST_CHANGE_SCENE", payload);
+    // request(requestType, responseType, makePayload, onRequest, onResponseOK, onResponseFail, socket)
+  };
 
   createUser() {
     console.log("Create user: Login user: ", this.loginUser);
@@ -134,14 +134,18 @@ export default class Study extends Phaser.Scene {
   }
 
   changeScene(newScene){
+    const data = {prevScene : this.key, nextScene : newScene};
+    if (this.sceneChanging) {
+      return;
+    }
+    this.sceneChanging = true;
+    console.log('this.scene.start:', data);
     this.game.events.emit("changeScene", newScene);
-    this.cameras.main.fadeOut(1000, 0, 0, 0);
+    this.cameras.main.fadeOut(1000, 0, 0, 0)
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
-        // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
-        // this.doUpdate = false
-        this.scene.start(newScene, {prevScene: this.key});
+        this.socket.removeAllListeners();
+        this.scene.start(newScene, data);
     })  
-};
-
+  }   
 
 }

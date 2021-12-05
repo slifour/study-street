@@ -97,7 +97,7 @@ export default class MapScene extends Phaser.Scene {
 
     /** Create User Avatar */
     this.createUser();
-    this.initialize({prevScene : this.prevScene, currentScene : this.key});
+    this.initialize({prevScene : this.prevScene, nextScene : this.key});
   }
 
   update() {
@@ -145,7 +145,7 @@ export default class MapScene extends Phaser.Scene {
       this.physics.add.collider(this.user, this.portalCollider, (() => {
           this.user.sprite.disableBody(false);
           let newScene = this.key === 'Library'? 'Rest' : 'Library';
-          this.changeScene(newScene, {prevScene : this.key, nextScene : 'rest'});
+          this.changeScene(newScene);
       }));
   }
 
@@ -175,7 +175,7 @@ export default class MapScene extends Phaser.Scene {
         this.friendDict[socketID].updateMovement(position.x, position.y);
       } 
       else{        
-        this.request.request("requestCreateFreind", {socketID : socketID});
+        this.request.request("requestCreateFriend", {socketID : socketID});
       }
 
     });
@@ -183,15 +183,13 @@ export default class MapScene extends Phaser.Scene {
 
   createFriend(payload){
     let socketID = payload.loginUser.socketID;
-    if (socketID === this.socketID) {
-      return false;
-    }
+
+    this.onResponseRemoveFriend(socketID);
+
     if (this.key =='Library'){
-      this.onResponseRemoveFriend(socketID);
       console.log("createFriend")
       this.onResponseFriendStopStudy(socketID);
     }
-
 
     const avatarSprite = payload.loginUser.avatarSprite || "user_1";
     const avatarAnimSuffix = avatarSprite;
@@ -208,6 +206,9 @@ export default class MapScene extends Phaser.Scene {
   }
 
   onResponseCreateFriend(payload){
+    if (payload.loginUser.socketID === this.socketID) {
+      return false;
+    }
     const friend = this.createFriend(payload);
     if(!friend){
       return;
@@ -221,22 +222,6 @@ export default class MapScene extends Phaser.Scene {
     if (Object.keys(this.friendDict).includes(socketID)){
       this.friendDict[socketID].destroy();
       delete this.friendDict[socketID];
-    }
-  }
-
-  onResponseFriendStartStudy(payload){
-    const friend = this.createFriend(payload);
-    console.log("onResponseFriendStartStudy(payload)", payload);
-    if(friend){
-      console.log("if(friend)", payload.deskIndex, payload.chairIndex);
-      this.friendDictStudying[payload.loginUser.socketID] = friend;
-      if ((payload.deskIndex !== undefined) && (payload.chairIndex !== undefined)){
-        console.log("friend.sit()", this.areas[payload.deskIndex].desk, payload.chairIndex);
-        friend.sit(this.areas[payload.deskIndex].desk, payload.chairIndex)
-      }
-      else{
-        return
-      }
     }
   }
   
@@ -259,7 +244,6 @@ export default class MapScene extends Phaser.Scene {
       this.socket.on("LOOP_POSITION", this.onLoopPosition.bind(this));
       this.socket.on("RESPONSE_CREATE_FRIEND", this.onResponseCreateFriend.bind(this));
       this.socket.on("RESPONSE_REMOVE_FRIEND", this.onResponseRemoveFriend.bind(this));
-      this.socket.on("RESPONSE_FRIEND_START_STUDY", this.onResponseFriendStartStudy.bind(this));
       this.socket.on("RESPONSE_FRIEND_STOP_STUDY", this.onResponseFriendStopStudy.bind(this));
       this.socket.on('RESPONSE_NEW_STATUS', this.onResponseNewStatus.bind(this));
     }
@@ -285,13 +269,21 @@ export default class MapScene extends Phaser.Scene {
   }
 
 
-  changeScene(newScene, data){
+  changeScene(nextScene, data){
+
     if (this.sceneChanging) {
       return;
     }
+
+    if (data === undefined){
+      data = {};
+    }
+    data.prevScene = this.key 
+    data.nextScene = nextScene
     this.sceneChanging = true;
+
     console.log('this.scene.start:', data);
-    this.game.events.emit("changeScene", newScene);
+    this.game.events.emit("changeScene", nextScene);
     this.cameras.main.fadeOut(1000, 0, 0, 0)
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
         // this.user.setPosition(this.user.x-this.bufferWidth, this.user.y)
@@ -300,7 +292,7 @@ export default class MapScene extends Phaser.Scene {
         // console.log('this.scene.start:', data);
         // this.scene.stop();
         this.socket.removeAllListeners();
-        this.scene.start(newScene, data);
+        this.scene.start(nextScene, data);
     })  
   }   
     // if (newScene === 'Study'){

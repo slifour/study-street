@@ -428,9 +428,9 @@ const onRequestChangeScene = (socket, request) => {
   const {requestUser, requestKey, payload} = request;
   const responseType = ResponseType.CHANGE_SCENE;
 
-  let prevScene, currentScene, deskIndex, chairIndex;
+  let prevScene, nextScene, deskIndex, chairIndex;
   try {
-    ({prevScene, currentScene, deskIndex, chairIndex} = payload);
+    ({prevScene, nextScene, deskIndex, chairIndex} = payload);
   } catch {
     return responseFail(socket, requestKey, responseType, "Invalid scene.");
   }
@@ -438,14 +438,14 @@ const onRequestChangeScene = (socket, request) => {
   if (prevScene !== null){
     socket.leave(prevScene);
   }
-  socket.join(currentScene);
+  socket.join(nextScene);
 
   let id = socket.id;
   let initialPosition = {x:300, y:300}
   let user = userList[requestUser];
-  // console.log('onRequestChangeScene user:', prevScene, currentScene);
+  // console.log('onRequestChangeScene user:', prevScene, nextScene);
 
-  switch (currentScene) {
+  switch (nextScene) {
     case "Home": ; break;
     case "Library": {      
       env.socketIDToRoom[id] = env.libraryRoom; 
@@ -456,7 +456,8 @@ const onRequestChangeScene = (socket, request) => {
     } 
     case "Study": {
       env.libraryRoom.sit(socket, deskIndex, chairIndex, user); 
-      break;}
+      break;
+    }
     case "Rest": {
       env.socketIDToRoom[id] = env.restRoom; 
       env.restRoom.setUserId(id, requestUser); 

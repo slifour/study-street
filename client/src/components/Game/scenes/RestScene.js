@@ -51,15 +51,11 @@ export default class Rest extends MapScene {
         // container.add(desk)
     };
 
-    // changeScene(){
-    //     super.changeScene('Library', )
-    // };
-
     setEventHandlers(){
         super.setEventHandlers()
         this.game.events.on('restToLibrary', () => {
             console.log('toLibraryScene')
-            this.changeScene()
+            this.changeScene('Library')
         })
     };
     /** CreateMap()

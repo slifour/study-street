@@ -61,15 +61,16 @@ export default class Library extends MapScene {
      */
      setEventHandlers(){
         super.setEventHandlers()
+        this.game.events.on('libraryToRest', () => {
+            this.changeScene('Rest')
+        })
         // Description
         // socket.on('event', eventHandler)
         this.socket.on('newArtifact', this.onNewArtifact.bind(this));
         // this.socket.on('newGroup', this.onNewGroup.bind(this))
         this.socket.on("RESPONSE_NEW_DONE_QUEST", this.onNewDoneQuest.bind(this));
-        this.game.events.on('libraryToRest', () => {
-            this.changeScene('Rest')
-        })
         this.socket.on("RESPONSE_NEW_GROUP", this.onResponseNewGroup.bind(this));
+        this.socket.on("RESPONSE_FRIEND_START_STUDY", this.onResponseFriendStartStudy.bind(this));
     }
 
 
@@ -207,10 +208,26 @@ export default class Library extends MapScene {
     /** toRestScene
      * @description move to rest scene     
      */
-    changeScene(newScene, data){        
-        super.changeScene(newScene, data);
+    // changeScene(newScene, data){        
+    //     super.changeScene(newScene, data);
+    // }
+
+    onResponseFriendStartStudy(payload){
+        const friend = this.createFriend(payload);
+        console.log("onResponseFriendStartStudy(payload)", payload);
+        if(friend){
+          console.log("if(friend)", payload.deskIndex, payload.chairIndex);
+          this.friendDictStudying[payload.loginUser.socketID] = friend;
+          if ((payload.deskIndex !== undefined) && (payload.chairIndex !== undefined)){
+            console.log("friend.sit()", this.areas[payload.deskIndex].desk, payload.chairIndex);
+            friend.sit(this.areas[payload.deskIndex].desk, payload.chairIndex)
+          }
+          else{
+            return
+          }
+        }
     }
-    
+
     /** 
      * onNewDoneQuest
      * @param /bookList
@@ -235,13 +252,6 @@ export default class Library extends MapScene {
         const {payload} = request;
         this.assignGroupArea(payload.groupID, payload.groupName, payload.colors)
     }  
-
-    onResponseRemoveFriend(socketID){
-        if (Object.keys(this.friendDict).includes(socketID)){
-          this.friendDict[socketID].destroy();
-          delete this.friendDict[socketID];
-        }
-    }
 
     onNewArtifact(data){
         // console.log('recieve : newArtifact')

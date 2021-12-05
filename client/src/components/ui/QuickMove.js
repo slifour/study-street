@@ -12,6 +12,7 @@ export function ConfirmAlert(prop) {
     const confirmQuestions = {
         'Rest' : 'Pause study and have rest?', 
         'Library' : 'Stop rest and go to study?',
+        'Study' : 'Pause study and exit to library?',
     }
     const emits = {
         'Rest' : 'restToLibrary', 
