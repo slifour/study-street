@@ -38,12 +38,12 @@ export default function Avatars() {
     return(
         <div className={styles.avatarContainer}>
             { group ?
-                <>
-                <GroupAvatarCircle group={group} onMouseEnterItem={group.groupName} />
-                { group.member.map(userID => (
-                    <SingleAvatar userID={userID} key={userID}/>
-                )) }
-                </>
+                <div className={styles.avatarBox}>
+                    <GroupAvatarCircle group={group} onMouseEnterItem={group.groupName} />
+                    { group.member.map(userID => (
+                        <SingleAvatar userID={userID} key={userID}/>
+                    )) }
+                </div>
                 : null
             }
         </div>

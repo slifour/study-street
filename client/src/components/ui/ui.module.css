@@ -307,3 +307,17 @@
 
     color: #0C0C0C;
 }
+
+.avatarBox {
+    overflow: scroll;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    align-items: center;
+    max-height: 500px;
+}
+
+.avatarBox::-webkit-scrollbar {
+    display: none;
+    width: 0;
+}
