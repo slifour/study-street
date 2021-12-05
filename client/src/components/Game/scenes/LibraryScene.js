@@ -44,14 +44,10 @@ export default class Library extends MapScene {
         this.createMap();    
         const worldWidth = 32*60;        
         const worldHeight = 32*60;
-        super.create({x : worldWidth/2, y : worldHeight}, {x : worldWidth, y: worldHeight});    
+        super.create({x : worldWidth/2, y : worldHeight}, {x : 1000, y: 1400}, {x : worldWidth, y: worldHeight});    
         this.setDeskCollider()
         this.setEventHandlers();
         this.socket.emit("initializeLibrary");
-        // let portalPosition = {x : this.world1.displayWidth/2, y : this.world1.displayHeight};
-        // portalPosition.x = 950;
-        // portalPosition.y = 1930;
-        // super.createPortal(portalPosition);
     }
 
     update() {
@@ -61,7 +57,7 @@ export default class Library extends MapScene {
     /** setEventHandlers
      * @description set event handlers     
      */
-     setEventHandlers(){
+    setEventHandlers(){
         super.setEventHandlers()
         this.game.events.on('libraryToRest', () => {
             this.changeScene('Rest')
@@ -77,18 +73,6 @@ export default class Library extends MapScene {
 
 
     /** Create() Helper Functions  */
-
-    /**
-     * createGroupArea
-     * @param groupKey : key to manage group areas
-     */
-    // createGroupArea(groupName, colors){
-    //     let groupArea = new GroupArea(this, 500, 400)
-    //     groupArea.init('desk', 'chair', 'bookshelf')
-    //     // this.nextBookPosition = groupArea.positions[0]
-    //     groupArea.setPosition(500, 400)
-    //     this.groupAreas[groupKey] = groupArea
-    // }
 
     createMap() {
         this.map = this.make.tilemap({ key: 'libraryMap' });
@@ -109,9 +93,7 @@ export default class Library extends MapScene {
         this.belowPlayer1.setDepth(-5);
         this.world1.setDepth(-5);      
 
-        // Group Area Example (Manual)
-        // this.createGroupArea('a');
-        // Create desks
+        /** Create desks */
         this.deskPositions = [{x:500, y:450}, {x:1000, y:450}, {x:1500, y: 450}, {x:450, y:1250}, {x:1500, y:1250}, {x:450, y: 1650}, {x:1500, y: 1650}]
         this.bookshelfPositions = [{x:500, y:350}, {x:1000, y:350}, {x:1500, y: 350}]
         let deskIndex = 0
@@ -120,18 +102,6 @@ export default class Library extends MapScene {
             let desk = this.createDesk(position.x, position.y, 'desk', {down: 'chair_down', up :'chair_up'}, index);
             this.areas[index] = {desk : desk, bookshelf : bookshelf, groupID : null};
         })
-
-        // don't go out of the map
-        console.log(this.belowPlayer1.displayWidth, this.belowPlayer1.displayHeight)
-        console.log(this.world1.displayWidth, this.world1.displayHeight)
-        console.log(this.world1.width, this.world1.height)
-        console.log(this.map.tileWidth, this.map.tileHeight )
-        console.log(this.map.widthInPixels, this.map.heightInPixels)
-        // this.physics.world.bounds.width = this.belowPlayer1.displayWidth;
-        // this.physics.world.bounds.height = this.belowPlayer1.displayHeight;
-        // this.cameras.main.setBounds(0, 0, this.belowPlayer1.displayWidth, this.belowPlayer1.displayHeight);
-        // this.bufferToFirst = this.add.rectangle(this.map.displayWidth-this.bufferWidth/2, this.map.displayHeight/2, this.bufferWidth, this.map.displayHeight, 0xff0000);
-        // this.physics.add.existing(this.bufferToFirst)
     }
 
     /** createDesk
@@ -208,13 +178,6 @@ export default class Library extends MapScene {
         })
         console.log("assignGroupArea")
     }
-
-    /** toRestScene
-     * @description move to rest scene     
-     */
-    // changeScene(newScene, data){        
-    //     super.changeScene(newScene, data);
-    // }
 
     onResponseFriendStartStudy(payload){
         const friend = this.createFriend(payload);

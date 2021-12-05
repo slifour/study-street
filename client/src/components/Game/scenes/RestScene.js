@@ -27,11 +27,8 @@ export default class Rest extends MapScene {
         this.createMap();    
         const worldWidth = 32*55;        
         const worldHeight = 32*56;
-        super.create({x : worldWidth/2, y : 0}, {x : worldWidth , y: worldHeight});    
+        super.create({x : worldWidth/2, y : 0}, {x : 900, y: 300}, {x : worldWidth , y: worldHeight});    
         this.setEventHandlers();
-        // let portalPosition = {x : this.world1.displayWidth/2, y : this.world1.displayHeight};
-        // portalPosition.y = 0;
-        // super.createPortal(portalPosition);
     };
 
     update() {
@@ -60,6 +57,7 @@ export default class Rest extends MapScene {
             this.changeScene('Library')
         })
     };
+
     /** CreateMap()
      * - Add tilemap
      * - Set boundary
