@@ -166,13 +166,8 @@ export default class MapScene extends Phaser.Scene {
 
     if(this.friendDict === undefined) {return;}    
     Object.entries(socketIDToPosition).forEach(([socketID, position])=>{  
-      // console.log("this", this);
-      // console.log(socketID, this.socketID);      
-      // console.log('Log. mapscene.friendDict =', this.friendDict);
-      // console.log('Log. mapscene.onLoopPosition socketIDToPosition =', socketIDToPosition);
 
       if (socketID === this.socketID) {
-        // console.log('returned'); 
         return;
       }
 
