@@ -40,6 +40,7 @@ export default class UserContainer extends GameObjects.Container{
     super(scene, position.x, position.y);
     this.userID = loginUser.userID
     this.userName = loginUser.userName;
+    this.curGroup = loginUser.curGroup;
     this.chair = null;
     console.log("Log. UserContainer() userName=", this.userName)
     this.scene.add.existing(this);

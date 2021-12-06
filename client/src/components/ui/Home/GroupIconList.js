@@ -11,6 +11,9 @@ export default function GroupIconList({onSetGroup}) {
   const onResponseOK = useCallback(({payload}) => {
     console.log("Group Icon List (client) got: ", payload);
     setGroupList(payload);
+    if (payload.length > 0){
+      onGroupIconClick(payload[0]);
+    }
   }, [setGroupList]);
 
   const onResponseFail = useCallback(({payload}) => {

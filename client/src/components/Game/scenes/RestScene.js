@@ -27,7 +27,7 @@ export default class Rest extends MapScene {
         this.createMap();    
         const worldWidth = 32*55;        
         const worldHeight = 32*56;
-        super.create({x : worldWidth/2, y : 0}, {x : 900, y: 300}, {x : worldWidth , y: worldHeight});    
+        super.create({x : worldWidth/2, y : 0}, {x : 900, y: 200}, {x : worldWidth , y: worldHeight});    
         this.setEventHandlers();
     };
 

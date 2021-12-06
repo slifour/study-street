@@ -73,6 +73,11 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
   }
 
   onPointerOver(){
+    const loginUser = this.scene.game.registry.get("loginUser")
+    console.log(loginUser, loginUser.curGroup, this.groupID)
+    if (loginUser.curGroup === this.groupID){
+      this.setAllowed(true);
+    }
     // console.log("onPointerOver", this.allowed)
     let text = "";
     if(this.allowed){
@@ -109,8 +114,9 @@ export default class Chair extends Phaser.Physics.Arcade.Sprite {
     this.setScale(1);
   }
 
-  setAllowed(allowed, groupName = ""){
+  setAllowed(allowed, groupID, groupName = ""){
     this.allowed = allowed
+    this.groupID = groupID
     this.groupName = groupName
   }
 }

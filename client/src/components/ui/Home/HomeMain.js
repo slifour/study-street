@@ -26,7 +26,7 @@ export default function HomeMain({onWalkToLibrary}) {
   const [currentShow, setCurrentShow] = useState(SHOW_USER);
   const [currentGroup, setCurrentGroup] = useState(null); // group
   const [reloadTime, setReloadTime] = useState(new Date());
-  const {loginUser} = useContext(LoginUserContext);
+  const {loginUser, setLoginUser} = useContext(LoginUserContext);
   const {game, gameEnableInput, gameDisableInput} = useContext(GameContext);
 
   useEffect(() => {
@@ -62,6 +62,9 @@ export default function HomeMain({onWalkToLibrary}) {
   const onSetGroup = group => {
     setCurrentGroup(group);
     setCurrentShow(SHOW_GROUP);
+    let newLoginUser = loginUser;
+    newLoginUser.curGroup = group.groupID;
+    setLoginUser(newLoginUser);
   }
 
   const onClickUser = () => {

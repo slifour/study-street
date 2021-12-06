@@ -69,7 +69,7 @@ export default function SingleAvatar({userID}) {
 
     return (
         <div>
-            <UserAvatarCircle user={user} size={80} onClick={() => setOpen(true)} onMouseEnterItem={user.userName} />
+            <UserAvatarCircle user={user} size={60} onClick={() => setOpen(true)} onMouseEnterItem={user.userName} />
             <StyledModal
                 show = {open}
                 onHide = {() => setOpen(false)}

@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import Chair from './Chair';
 
 export default class Desk extends Phaser.GameObjects.Container {
-  constructor(scene, x, y, deskKey, chairKey, index, interactive = true, n = 2) {
+  constructor(scene, x, y, deskKey, chairKey, index, interactive = true, n = 3) {
     super(scene, x, y);
     this.scene = scene;
     this.scene.add.existing(this);
@@ -55,7 +55,7 @@ export default class Desk extends Phaser.GameObjects.Container {
   assignGroup(allowed, group){
     this.group = group
     Object.values(this.indexToChair).forEach( (chair) => {
-      chair.setAllowed(allowed, group.groupName);
+      chair.setAllowed(allowed, group.groupID, group.groupName);
     })
   }
 

@@ -44,7 +44,7 @@ export default class Library extends MapScene {
         this.createMap();    
         const worldWidth = 32*60;        
         const worldHeight = 32*60;
-        super.create({x : worldWidth/2, y : worldHeight}, {x : 1000, y: 1400}, {x : worldWidth, y: worldHeight});    
+        super.create({x : worldWidth/2, y : worldHeight}, {x : 1000, y: 800}, {x : worldWidth, y: worldHeight});    
         this.setDeskCollider()
         this.setEventHandlers();
         this.socket.emit("initializeLibrary");

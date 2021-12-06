@@ -49,7 +49,7 @@ let userList = {
     "userName": "은기",
     "status": "Developing user data system",
     "profileImage": dummyAvatars[0],
-    "avatarSprite": "user_5",
+    "avatarSprite": "user_6",
     "curGroup" : "cs473",
     "todayStudyTime": 7200 * 1000,
     "checklist" : {
@@ -591,9 +591,9 @@ let userList = {
     "socketID": null,
     "checklist": null
   },
-  "김 경연": {
-    "userID": "김 경연",
-    "userName": "김 경연",
+  "김경연": {
+    "userID": "김경연",
+    "userName": "김경연",
     "profileImage": dummyAvatars[0],
     "todayStudyTime": null,
     "status": null,
@@ -779,7 +779,7 @@ let groupList = {
     groupName: "KIXLAB",
     leader: "Juho Kim",
     member: ["Juho Kim", "Yoonjoo Lee", "Haesoo Kim", "Hyunwoo Kim", "Jeongeon Park",],
-    colors: ['#F79489', '#F9F1F0'],
+    colors: ['#F79256', '#fbd1a2'],
     quests: {
       "eq2dm5" : {
           questID : "eq2dm5",
@@ -808,7 +808,7 @@ let groupList = {
     groupName: "We love study",
     leader: "eunki",
     member: ["eunki", "haeseul", "guest"],
-    colors: ['#F79489', '#F9F1F0'],
+    colors: ['#8d1c1a', '#F9F1F0'],
     quests: {
       "eq2dm5" : {
           questID : "eq2dm5",
@@ -832,23 +832,24 @@ let groupList = {
       }
     }
   },
+  "b": {
+    groupID: "b",
+    groupName: "Team slifour",
+    leader: "hyeon",
+    member: ["eunki", "hyeon", "jeonghoon"],
+    colors: ['#A0E7E5', '#B4F8C8'],
+    quests: {}
+  },
   "cs473": {
     groupID: "cs473",
     groupName: "CS473 LET'S NAIL FINAL",
     leader: "eunki",
     member: ["eunki", "hyeon"],
-    colors: ['#A0E7E5', '#B4F8C8'],
+    colors: ['#e5989b', '#ffcdb2'],
     quests: {
     }
   },
-  // "b": {
-  //   groupID: "b",
-  //   groupName: "We love slifour",
-  //   leader: "hyeon",
-  //   member: ["eunki", "hyeon", "jeonghoon"],
-  //   colors: ['#003B73', '#BFD7ED'],
-  //   quests: {}
-  // },
+
 };
 
 /* 살짝 창의적으로 키를 띄어쓰기로 구분한 두 아이디로 써봤어요. "{Group ID} {User ID}" 형식입니다.
@@ -868,23 +869,299 @@ let invitationList = {
     hostUser: "jeonghoon",
     inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
   },
+  "cs473 Alua Orazbek": {
+    "groupID": "cs473",
+    "friendID": "Alua Orazbek",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Assem Zhunis": {
+    "groupID": "cs473",
+    "friendID": "Assem Zhunis",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Auejin Ham": {
+    "groupID": "cs473",
+    "friendID": "Auejin Ham",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Bauyrzhan Tokenov": {
+    "groupID": "cs473",
+    "friendID": "Bauyrzhan Tokenov",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Bekzat Tilekbay": {
+    "groupID": "cs473",
+    "friendID": "Bekzat Tilekbay",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Charlie .": {
+    "groupID": "cs473",
+    "friendID": "Charlie .",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Cheryl Siy": {
+    "groupID": "cs473",
+    "friendID": "Cheryl Siy",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Chigon Ryu": {
+    "groupID": "cs473",
+    "friendID": "Chigon Ryu",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Chloe McCracken": {
+    "groupID": "cs473",
+    "friendID": "Chloe McCracken",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Chulhwan Kim": {
+    "groupID": "cs473",
+    "friendID": "Chulhwan Kim",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Dain Kim": {
+    "groupID": "cs473",
+    "friendID": "Dain Kim",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Diyar Tulenov": {
+    "groupID": "cs473",
+    "friendID": "Diyar Tulenov",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
   "cs473 Eunki Joung": {
-    groupID: "cs473",
-    friendID: "Eunki Joung",
-    hostUser: "eunki",
-    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+    "groupID": "cs473",
+    "friendID": "Eunki Joung",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 fathony achmad": {
+    "groupID": "cs473",
+    "friendID": "fathony achmad",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
   },
   "cs473 Haeseul Cha": {
-    groupID: "cs473",
-    friendID: "Haeseul Cha",
-    hostUser: "eunki",
-    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+    "groupID": "cs473",
+    "friendID": "Haeseul Cha",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Haesoo Kim": {
+    "groupID": "cs473",
+    "friendID": "Haesoo Kim",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 hong beom yoo": {
+    "groupID": "cs473",
+    "friendID": "hong beom yoo",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Huikyeong An": {
+    "groupID": "cs473",
+    "friendID": "Huikyeong An",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Hyeon Pyo": {
+    "groupID": "cs473",
+    "friendID": "Hyeon Pyo",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Hyunwoo Kim": {
+    "groupID": "cs473",
+    "friendID": "Hyunwoo Kim",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Inhwa Song": {
+    "groupID": "cs473",
+    "friendID": "Inhwa Song",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Jeongeon Park": {
+    "groupID": "cs473",
+    "friendID": "Jeongeon Park",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
   },
   "cs473 Jeonghoon Han": {
-    groupID: "cs473",
-    friendID: "Jeonghoon Han",
-    hostUser: "eunki",
-    inviteTime: new Date('07 Nov 2021 13:15:00 GMT+9')
+    "groupID": "cs473",
+    "friendID": "Jeonghoon Han",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 JeongYoon Shin": {
+    "groupID": "cs473",
+    "friendID": "JeongYoon Shin",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Jinhyen Kim": {
+    "groupID": "cs473",
+    "friendID": "Jinhyen Kim",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Jiseung Ryu": {
+    "groupID": "cs473",
+    "friendID": "Jiseung Ryu",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Juho Kim": {
+    "groupID": "cs473",
+    "friendID": "Juho Kim",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Junyeong Park": {
+    "groupID": "cs473",
+    "friendID": "Junyeong Park",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Kim Taewoo": {
+    "groupID": "cs473",
+    "friendID": "Kim Taewoo",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Kwanghyun Jung": {
+    "groupID": "cs473",
+    "friendID": "Kwanghyun Jung",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Lee jeonga": {
+    "groupID": "cs473",
+    "friendID": "Lee jeonga",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Minh Hoang Dang": {
+    "groupID": "cs473",
+    "friendID": "Minh Hoang Dang",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Ngoc Doan": {
+    "groupID": "cs473",
+    "friendID": "Ngoc Doan",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Nicole Lee": {
+    "groupID": "cs473",
+    "friendID": "Nicole Lee",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Nurlykhan Kopenov": {
+    "groupID": "cs473",
+    "friendID": "Nurlykhan Kopenov",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 SeongHye Cho": {
+    "groupID": "cs473",
+    "friendID": "SeongHye Cho",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Seungho Baek": {
+    "groupID": "cs473",
+    "friendID": "Seungho Baek",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Shinung Ahn": {
+    "groupID": "cs473",
+    "friendID": "Shinung Ahn",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Subin Kim": {
+    "groupID": "cs473",
+    "friendID": "Subin Kim",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Suchan Kim": {
+    "groupID": "cs473",
+    "friendID": "Suchan Kim",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Tung Duong Mai": {
+    "groupID": "cs473",
+    "friendID": "Tung Duong Mai",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Yeon Su Park": {
+    "groupID": "cs473",
+    "friendID": "Yeon Su Park",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Yohan Yun": {
+    "groupID": "cs473",
+    "friendID": "Yohan Yun",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Yoonjeong Park": {
+    "groupID": "cs473",
+    "friendID": "Yoonjeong Park",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Yoonjoo Lee": {
+    "groupID": "cs473",
+    "friendID": "Yoonjoo Lee",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Yumi Lee": {
+    "groupID": "cs473",
+    "friendID": "Yumi Lee",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Zhaoyan Wang": {
+    "groupID": "cs473",
+    "friendID": "Zhaoyan Wang",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 Zihan Lin": {
+    "groupID": "cs473",
+    "friendID": "Zihan Lin",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
+  },
+  "cs473 김경연": {
+    "groupID": "cs473",
+    "friendID": "김경연",
+    "hostUser": "eunki",
+    "inviteTime": "new Date('07 Nov 2021 13:15:00 GMT+9')"
   },
   "cs473 Guest1": {
     groupID: "cs473",
