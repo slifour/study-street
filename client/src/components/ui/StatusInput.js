@@ -65,6 +65,19 @@ export default function StatusInput(props) {
         }
       }, [game.current, showStatusInput])   
 
+    useEffect(() => {
+        const disableInput = () => {
+          console.log("Game: ", game.current);
+          game.current.game.input.keyboard.enabled = false;
+          game.current.game.input.mouse.enabled = false;
+        } 
+        disableInput();
+        return () => {
+          game.current.game.events.off("ready", disableInput);
+          game.current.game.input.keyboard.enabled = true;
+          game.current.game.input.mouse.enabled = true;
+        }
+    }, []);
 
     //**socket related functions**
     const onResponseOK = useCallback(({payload}) => {
@@ -102,7 +115,9 @@ export default function StatusInput(props) {
                 </div>
             )
         }
+        returnComponents = returnComponents.slice(-1)
         return returnComponents.map(el => el)
+        // return returnComponents.length > 0 ? returnComponents[-1] : null
     }
 
     const changeInputValue = (e) => {
@@ -118,7 +133,7 @@ export default function StatusInput(props) {
         }
         localStatus = {...updateList};
         setStatus((status)=> ({...status, ...updateList}));
-        setInputValue('Click to write a status');
+        setInputValue('Click to write status');
         setInput(false);
 
         const requestType = "REQUEST_STATUS";
@@ -165,7 +180,7 @@ export default function StatusInput(props) {
                         }
                     </div>
                 </div>
-                {mapChecklistsPersonal()}
+                {mapChecklistsPersonal()}  
             </div>
 
     )

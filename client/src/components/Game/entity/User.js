@@ -13,7 +13,7 @@ import UserContainer from './UserContainer';
 export default class User extends UserContainer {
 
   constructor(scene, x, y, spriteKey, animSuffix, loginUser, sizeFactor ) {
-    super(scene, {x:x, y:y},  spriteKey, animSuffix, loginUser, sizeFactor, "Click to set status");
+    super(scene, {x:x, y:y},  spriteKey, animSuffix, loginUser, sizeFactor, "Click avatar to write status");
     this.registry = this.scene.game.registry;
     this.stop = true
     this.socket = socket    

@@ -35,8 +35,6 @@ const Backdrop = styled("div")`
     opacity: 0.2;
 `;
 export default function StatusContainer(props) {
-       const [isInput, setInput] = useState(false);
-    const [inputValue, setInputValue] = useState('Click to write a to-do');
     const {loginUser} = useContext(LoginUserContext);
     const {game, gameEnableInput, gameDisableInput} = useContext(GameContext);
     const [showStatusInput, setShowStatusInput] = useState(false);

@@ -56,7 +56,7 @@ export default function ChatOverlay(props) {
           game.current.game.input.keyboard.enabled = true;
           game.current.game.input.mouse.enabled = true;
         }
-      }, []);
+    }, []);
 
     useEffect(() => {
         //이전 채팅 기록을 불러오는 함수
