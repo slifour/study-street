@@ -36,8 +36,9 @@ class UserSprite extends Phaser.Physics.Arcade.Sprite {
 }
 
 export default class UserContainer extends GameObjects.Container{
-  constructor(scene, position, spriteKey, animSuffix, loginUser, sizeFactor = 1, initialtext = "") {
+  constructor(scene, position, spriteKey, animSuffix, loginUser, sizeFactor = 1) {
     super(scene, position.x, position.y);
+    let initialtext = loginUser.status;
     this.userID = loginUser.userID
     this.userName = loginUser.userName;
     this.curGroup = loginUser.curGroup;

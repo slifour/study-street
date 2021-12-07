@@ -13,14 +13,24 @@ import json
 #         json.dump(outDoc, outfile, ensure_ascii= False, indent=2)
 #         # outfile.write(',\n')
 
+# with open('invitation.csv', mode='r', encoding='utf-8') as infile:
+#     reader = csv.reader(infile)
+#     header = next(reader)
+#     key = "0"
+#     with open('invitation'+key+'.txt', mode='w') as outfile:
+#         writer = csv.writer(outfile)        
+#         outDoc = {}
+#         for cols in reader:
+#             outDoc[cols[0]] = {col_name: col for col_name, col in zip(header[1:-1], cols[1:-1])}
+#         json.dump(outDoc, outfile, ensure_ascii= False, indent=2)
+#         # outfile.write(',\n')        
+
 with open('invitation.csv', mode='r', encoding='utf-8') as infile:
     reader = csv.reader(infile)
     header = next(reader)
     key = "0"
-    with open('invitation'+key+'.txt', mode='w') as outfile:
+    with open('names'+key+'.txt', mode='w') as outfile:
         writer = csv.writer(outfile)        
         outDoc = {}
         for cols in reader:
-            outDoc[cols[0]] = {col_name: col for col_name, col in zip(header[1:-1], cols[1:-1])}
-        json.dump(outDoc, outfile, ensure_ascii= False, indent=2)
-        # outfile.write(',\n')        
+            outfile.write('\"'+cols[-1]+'\",')    
