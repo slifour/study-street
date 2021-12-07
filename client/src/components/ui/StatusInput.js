@@ -41,7 +41,7 @@ const Backdrop = styled("div")`
 export default function StatusInput(props) {
     const [isInput, setInput] = useState(false);
     const [inputValue, setInputValue] = useState('Click to write a status');
-    const {loginUser} = useContext(LoginUserContext);
+    const {loginUser, setLoginUser} = useContext(LoginUserContext);
     const [status, setStatus] = useState({});
     const [quests, setQuests] = useState({});
     const [groupName, setGroupName] = useState('');
@@ -139,6 +139,10 @@ export default function StatusInput(props) {
         const requestType = "REQUEST_STATUS";
         usedRequestKeyRef.current = uniqueString();
 
+        let newLoginUser = loginUser;
+        newLoginUser.status = currentState;
+        setLoginUser(newLoginUser);
+
         socket.emit(requestType, {
             requestUser: loginUser.userID,
             requestKey: usedRequestKeyRef.current,
@@ -149,6 +153,7 @@ export default function StatusInput(props) {
             }
         });
         console.log('emited')
+
     }
 
     return(

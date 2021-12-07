@@ -97,8 +97,9 @@ export default class UserContainer extends GameObjects.Container{
     };
     this.sprite = new UserSprite(scene, 0, 0, spriteKey, animSuffix, sizeFactor);
     this.add(this.sprite);
-    this.width = this.sprite.displayWidth;
-    this.height = this.sprite.displayHeight;
+    this.width = 64;
+    this.height = 64;
+    console.log(this.sprite.displayWidth, this.sprite.displayHeight)
     this.setSize(this.sprite.displayWidth, this.sprite.displayHeight);
     // this.setDisplaySize(this.sprite.displayWidth, this.sprite.displayHeight);
     // this.body.setSize(this.sprite.displayWidth, this.sprite.displayHeight);
