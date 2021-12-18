@@ -455,6 +455,7 @@ const onRequestChangeScene = (socket, request) => {
       break;    
     } 
     case "Study": {
+      console.log('switch - Study')
       env.libraryRoom.sit(socket, deskIndex, chairIndex, user); 
       break;
     }

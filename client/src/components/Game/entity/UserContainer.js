@@ -177,6 +177,7 @@ export default class UserContainer extends GameObjects.Container{
     this.sprite.setFrame(frame);
     let chairAt = desk.getIndex(this.chair)
     desk.addAt(this, chairAt + indexer)
+    //desk.addAt(this, 0)
 
     this.chair.setInteractions(false);
     console.log("sit", this.chair.x, this.chair.y, this.x, this.y);
