@@ -37,13 +37,13 @@ export default class Books extends Phaser.GameObjects.Container {
       // console.log(size);
       let book = new Book(this.scene, bookX, 0, quest)
       this.add(book)
-      if (i > this.prevMaxIndex){
-        // let alert = new Alert(this.scene, this, '!');
-        // Phaser.Display.Align.To.TopCenter(alert, book, 0, -20)
-        // alert.setBook(book)
-        // book.setAlert(alert)
-        // book.startTween()
-        // this.add(alert)        
+      if (true){
+        let alert = new Alert(this.scene, this, '!');
+        Phaser.Display.Align.To.TopCenter(alert, book, 0, -20)
+        alert.setBook(book)
+        book.setAlert(alert)
+        book.startTween()
+        this.add(alert)        
       }
       bookX += book.displayWidth;
       // console.log(size, book.displayWidth)
