@@ -1,5 +1,9 @@
 # study-street
 
+## study-street
+
+Documents and Codes for https://study-street-client.herokuapp.com/, course project, KAIST CS473 Introduction to Social Computing 2021 Fall 
+
 ## Getting started to develop
 ### Dependencies
 - Node v14
